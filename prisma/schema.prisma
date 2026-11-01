@@ -1,0 +1,79 @@
+// LedgerFlow — Prisma schema.
+// Models are added in SETUP-03 (base) and per-epic tasks (FIRM, CLIENT, DOC, INV, TASK, ...).
+// Do not hard-code tax rates, deadlines or legal rules — use configurable data.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// Minimal firm workspace model.
+/// FIRM-01 owns the full workspace lifecycle; CLIENT-02/03 only need the tenant root
+/// so every client query can be scoped by `firmId` (see FIRM-05).
+model Firm {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  clients Client[]
+
+  @@map("firms")
+}
+
+enum ClientType {
+  INDIVIDUAL
+  COMPANY
+}
+
+enum ClientStatus {
+  ACTIVE
+  ARCHIVED
+}
+
+/// A client (individual or company) belonging to exactly one firm.
+/// Tax identifiers are stored as free-form, configurable data — no tax rules are inferred.
+model Client {
+  id        String @id @default(cuid())
+  firmId    String
+  reference String?
+
+  type        ClientType   @default(COMPANY)
+  status      ClientStatus @default(ACTIVE)
+  name        String
+  contactName String?
+
+  email String?
+  phone String?
+
+  /// Tax identification number (e.g. NIF). Free-form; never validated against legal rules.
+  taxId String?
+  /// Commercial register number (e.g. RC). Free-form.
+  commercialRegister String?
+
+  addressLine1 String?
+  addressLine2 String?
+  city         String?
+  postalCode   String?
+  country      String  @default("DZ")
+
+  notes String?
+
+  archivedAt  DateTime?
+  createdById String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  firm Firm @relation(fields: [firmId], references: [id], onDelete: Cascade)
+
+  @@unique([firmId, reference])
+  @@index([firmId, status])
+  @@index([firmId, name])
+  @@index([firmId, updatedAt])
+  @@map("clients")
+}
