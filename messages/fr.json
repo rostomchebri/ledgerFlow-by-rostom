@@ -1,0 +1,33 @@
+{
+  "meta": {
+    "title": "LedgerFlow",
+    "description": "Un espace de productivité comptable pour les comptables et les petits cabinets — clients, documents, factures et échéances au même endroit, auditable."
+  },
+  "common": {
+    "appName": "LedgerFlow",
+    "language": "Langue",
+    "soon": "Bientôt"
+  },
+  "nav": {
+    "mainLabel": "Navigation principale",
+    "overview": "Vue d'ensemble",
+    "clients": "Clients",
+    "documents": "Documents",
+    "invoices": "Factures",
+    "tasks": "Tâches",
+    "reports": "Rapports",
+    "settings": "Paramètres"
+  },
+  "shell": {
+    "workspace": "Espace comptable",
+    "demoWorkspace": "Espace démo · sans authentification"
+  },
+  "landing": {
+    "badge": "CLIENT-02 · gestion des clients",
+    "title": "LedgerFlow",
+    "description": "Un espace de productivité comptable pour les comptables et les petits cabinets — clients, documents, factures et échéances au même endroit, auditable.",
+    "openClients": "Ouvrir les clients",
+    "createClient": "Créer un client",
+    "note": "Le module clients est la première tranche de production. Les documents, factures et tâches suivent."
+  }
+}

@@ -2,65 +2,160 @@
 @tailwind components;
 @tailwind utilities;
 
+/*
+ * LedgerFlow design tokens (SETUP-05).
+ *
+ * Every color is a CSS variable so themes (light/dark, future firm branding)
+ * can be swapped without touching components. Tailwind maps them in
+ * `tailwind.config.ts`. Keep new tokens in both files.
+ */
 @layer base {
   :root {
     --background: 0 0% 100%;
     --foreground: 222 47% 11%;
+
     --card: 0 0% 100%;
     --card-foreground: 222 47% 11%;
+
     --popover: 0 0% 100%;
     --popover-foreground: 222 47% 11%;
+
     --primary: 199 89% 32%;
     --primary-foreground: 0 0% 100%;
+
     --secondary: 210 40% 96%;
     --secondary-foreground: 222 47% 11%;
+
     --muted: 210 40% 96%;
     --muted-foreground: 215 16% 47%;
+
     --accent: 199 89% 95%;
     --accent-foreground: 199 89% 24%;
+
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
+
+    --success: 152 69% 31%;
+    --success-foreground: 0 0% 100%;
+
+    --warning: 38 92% 50%;
+    --warning-foreground: 26 83% 14%;
+
+    --info: 199 89% 32%;
+    --info-foreground: 0 0% 100%;
+
     --border: 214 32% 91%;
     --input: 214 32% 91%;
     --ring: 199 89% 32%;
+
+    --sidebar: 0 0% 100%;
+    --sidebar-foreground: 222 47% 11%;
+    --sidebar-border: 214 32% 91%;
+    --sidebar-accent: 210 40% 96%;
+
+    --chart-1: 199 89% 32%;
+    --chart-2: 152 69% 31%;
+    --chart-3: 38 92% 50%;
+    --chart-4: 262 83% 58%;
+    --chart-5: 0 72% 51%;
+
     --radius: 0.5rem;
   }
 
   .dark {
     --background: 222 47% 7%;
     --foreground: 210 40% 98%;
+
     --card: 222 47% 9%;
     --card-foreground: 210 40% 98%;
+
     --popover: 222 47% 9%;
     --popover-foreground: 210 40% 98%;
+
     --primary: 199 89% 48%;
     --primary-foreground: 222 47% 7%;
+
     --secondary: 217 33% 17%;
     --secondary-foreground: 210 40% 98%;
+
     --muted: 217 33% 17%;
     --muted-foreground: 215 20% 65%;
+
     --accent: 199 89% 20%;
     --accent-foreground: 199 89% 90%;
+
     --destructive: 0 63% 45%;
     --destructive-foreground: 210 40% 98%;
+
+    --success: 152 60% 45%;
+    --success-foreground: 152 90% 8%;
+
+    --warning: 38 92% 55%;
+    --warning-foreground: 26 83% 10%;
+
+    --info: 199 89% 48%;
+    --info-foreground: 222 47% 7%;
+
     --border: 217 33% 20%;
     --input: 217 33% 20%;
     --ring: 199 89% 48%;
+
+    --sidebar: 222 47% 9%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-border: 217 33% 20%;
+    --sidebar-accent: 217 33% 17%;
+
+    --chart-1: 199 89% 55%;
+    --chart-2: 152 60% 50%;
+    --chart-3: 38 92% 60%;
+    --chart-4: 262 83% 68%;
+    --chart-5: 0 72% 60%;
   }
 
   * {
     @apply border-border;
   }
 
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
   body {
     @apply bg-background text-foreground antialiased;
     font-feature-settings: "rlig" 1, "calt" 1;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    @apply bg-primary/20 text-foreground;
+  }
+
+  /*
+   * Arabic typography: switch to the Arabic font family, increase line-height
+   * and drop letter-spacing (tracking is a Latin-only convention).
+   */
+  html[dir="rtl"] body {
+    font-family: var(--font-arabic), var(--font-sans), system-ui, sans-serif;
+    line-height: 1.8;
+  }
+
+  html[dir="rtl"] .tracking-wide,
+  html[dir="rtl"] .tracking-wider,
+  html[dir="rtl"] .tracking-widest {
+    letter-spacing: 0;
   }
 }
 
-/* RTL-aware helpers — extended in SETUP-05. */
 @layer utilities {
-  [dir="rtl"] .flip-x {
+  /* Mirrors directional icons (arrows, chevrons) in RTL layouts. */
+  [dir="rtl"] .rtl-flip {
     transform: scaleX(-1);
+  }
+
+  /* Respect users who prefer reduced motion. */
+  @media (prefers-reduced-motion: reduce) {
+    .motion-safe\:transition-all {
+      transition: none;
+    }
   }
 }

@@ -1,10 +1,13 @@
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 
 import { AppNav } from "@/components/app-nav";
+import { LocaleSwitcher } from "@/components/i18n/locale-switcher";
 import { getFirmContext } from "@/lib/firm-context";
 
-export default function AppLayout({ children }: { children: React.ReactNode }) {
+export default async function AppLayout({ children }: { children: React.ReactNode }) {
   const { firmName } = getFirmContext();
+  const t = await getTranslations("shell");
 
   return (
     <div className="min-h-screen bg-muted/20 lg:grid lg:grid-cols-[16rem_minmax(0,1fr)]">
@@ -15,7 +18,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           </span>
           <div className="leading-tight">
             <p className="text-sm font-semibold">LedgerFlow</p>
-            <p className="text-xs text-muted-foreground">Accounting workspace</p>
+            <p className="text-xs text-muted-foreground">{t("workspace")}</p>
           </div>
         </div>
 
@@ -23,9 +26,12 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           <AppNav />
         </div>
 
-        <div className="border-t p-4">
-          <p className="truncate text-sm font-medium">{firmName}</p>
-          <p className="text-xs text-muted-foreground">Demo workspace · no auth yet</p>
+        <div className="space-y-3 border-t p-4">
+          <LocaleSwitcher className="w-full justify-between" />
+          <div>
+            <p className="truncate text-sm font-medium">{firmName}</p>
+            <p className="text-xs text-muted-foreground">{t("demoWorkspace")}</p>
+          </div>
         </div>
       </aside>
 
@@ -40,7 +46,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             </Link>
 
             <div className="ms-auto flex items-center gap-2">
-              <span className="hidden text-xs text-muted-foreground sm:inline">{firmName}</span>
+              <LocaleSwitcher className="hidden sm:inline-flex" />
+              <span className="hidden text-xs text-muted-foreground md:inline">{firmName}</span>
               <span
                 aria-hidden="true"
                 className="flex h-8 w-8 items-center justify-center rounded-full bg-secondary text-xs font-semibold text-secondary-foreground"

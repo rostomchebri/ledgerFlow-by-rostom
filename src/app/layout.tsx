@@ -1,5 +1,9 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Noto_Sans_Arabic } from "next/font/google";
+import { NextIntlClientProvider } from "next-intl";
+import { getLocale, getMessages, getTranslations } from "next-intl/server";
+
+import { localeDirections, type Locale } from "@/i18n/config";
 
 import "./globals.css";
 
@@ -9,22 +13,38 @@ const inter = Inter({
   display: "swap",
 });
 
-export const metadata: Metadata = {
-  title: {
-    default: "LedgerFlow",
-    template: "%s · LedgerFlow",
-  },
-  description:
-    "Accounting productivity workspace for accountants and small firms — clients, documents, invoices and deadlines.",
-};
+const notoArabic = Noto_Sans_Arabic({
+  subsets: ["arabic"],
+  variable: "--font-arabic",
+  display: "swap",
+});
 
-export default function RootLayout({
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("meta");
+
+  return {
+    title: {
+      default: t("title"),
+      template: `%s · ${t("title")}`,
+    },
+    description: t("description"),
+  };
+}
+
+export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const locale = (await getLocale()) as Locale;
+  const messages = await getMessages();
+  const dir = localeDirections[locale] ?? "ltr";
+
   return (
-    // Locale/direction become dynamic in SETUP-05 (FR / AR / EN + RTL).
-    <html lang="fr" dir="ltr" suppressHydrationWarning>
-      <body className={`${inter.variable} min-h-screen font-sans`}>{children}</body>
+    <html lang={locale} dir={dir} suppressHydrationWarning>
+      <body className={`${inter.variable} ${notoArabic.variable} min-h-screen font-sans`}>
+        <NextIntlClientProvider locale={locale} messages={messages}>
+          {children}
+        </NextIntlClientProvider>
+      </body>
     </html>
   );
 }

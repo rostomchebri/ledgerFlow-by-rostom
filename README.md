@@ -43,6 +43,17 @@ pnpm test                                        # unit tests
 
 Mailpit UI: http://localhost:8025 · MinIO console: http://localhost:9001
 
+## Internationalization (FR / AR / EN)
+
+- Locale is stored in the `NEXT_LOCALE` cookie (no URL prefix), resolved in `src/i18n/request.ts`.
+- Message catalogs live in `messages/<locale>.json`; all three files must keep identical keys
+  (enforced by `tests/unit/i18n.test.ts`).
+- Arabic switches the document to `dir="rtl"`; use logical utilities (`ms-*`, `me-*`, `ps-*`, `pe-*`)
+  and `rtl:-scale-x-100` for directional icons.
+- Use `useTranslations()` in client components and `getTranslations()` in server components.
+  The language switcher (`src/components/i18n/locale-switcher.tsx`) updates the cookie and refreshes.
+- Design tokens are CSS variables in `src/app/globals.css`, mapped in `tailwind.config.ts`.
+
 ## Scripts
 
 | Command | Purpose |

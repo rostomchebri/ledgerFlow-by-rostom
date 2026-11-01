@@ -1,0 +1,33 @@
+{
+  "meta": {
+    "title": "LedgerFlow",
+    "description": "Accounting productivity workspace for accountants and small firms — clients, documents, invoices and deadlines in one auditable place."
+  },
+  "common": {
+    "appName": "LedgerFlow",
+    "language": "Language",
+    "soon": "Soon"
+  },
+  "nav": {
+    "mainLabel": "Main navigation",
+    "overview": "Overview",
+    "clients": "Clients",
+    "documents": "Documents",
+    "invoices": "Invoices",
+    "tasks": "Tasks",
+    "reports": "Reports",
+    "settings": "Settings"
+  },
+  "shell": {
+    "workspace": "Accounting workspace",
+    "demoWorkspace": "Demo workspace · no auth yet"
+  },
+  "landing": {
+    "badge": "CLIENT-02 · client management",
+    "title": "LedgerFlow",
+    "description": "Accounting productivity workspace for accountants and small firms — clients, documents, invoices and deadlines in one auditable place.",
+    "openClients": "Open clients",
+    "createClient": "Create a client",
+    "note": "The client workspace is the first production slice. Documents, invoices and tasks follow."
+  }
+}
