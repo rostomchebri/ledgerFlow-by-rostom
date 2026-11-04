@@ -1,14 +1,16 @@
-import { Badge } from "@/components/ui/badge";
+"use client";
+
+import { useTranslations } from "next-intl";
 import type { Client } from "@prisma/client";
 
-import { clientStatusLabel, clientTypeLabel } from "@/lib/clients/format";
+import { Badge } from "@/components/ui/badge";
 
 export function ClientStatusBadge({ status }: { status: Client["status"] }) {
-  return (
-    <Badge variant={status === "ACTIVE" ? "success" : "muted"}>{clientStatusLabel(status)}</Badge>
-  );
+  const t = useTranslations("clients.statuses");
+  return <Badge variant={status === "ACTIVE" ? "success" : "muted"}>{t(status)}</Badge>;
 }
 
 export function ClientTypeBadge({ type }: { type: Client["type"] }) {
-  return <Badge variant="outline">{clientTypeLabel(type)}</Badge>;
+  const t = useTranslations("clients.types");
+  return <Badge variant="outline">{t(type)}</Badge>;
 }

@@ -1,6 +1,8 @@
-// LedgerFlow — Prisma schema.
-// Models are added in SETUP-03 (base) and per-epic tasks (FIRM, CLIENT, DOC, INV, TASK, ...).
-// Do not hard-code tax rates, deadlines or legal rules — use configurable data.
+// LedgerFlow database schema.
+//
+// The User / Session / Account / Verification / RateLimit models are the
+// tables Better Auth expects. Keep the field names in sync with the auth
+// configuration in src/lib/auth.ts.
 
 generator client {
   provider = "prisma-client-js"
@@ -11,9 +13,87 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-/// Minimal firm workspace model.
-/// FIRM-01 owns the full workspace lifecycle; CLIENT-02/03 only need the tenant root
-/// so every client query can be scoped by `firmId` (see FIRM-05).
+model User {
+  id            String    @id @default(cuid())
+  name          String
+  email         String    @unique
+  emailVerified Boolean   @default(false)
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  sessions      Session[]
+  accounts      Account[]
+  memberships   FirmMember[]
+  invitationsSent     Invitation[] @relation("InvitationInvitedBy")
+  invitationsAccepted Invitation[] @relation("InvitationAcceptedBy")
+
+  @@map("users")
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  expiresAt DateTime
+  token     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("sessions")
+}
+
+model Account {
+  id                    String    @id @default(cuid())
+  accountId             String
+  providerId            String
+  userId                String
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  @@unique([providerId, accountId])
+  @@index([userId])
+  @@map("accounts")
+}
+
+model Verification {
+  id         String   @id @default(cuid())
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([identifier])
+  @@map("verifications")
+}
+
+// Better Auth's database-backed rate limiter (rateLimit.storage = "database").
+model RateLimit {
+  id          String @id @default(cuid())
+  key         String @unique
+  count       Int    @default(0)
+  lastRequest BigInt
+
+  @@map("rate_limits")
+}
+
+// ---------------------------------------------------------------------------
+// CLIENT — client management (CLIENT-01/02/03)
+// Minimal tenant root so client queries can always be scoped by `firmId`
+// (FIRM-05). FIRM-01 owns the full workspace lifecycle.
+// ---------------------------------------------------------------------------
+
 model Firm {
   id        String   @id @default(cuid())
   name      String
@@ -21,9 +101,69 @@ model Firm {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  clients Client[]
+  clients     Client[]
+  members     FirmMember[]
+  invitations Invitation[]
 
   @@map("firms")
+}
+
+/// FIRM-02 — a user belongs to a firm with exactly one role.
+/// The role drives the permission policy in src/lib/rbac.ts.
+enum FirmRole {
+  OWNER
+  ADMIN
+  ACCOUNTANT
+  VIEWER
+}
+
+/// FIRM-01 / FIRM-02 — explicit membership replaces the demo firm context.
+/// A user may belong to several firms; queries are always scoped by firmId.
+model FirmMember {
+  id        String   @id @default(cuid())
+  firmId    String
+  userId    String
+  role      FirmRole @default(ACCOUNTANT)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  firm Firm @relation(fields: [firmId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([firmId, userId])
+  @@index([userId])
+  @@map("firm_members")
+}
+
+enum InvitationStatus {
+  PENDING
+  ACCEPTED
+  REVOKED
+  EXPIRED
+}
+
+/// FIRM-03 — e-mail invitations to join a firm.
+/// The raw token is stored hashed? For MVP we store an opaque random token.
+model Invitation {
+  id            String           @id @default(cuid())
+  firmId        String
+  email         String
+  role          FirmRole         @default(ACCOUNTANT)
+  status        InvitationStatus @default(PENDING)
+  token         String           @unique
+  expiresAt     DateTime
+  invitedById   String?
+  acceptedById  String?
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+
+  firm       Firm @relation(fields: [firmId], references: [id], onDelete: Cascade)
+  invitedBy  User? @relation("InvitationInvitedBy", fields: [invitedById], references: [id], onDelete: SetNull)
+  acceptedBy User? @relation("InvitationAcceptedBy", fields: [acceptedById], references: [id], onDelete: SetNull)
+
+  @@index([firmId, status])
+  @@index([email, status])
+  @@map("invitations")
 }
 
 enum ClientType {

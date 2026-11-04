@@ -86,6 +86,12 @@ const config: Config = {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+      boxShadow: {
+        card: "0 1px 2px rgba(15, 23, 42, 0.04), 0 10px 30px -18px rgba(15, 23, 42, 0.18)",
+        "card-hover":
+          "0 2px 4px rgba(15, 23, 42, 0.04), 0 18px 40px -20px rgba(15, 23, 42, 0.24)",
+        popover: "0 18px 50px -16px rgba(15, 23, 42, 0.24)",
+      },
       fontFamily: {
         sans: ["var(--font-sans)", "system-ui", "sans-serif"],
         arabic: ["var(--font-arabic)", "system-ui", "sans-serif"],

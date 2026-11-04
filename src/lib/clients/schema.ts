@@ -2,14 +2,6 @@ import { z } from "zod";
 
 export const CLIENT_TYPES = ["INDIVIDUAL", "COMPANY"] as const;
 export const CLIENT_STATUSES = ["ACTIVE", "ARCHIVED"] as const;
-export const CLIENT_TYPE_LABELS: Record<(typeof CLIENT_TYPES)[number], string> = {
-  INDIVIDUAL: "Individual",
-  COMPANY: "Company",
-};
-export const CLIENT_STATUS_LABELS: Record<(typeof CLIENT_STATUSES)[number], string> = {
-  ACTIVE: "Active",
-  ARCHIVED: "Archived",
-};
 
 /** Empty form fields arrive as `""`; persist them as NULL. */
 function emptyToUndefined(value: unknown) {
@@ -20,11 +12,7 @@ function emptyToUndefined(value: unknown) {
 function optionalText(max: number, label: string) {
   return z.preprocess(
     emptyToUndefined,
-    z
-      .string()
-      .trim()
-      .max(max, `${label} must be at most ${max} characters.`)
-      .optional(),
+    z.string().trim().max(max, `${label} must be at most ${max} characters.`).optional(),
   );
 }
 
@@ -40,45 +28,60 @@ function optionalEmail() {
   );
 }
 
+const countryField = z.preprocess(
+  (value) => {
+    if (value === undefined || value === null) return undefined;
+    if (typeof value !== "string") return value;
+    const trimmed = value.trim();
+    return trimmed === "" ? undefined : trimmed.toUpperCase();
+  },
+  z
+    .string()
+    .regex(/^[A-Z]{2}$/, "Use a two-letter country code (e.g. DZ).")
+    .optional(),
+);
+
+/**
+ * Field definitions shared by create and update.
+ * Defaults are added only on create, so a PATCH never overwrites omitted fields.
+ */
+const clientFields = {
+  type: z.enum(CLIENT_TYPES, { message: "Select a client type." }),
+  name: z
+    .string({ message: "Name is required." })
+    .trim()
+    .min(1, "Name is required.")
+    .max(160, "Name must be at most 160 characters."),
+  contactName: optionalText(120, "Contact name"),
+  email: optionalEmail(),
+  phone: optionalText(40, "Phone"),
+  taxId: optionalText(40, "Tax identification number"),
+  commercialRegister: optionalText(40, "Commercial register"),
+  addressLine1: optionalText(160, "Address line 1"),
+  addressLine2: optionalText(160, "Address line 2"),
+  city: optionalText(80, "City"),
+  postalCode: optionalText(20, "Postal code"),
+  country: countryField,
+  notes: optionalText(2000, "Notes"),
+};
+
 /**
  * Shared client payload schema (API + forms).
  * Legal/tax fields are optional free-form strings: no tax rule is enforced here.
  */
 export const clientInputSchema = z
   .object({
-    type: z.enum(CLIENT_TYPES, { message: "Select a client type." }).default("COMPANY"),
-    name: z
-      .string({ message: "Name is required." })
-      .trim()
-      .min(1, "Name is required.")
-      .max(160, "Name must be at most 160 characters."),
-    contactName: optionalText(120, "Contact name"),
-    email: optionalEmail(),
-    phone: optionalText(40, "Phone"),
-    taxId: optionalText(40, "Tax identification number"),
-    commercialRegister: optionalText(40, "Commercial register"),
-    addressLine1: optionalText(160, "Address line 1"),
-    addressLine2: optionalText(160, "Address line 2"),
-    city: optionalText(80, "City"),
-    postalCode: optionalText(20, "Postal code"),
-    country: z.preprocess(
-      (value) => {
-        if (typeof value !== "string" || value.trim() === "") return "DZ";
-        return value.trim().toUpperCase();
-      },
-      z
-        .string()
-        .regex(/^[A-Z]{2}$/, "Use a two-letter country code (e.g. DZ).")
-        .default("DZ"),
-    ),
-    notes: optionalText(2000, "Notes"),
+    ...clientFields,
+    type: clientFields.type.default("COMPANY"),
+    country: clientFields.country.default("DZ"),
   })
   .strict();
 
 export type ClientInput = z.infer<typeof clientInputSchema>;
 
 /** PATCH accepts any subset of the create payload, but at least one field. */
-export const clientUpdateSchema = clientInputSchema
+export const clientUpdateSchema = z
+  .object(clientFields)
   .partial()
   .strict()
   .refine((value) => Object.keys(value).length > 0, {
@@ -99,7 +102,13 @@ export const CLIENT_STATUS_FILTERS = ["active", "archived", "all"] as const;
 export const CLIENT_TYPE_FILTERS = ["all", "individual", "company"] as const;
 export const CLIENT_PAGE_SIZES = [10, 20, 50] as const;
 
-const pageSizeSchema = z.union([z.literal(10), z.literal(20), z.literal(50)]);
+const pageSizeSchema = z.preprocess(
+  (value) => {
+    if (typeof value === "string" && value.trim() !== "") return Number(value);
+    return value;
+  },
+  z.union([z.literal(10), z.literal(20), z.literal(50)]),
+);
 
 /**
  * Validates list query parameters coming from the URL or the API.

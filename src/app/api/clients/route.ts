@@ -1,16 +1,19 @@
 import { NextResponse } from "next/server";
 
-import { apiError, readJson } from "@/lib/api";
-import { getFirmContext } from "@/lib/firm-context";
+import { ApiError, apiErrorResponse } from "@/lib/api-error";
+import { readJson } from "@/lib/api";
 import { clientInputSchema, fieldErrorsFromZod, parseClientListQuery } from "@/lib/clients/schema";
 import { createClient, listClients } from "@/lib/clients/service";
+import { requireApiFirmContext } from "@/lib/firm-context";
+import { assertPermission } from "@/lib/rbac";
 
 /** GET /api/clients — tenant-scoped, filtered, paginated client list. */
 export async function GET(request: Request) {
-  const { firmId } = getFirmContext();
-  const { searchParams } = new URL(request.url);
-
   try {
+    const { firmId, role } = await requireApiFirmContext();
+    assertPermission(role, "client.read");
+
+    const { searchParams } = new URL(request.url);
     const query = parseClientListQuery(searchParams);
     const result = await listClients(firmId, query);
 
@@ -24,35 +27,32 @@ export async function GET(request: Request) {
       },
     });
   } catch (error) {
-    console.error("[api/clients] list failed", error);
-    return apiError(500, "internal_error", "Unable to load clients.");
+    return apiErrorResponse(error);
   }
 }
 
 /** POST /api/clients — creates a client inside the current firm. */
 export async function POST(request: Request) {
-  const { firmId, userId } = getFirmContext();
-  const body = await readJson(request);
-
-  if (body === undefined) {
-    return apiError(400, "invalid_json", "Request body must be valid JSON.");
-  }
-
-  const parsed = clientInputSchema.safeParse(body);
-  if (!parsed.success) {
-    return apiError(
-      400,
-      "validation_error",
-      "Please correct the highlighted fields.",
-      fieldErrorsFromZod(parsed.error),
-    );
-  }
-
   try {
+    const { firmId, role, userId } = await requireApiFirmContext();
+    assertPermission(role, "client.write");
+
+    const body = await readJson(request);
+
+    if (body === undefined) {
+      throw new ApiError("BAD_REQUEST", "Request body must be valid JSON.");
+    }
+
+    const parsed = clientInputSchema.safeParse(body);
+    if (!parsed.success) {
+      throw new ApiError("BAD_REQUEST", "Please correct the highlighted fields.", {
+        details: { fields: fieldErrorsFromZod(parsed.error) },
+      });
+    }
+
     const client = await createClient(firmId, parsed.data, userId);
     return NextResponse.json({ data: client }, { status: 201 });
   } catch (error) {
-    console.error("[api/clients] create failed", error);
-    return apiError(500, "internal_error", "Unable to create the client.");
+    return apiErrorResponse(error);
   }
 }

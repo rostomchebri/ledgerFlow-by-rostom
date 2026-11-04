@@ -1,15 +1,5 @@
 import type { Client } from "@prisma/client";
 
-import { CLIENT_STATUS_LABELS, CLIENT_TYPE_LABELS } from "./schema";
-
-export function clientTypeLabel(type: Client["type"]): string {
-  return CLIENT_TYPE_LABELS[type];
-}
-
-export function clientStatusLabel(status: Client["status"]): string {
-  return CLIENT_STATUS_LABELS[status];
-}
-
 /** Returns the two-letter monogram shown in the list/detail avatar. */
 export function clientInitials(name: string): string {
   const words = name
@@ -32,20 +22,31 @@ export function formatClientAddress(
     .join(", ");
 }
 
-const DATE_FORMATTER = new Intl.DateTimeFormat("en-GB", {
-  day: "2-digit",
-  month: "short",
-  year: "numeric",
-});
+const DATE_FORMATTERS = new Map<string, Intl.DateTimeFormat>();
 
-export function formatDate(value: Date | string | null | undefined): string {
+function getDateFormatter(locale: string): Intl.DateTimeFormat {
+  const cached = DATE_FORMATTERS.get(locale);
+  if (cached) return cached;
+
+  const formatter = new Intl.DateTimeFormat(locale, {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+  DATE_FORMATTERS.set(locale, formatter);
+  return formatter;
+}
+
+export function formatDate(value: Date | string | null | undefined, locale = "en-GB"): string {
   if (!value) return "—";
   const date = value instanceof Date ? value : new Date(value);
   if (Number.isNaN(date.getTime())) return "—";
-  return DATE_FORMATTER.format(date);
+  return getDateFormatter(locale).format(date);
 }
 
-/** Short, stable human reference derived from the cuid (no extra DB column needed). */
-export function clientReference(id: string): string {
+/** Short, stable human reference. Uses the stored reference when present. */
+export function clientReference(id: string, reference?: string | null): string {
+  const stored = reference?.trim();
+  if (stored) return stored;
   return `CL-${id.slice(-6).toUpperCase()}`;
 }

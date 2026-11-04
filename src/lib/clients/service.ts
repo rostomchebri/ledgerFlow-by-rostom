@@ -1,4 +1,5 @@
 import type { Client } from "@prisma/client";
+import { cache } from "react";
 
 import { db } from "@/lib/db";
 
@@ -53,10 +54,10 @@ export async function listClients(
   };
 }
 
-/** Returns a client only when it belongs to `firmId`. */
-export async function getClient(firmId: string, clientId: string): Promise<Client | null> {
+/** Returns a client only when it belongs to `firmId`. Cached per request (metadata + page). */
+export const getClient = cache(async (firmId: string, clientId: string): Promise<Client | null> => {
   return db.client.findFirst({ where: { id: clientId, firmId } });
-}
+});
 
 export async function getClientOrThrow(firmId: string, clientId: string): Promise<Client> {
   const client = await getClient(firmId, clientId);
