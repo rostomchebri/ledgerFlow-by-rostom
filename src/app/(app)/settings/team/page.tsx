@@ -3,6 +3,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { Mail, ShieldCheck, Users } from "lucide-react";
 
 import { InviteMemberForm } from "@/components/firms/invite-member-form";
+import { MemberActions } from "@/components/firms/member-actions";
 import { RevokeInvitationButton } from "@/components/firms/revoke-invitation-button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -16,7 +17,7 @@ import {
 } from "@/components/ui/table";
 import { listFirmMembers, listPendingInvitations } from "@/lib/firms/invitations";
 import { requireFirmContext } from "@/lib/firm-context";
-import { assignableRoles, can } from "@/lib/rbac";
+import { assignableRoles, can, outranks } from "@/lib/rbac";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("team.meta");
@@ -30,6 +31,7 @@ export default async function TeamPage() {
   const locale = await getLocale();
 
   const canInvite = can(role, "member.invite");
+  const canManageMembers = can(role, "member.manage");
   const roles = assignableRoles(role);
 
   const [members, invitations] = await Promise.all([
@@ -41,17 +43,23 @@ export default async function TeamPage() {
 
   return (
     <div className="mx-auto flex w-full max-w-5xl flex-col gap-6">
-      <div className="space-y-1">
-        <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+      <div className="space-y-2">
+        <p className="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-primary/90">
+          <span
+            aria-hidden="true"
+            className="h-1.5 w-1.5 rounded-full bg-primary shadow-[0_0_0_3px_hsl(var(--primary)/0.14)]"
+          />
           {t("eyebrow")}
         </p>
-        <h1 className="text-2xl font-semibold tracking-tight">{t("title")}</h1>
-        <p className="max-w-2xl text-sm text-muted-foreground">{t("description")}</p>
+        <h1 className="text-gradient text-[30px] font-bold leading-tight tracking-[-0.04em] sm:text-[34px]">
+          {t("title")}
+        </h1>
+        <p className="max-w-2xl text-sm leading-6 text-muted-foreground">{t("description")}</p>
       </div>
 
       <Card>
         <CardHeader className="flex-row items-center gap-3 space-y-0">
-          <span className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">
+          <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-primary/15 bg-primary/10 text-primary">
             <Users aria-hidden="true" className="h-5 w-5" />
           </span>
           <div className="space-y-1">
@@ -60,10 +68,10 @@ export default async function TeamPage() {
           </div>
         </CardHeader>
         <CardContent>
-          <div className="overflow-hidden rounded-lg border">
+          <div className="overflow-hidden rounded-xl border border-[hsl(var(--border)/0.55)] bg-[hsl(var(--card)/0.22)]">
             <Table>
               <TableHeader>
-                <TableRow className="bg-muted/40 hover:bg-muted/40">
+                <TableRow className="bg-[hsl(var(--card)/0.32)] hover:bg-[hsl(var(--card)/0.32)]">
                   <TableHead className="ps-4">{t("columns.member")}</TableHead>
                   <TableHead>{t("columns.role")}</TableHead>
                   <TableHead className="hidden sm:table-cell">{t("columns.joined")}</TableHead>
@@ -82,9 +90,20 @@ export default async function TeamPage() {
                       <p className="text-xs text-muted-foreground">{member.user.email}</p>
                     </TableCell>
                     <TableCell>
-                      <Badge variant={member.role === "OWNER" ? "success" : "outline"}>
-                        {tRoles(member.role)}
-                      </Badge>
+                      {canManageMembers &&
+                      member.user.id !== userId &&
+                      member.role !== "OWNER" &&
+                      outranks(role, member.role) ? (
+                        <MemberActions
+                          memberId={member.id}
+                          role={member.role}
+                          roles={roles}
+                        />
+                      ) : (
+                        <Badge variant={member.role === "OWNER" ? "success" : "outline"}>
+                          {tRoles(member.role)}
+                        </Badge>
+                      )}
                     </TableCell>
                     <TableCell className="hidden whitespace-nowrap text-muted-foreground sm:table-cell">
                       {dateFormatter.format(member.createdAt)}
@@ -100,7 +119,7 @@ export default async function TeamPage() {
       {canInvite ? (
         <Card>
           <CardHeader className="flex-row items-center gap-3 space-y-0">
-            <span className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">
+            <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-primary/15 bg-primary/10 text-primary">
               <Mail aria-hidden="true" className="h-5 w-5" />
             </span>
             <div className="space-y-1">
@@ -124,7 +143,7 @@ export default async function TeamPage() {
                   {invitations.map((invitation) => (
                     <li
                       key={invitation.id}
-                      className="flex flex-col gap-1 rounded-lg border bg-muted/20 px-3 py-2 text-sm sm:flex-row sm:items-center sm:justify-between"
+                      className="glass-soft flex flex-col gap-1 rounded-xl px-3 py-2.5 text-sm sm:flex-row sm:items-center sm:justify-between"
                     >
                       <span className="truncate font-medium">{invitation.email}</span>
                       <span className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">

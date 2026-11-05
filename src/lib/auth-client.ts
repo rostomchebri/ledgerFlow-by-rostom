@@ -1,5 +1,6 @@
 "use client";
 
+import { emailOTPClient } from "better-auth/client/plugins";
 import { createAuthClient } from "better-auth/react";
 
 /**
@@ -9,6 +10,7 @@ import { createAuthClient } from "better-auth/react";
  * variable is needed in the browser bundle.
  */
 export const authClient = createAuthClient({
+  plugins: [emailOTPClient()],
   fetchOptions: {
     onError: async (context) => {
       if (context.response.status !== 429) return;

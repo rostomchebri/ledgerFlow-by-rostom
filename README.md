@@ -2,7 +2,7 @@
 
 A web application for accountants and small accounting firms to manage **clients, documents, invoices, tasks and deadlines** in one auditable, multi-user workspace. Initial market: **Algeria**; architecture prepared for other countries.
 
-> **Status: implementation in progress.** Foundation, authentication, firm workspace/RBAC/invitations, client management, the storage abstraction and the background-job infrastructure are implemented. Documents, invoices, tasks, notifications and reports are next.
+> **Status: MVP implemented.** Authentication, firm workspace/RBAC/invitations, clients, documents, invoices, transactions, tasks and reminders, notifications, reports, the audit trail, background jobs, and the production deployment tooling are in place. Remaining work is tracked in [docs/tasks/README.md](docs/tasks/README.md).
 
 ## What the MVP does
 
@@ -30,7 +30,7 @@ docs/           product & technical documentation
 
 ## Local setup
 
-Prerequisites: Node.js 24 (see `.nvmrc`), pnpm 11, Docker.
+Prerequisites: Node.js 24 (see `.nvmrc`), pnpm 12 (pinned in `package.json`), Docker.
 
 ```bash
 pnpm install
@@ -41,6 +41,7 @@ pnpm db:seed                                     # optional demo account
 pnpm dev                                         # http://localhost:3000
 pnpm jobs:worker                                 # separate terminal: background jobs
 pnpm test                                        # unit tests
+pnpm test:e2e                                    # Playwright (needs a seeded DB)
 ```
 
 Mailpit UI: http://localhost:8025 · MinIO console: http://localhost:9001
@@ -63,9 +64,10 @@ Authentication is handled by [Better Auth](https://www.better-auth.com/) with th
 - **AUTH-01 — registration and sign-in:** email + password, with a 12–128 character
   policy (letter + number, small deny-list). E-mail verification is required before
   the first sign-in.
-- **AUTH-02 — verification and password reset:** one-hour single-use links. Reset
-  tokens are invalidated after use and every existing session is revoked when the
-  password changes.
+- **AUTH-02 — verification and password reset:** e-mail verification uses a
+  10-minute, single-use 6-digit code (stored hashed). Password reset uses one-hour
+  single-use links; reset tokens are invalidated after use and every existing
+  session is revoked when the password changes.
 - **AUTH-03 — sessions and route protection:** `/dashboard`, `/clients`, `/settings`,
   `/onboarding` and `/invitations` require a session. `/login`, `/register` and
   `/forgot-password` are guest-only. Middleware performs an optimistic cookie check;
@@ -75,11 +77,19 @@ Authentication is handled by [Better Auth](https://www.better-auth.com/) with th
   sign-in, sign-up, verification and password-reset endpoints. Policy values live in
   `src/lib/rate-limit-policy.ts`.
 
-### Local e-mail
+### E-mail delivery
+
+`EMAIL_PROVIDER=auto` (the default) uses **Resend** when `RESEND_API_KEY` is set,
+otherwise **SMTP**. For Resend, verify the sender/domain in the Resend dashboard
+and set `EMAIL_FROM` to that address. Resend's `onboarding@resend.dev` test sender
+only delivers to the Resend account owner's address; verify a domain before
+sending to other recipients. For SMTP, set `SMTP_HOST`, `SMTP_PORT`,
+`SMTP_USER`, `SMTP_PASSWORD`, and `EMAIL_FROM` (or `SMTP_FROM`).
 
 With `docker compose -f docker/compose.dev.yml up -d`, Mailpit captures every
-verification and reset e-mail at <http://localhost:8025>. If `SMTP_HOST` is unset,
-development builds log the message and link to the terminal instead.
+verification code and reset e-mail at <http://localhost:8025>. If neither Resend
+nor SMTP is configured, development builds print the message (including the
+6-digit code) to the terminal instead.
 
 ### Demo account
 
@@ -97,7 +107,8 @@ the default password.
 
 Generate a secret with `openssl rand -base64 32` and set `BETTER_AUTH_SECRET` in
 production. `BETTER_AUTH_URL` and `NEXT_PUBLIC_APP_URL` must match the public origin
-so verification and reset links point to the right host.
+so verification and reset e-mails point to the right host. Configure either
+`RESEND_API_KEY` + `EMAIL_FROM` or the `SMTP_*` settings for real delivery.
 
 ## Firm workspace, roles and team (FIRM-01 → FIRM-05)
 
@@ -126,33 +137,110 @@ detail pages. `DELETE /api/clients/:id` archives a client (soft delete) and
 list but keep all their data; the detail page exposes archive/restore actions to
 roles with `client.archive`.
 
-## Documents and background jobs (DOC-01, NOTIF-02)
+## Documents (DOC-01 → DOC-08)
 
-- **DOC-01 — storage abstraction:** `src/lib/storage` defines a `StorageAdapter`
-  with an S3-compatible implementation (AWS S3, MinIO, R2) and an in-memory one for
-  tests. Object keys are generated and sanitised in `keys.ts` — user paths are never
-  used directly. Storage is configured with the `S3_*` variables and stays optional
-  until document features (DOC-03/05) use it.
-- **NOTIF-02 — pg-boss:** the web process only enqueues jobs
-  (`src/lib/jobs/boss.ts`); a separate worker process (`pnpm jobs:worker`) owns
-  supervision, scheduling and execution. Queues isolate their tables in the
-  `JOBS_SCHEMA` schema (default `pgboss`). The e-mail reminder handler arrives with
-  NOTIF-03.
+- **Storage abstraction (DOC-01):** `src/lib/storage` defines a `StorageAdapter`
+  with an S3-compatible implementation (AWS S3, MinIO, R2) and an in-memory one
+  for tests. Object keys are generated and sanitised in `keys.ts` — user paths
+  are never used directly.
+- **Upload and library (DOC-03/04):** `/documents` lists, filters and searches
+  uploaded files; `/documents/new` uploads with a 25 MB cap, an accounting MIME
+  allow-list, an optional client, category and tags.
+- **Access (DOC-05/06):** downloads are proxied through a tenant-scoped route;
+  delete is a soft delete (`deletedAt`) with a restore endpoint, and the bucket
+  stays private.
+
+## Invoices and transactions (INV-01 → INV-05, FIN-01)
+
+- **Invoices:** `/invoices` is the register with search, status filters and
+  summary totals; `/invoices/new` and `/invoices/:id/edit` manage an invoice and
+  its line items. Status transitions are enforced server-side
+  (`DRAFT → SENT → PAID/OVERDUE`) and can also be applied in bulk.
+- **Transactions:** `/transactions` records income and expenses with category,
+  client, status and date filters, and supports create/edit/delete.
+- **CSV export:** `/api/reports/invoices/export`, `/api/reports/transactions/export`,
+  `/api/reports/tasks/export` and `/api/reports/clients/export` stream
+  tenant-scoped CSV files.
+
+## Tasks, templates and reminders (TASK-01 → TASK-05, NOTIF-03)
+
+- **Tasks:** list, board and calendar views at `/tasks`, plus create, detail,
+  comments and checklist items. Templates at `/tasks/templates` create a task in
+  one click.
+- **Reminders (NOTIF-03):** the worker schedules a configurable sweep
+  (`REMINDER_CRON`, `REMINDER_TIMEZONE`). Due/overdue tasks create an idempotent
+  in-app notification and enqueue one e-mail per task; the handler re-checks the
+  task before sending.
+
+## Notifications, reports and audit (NOTIF-01, AUDIT-01, REPORT-01)
+
+- **Notification center:** `/notifications` and the top-bar bell read the
+  tenant-scoped inbox; items can be opened and marked read.
+- **Reports:** `/reports` is the finance overview; `/reports/invoices` is the
+  invoice register.
+- **Audit trail:** `/settings/audit` lists append-only audit entries for client,
+  invoice, document, task, member and transaction actions. Audit writes are
+  best-effort so a logging failure never rolls back the business action.
+
+## Background jobs (NOTIF-02)
+
+The web process only enqueues jobs (`src/lib/jobs/boss.ts`); a separate worker
+process (`pnpm jobs:worker`) owns supervision, scheduling and execution. Queues
+isolate their tables in the `JOBS_SCHEMA` schema (default `pgboss`). Production
+runs the worker from the `worker` Docker target.
+
+## End-to-end tests (OPS-04)
+
+Playwright specs live in `tests/e2e`. They require a running PostgreSQL instance
+with migrations applied and the demo data seeded:
+
+```bash
+pnpm db:deploy        # or pnpm db:migrate in development
+pnpm db:seed          # creates the verified demo account used by auth.setup.ts
+pnpm exec playwright install   # all local engines; CI installs chromium only
+pnpm test:e2e
+```
+
+The config builds and starts a production server (`pnpm build && pnpm start`)
+before running the suite, so route content is ready immediately and the tests
+exercise the same server used in production. `auth.setup.ts` signs in once and
+stores the session in `tests/e2e/.auth/user.json` (git-ignored); browser projects
+reuse it. Specs set `NEXT_LOCALE=en` for stable selectors and create uniquely
+named data on every run. CI uses Chromium only and provisions PostgreSQL as a
+service.
+
+## Production deployment and operations (OPS-01 → OPS-05)
+
+- [Deployment guide](docs/ops/DEPLOYMENT.md) — Docker targets (`runner`,
+  `worker`, `migrator`), Compose topology, upgrades and rollback.
+- [Backups and restore drill](docs/ops/BACKUPS.md) — `scripts/backup.sh`,
+  `scripts/restore.sh`, retention and RTO/RPO targets.
+- [Monitoring](docs/ops/MONITORING.md) — `/api/health`, structured log events,
+  queue queries and alert thresholds.
+- [Security and privacy](docs/ops/SECURITY_PRIVACY.md) — threat model, controls,
+  data inventory and launch checklist.
+
+Production secrets are generated with `openssl rand -base64 32`; the app refuses
+to start with the development `BETTER_AUTH_SECRET`. TLS/HSTS terminate at the
+reverse proxy, and PostgreSQL/MinIO must never be exposed publicly.
 
 ## Scripts
 
-| Command                        | Purpose                  |
-| ------------------------------ | ------------------------ |
-| `pnpm dev`                     | Start dev server         |
-| `pnpm build` / `pnpm start`    | Production build / serve |
-| `pnpm lint` / `pnpm typecheck` | Static checks            |
-| `pnpm test`                    | Vitest unit tests        |
-| `pnpm test:e2e`                | Playwright end-to-end    |
-| `pnpm db:generate`             | Regenerate Prisma client |
-| `pnpm db:migrate`              | Prisma migrate (dev)     |
-| `pnpm db:seed`                 | Seed the demo account    |
-| `pnpm db:studio`               | Prisma Studio            |
-| `pnpm jobs:worker`             | Run the pg-boss worker   |
+| Command                        | Purpose                           |
+| ------------------------------ | --------------------------------- |
+| `pnpm dev`                     | Start dev server                  |
+| `pnpm build` / `pnpm start`    | Production build / serve          |
+| `pnpm lint` / `pnpm typecheck` | Static checks                     |
+| `pnpm test`                    | Vitest unit tests                 |
+| `pnpm test:e2e`                | Playwright end-to-end (seeded DB) |
+| `pnpm db:generate`             | Regenerate Prisma client          |
+| `pnpm db:migrate`              | Prisma migrate (dev)              |
+| `pnpm db:deploy`               | Apply migrations (prod)           |
+| `pnpm db:seed`                 | Seed the demo account             |
+| `pnpm db:studio`               | Prisma Studio                     |
+| `pnpm jobs:worker`             | Run the pg-boss worker            |
+| `./scripts/backup.sh`          | PostgreSQL backup                 |
+| `./scripts/restore.sh`         | Restore drill (guarded)           |
 
 ## Task tracking
 

@@ -18,6 +18,14 @@ describe("rate-limit policy", () => {
     expect(getRateLimitRule("/send-verification-email")).toEqual({ window: 3600, max: 3 });
   });
 
+  it("limits verification-code delivery and attempts", () => {
+    expect(getRateLimitRule("/email-otp/send-verification-otp")).toEqual({
+      window: 3600,
+      max: 5,
+    });
+    expect(getRateLimitRule("/email-otp/verify-email")).toEqual({ window: 900, max: 10 });
+  });
+
   it("falls back to the default for unknown paths", () => {
     expect(getRateLimitRule("/not-an-auth-route")).toEqual(RATE_LIMIT_DEFAULT);
   });

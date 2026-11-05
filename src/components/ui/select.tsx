@@ -12,7 +12,7 @@ export function Select({ className, children, ...props }: React.ComponentProps<"
     <div className="relative">
       <select
         className={cn(
-          "flex h-9 w-full appearance-none rounded-lg border border-input bg-background px-3 py-1 pe-8 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+          "glass-field flex h-10 w-full cursor-pointer appearance-none rounded-xl px-3.5 py-1 pe-9 text-sm text-foreground outline-none disabled:cursor-not-allowed disabled:opacity-50 [&>option]:bg-popover [&>option]:text-popover-foreground",
           className,
         )}
         {...props}
@@ -21,7 +21,7 @@ export function Select({ className, children, ...props }: React.ComponentProps<"
       </select>
       <ChevronDown
         aria-hidden="true"
-        className="pointer-events-none absolute end-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+        className="pointer-events-none absolute end-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
       />
     </div>
   );

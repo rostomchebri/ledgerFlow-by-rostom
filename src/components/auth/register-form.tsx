@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, Loader2, Lock, Mail, MailCheck, User } from "lucide-react";
+import { ArrowRight, Loader2, Lock, Mail, User } from "lucide-react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
@@ -30,7 +30,6 @@ export function RegisterForm() {
   const [fieldErrors, setFieldErrors] = useState<Record<string, string | undefined>>({});
   const [formError, setFormError] = useState<string | undefined>();
   const [createdEmail, setCreatedEmail] = useState<string | null>(null);
-  const [resendState, setResendState] = useState<"idle" | "sending" | "sent">("idle");
   const [isPending, setIsPending] = useState(false);
 
   function validate() {
@@ -78,21 +77,6 @@ export function RegisterForm() {
     setCreatedEmail(email.trim().toLowerCase());
   }
 
-  async function handleResend() {
-    if (!createdEmail) return;
-
-    setResendState("sending");
-
-    const { error } = await authClient.sendVerificationEmail({
-      email: createdEmail,
-      callbackURL: "/verify-email?verified=1",
-    });
-
-    setResendState(error ? "idle" : "sent");
-
-    if (error) setFormError(authErrorKey(error));
-  }
-
   if (createdEmail) {
     return (
       <div className="space-y-5">
@@ -101,27 +85,12 @@ export function RegisterForm() {
           <p className="mt-1">{t("successBody", { email: createdEmail })}</p>
         </Alert>
 
-        {resendState === "sent" ? (
-          <p className="flex items-center gap-2 text-sm text-muted-foreground">
-            <MailCheck aria-hidden="true" className="h-4 w-4" />
-            {t("resendSuccess")}
-          </p>
-        ) : (
-          <Button
-            type="button"
-            variant="outline"
-            className="w-full"
-            onClick={handleResend}
-            disabled={resendState === "sending"}
-          >
-            {resendState === "sending" ? (
-              <Loader2 aria-hidden="true" className="h-4 w-4 animate-spin" />
-            ) : (
-              <Mail aria-hidden="true" className="h-4 w-4" />
-            )}
-            {t("resendVerification")}
-          </Button>
-        )}
+        <Link
+          href={`/verify-email?email=${encodeURIComponent(createdEmail)}`}
+          className={buttonVariants({ className: "w-full" })}
+        >
+          {t("enterCode")}
+        </Link>
 
         <Link href="/login" className={buttonVariants({ variant: "outline", className: "w-full" })}>
           {t("backToLogin")}

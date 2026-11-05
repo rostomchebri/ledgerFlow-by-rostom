@@ -28,6 +28,9 @@ export const RATE_LIMIT_RULES = {
   /** Verification-email bombing and token probing. */
   "/send-verification-email": { window: 60 * 60, max: 3 },
   "/verify-email": { window: 15 * 60, max: 10 },
+  /** Six-digit code delivery and brute-force protection. */
+  "/email-otp/send-verification-otp": { window: 60 * 60, max: 5 },
+  "/email-otp/verify-email": { window: 15 * 60, max: 10 },
   /** Authenticated credential changes. */
   "/change-password": { window: 60 * 60, max: 5 },
   /** Session polling from many tabs should not trip the global limit. */

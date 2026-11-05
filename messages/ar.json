@@ -7,7 +7,8 @@
     "appName": "LedgerFlow",
     "language": "اللغة",
     "soon": "قريبًا",
-    "signOut": "تسجيل الخروج"
+    "signOut": "تسجيل الخروج",
+    "viewAll": "عرض الكل"
   },
   "roles": {
     "OWNER": "مالك",
@@ -23,12 +24,38 @@
     "invoices": "الفواتير",
     "tasks": "المهام",
     "reports": "التقارير",
-    "settings": "الإعدادات"
+    "settings": "الإعدادات",
+    "dashboard": "لوحة التحكم",
+    "transactions": "المعاملات",
+    "notifications": "الإشعارات"
   },
   "shell": {
     "workspace": "مساحة عمل محاسبية",
     "signedInAs": "مسجّل الدخول باسم",
-    "demoWorkspace": "مساحة تجريبية · بدون مصادقة بعد"
+    "demoWorkspace": "مساحة تجريبية · بدون مصادقة بعد",
+    "searchPlaceholder": "ابحث عن العملاء أو الفواتير…",
+    "notifications": "الإشعارات",
+    "notificationsTitle": "الإشعارات",
+    "notificationsUnread": "{count} غير مقروء",
+    "markAllRead": "تحديد الكل كمقروء",
+    "notificationsHint": "لا جديد. ستظهر الأنشطة الجديدة هنا.",
+    "notificationInvoiceTitle": "تم دفع الفاتورة",
+    "notificationInvoiceBody": "دفعت أطلس للاستشارات الفاتورة INV-2026-018.",
+    "notificationInvoiceTime": "قبل 12 دقيقة",
+    "notificationTaskTitle": "موعد نهائي يقترب",
+    "notificationTaskBody": "الإقرار الضريبي لنور للتجارة مستحق خلال يومين.",
+    "notificationTaskTime": "قبل ساعة",
+    "profileMenu": "قائمة الحساب",
+    "openMenu": "فتح القائمة",
+    "closeMenu": "إغلاق القائمة",
+    "collapseSidebar": "طي الشريط الجانبي",
+    "expandSidebar": "توسيع الشريط الجانبي",
+    "themeLight": "التبديل إلى الوضع الفاتح",
+    "themeDark": "التبديل إلى الوضع الداكن",
+    "supportTitle": "تحتاج إلى مساعدة؟",
+    "supportBody": "فريقنا هنا لمساعدتك على الاستفادة القصوى من LedgerFlow.",
+    "supportCta": "تواصل مع الدعم",
+    "role": "الدور"
   },
   "landing": {
     "badge": "CLIENT-02 · إدارة العملاء",
@@ -40,8 +67,8 @@
   },
   "dashboard": {
     "title": "لوحة التحكم",
-    "welcome": "مرحبًا، {name}",
-    "subtitle": "مساحة عمل LedgerFlow الخاصة بك.",
+    "welcome": "مرحباً بعودتك، {name}",
+    "subtitle": "هذه نظرة على أداء مكتبك. تابع الإيرادات واضبط المصروفات وأبقِ كل فاتورة تحت السيطرة.",
     "openClients": "العملاء",
     "statusLabel": "حالة الحساب",
     "verified": "مُتحقَّق",
@@ -54,7 +81,85 @@
     "securityItemRateLimit": "تحديد معدل محاولات الدخول",
     "securityItemSession": "جلسات موقّعة قابلة للإلغاء",
     "quickTitle": "إجراءات سريعة",
-    "quickBody": "انتقل إلى الوحدات المتاحة اليوم."
+    "quickBody": "انتقل إلى الوحدات المتاحة اليوم.",
+    "eyebrow": "نظرة مالية",
+    "dateRange": "الفترة",
+    "ranges": {
+      "month": "هذا الشهر",
+      "lastMonth": "الشهر الماضي",
+      "year": "هذه السنة"
+    },
+    "kpi": {
+      "revenue": "إجمالي الإيرادات",
+      "expenses": "إجمالي المصروفات",
+      "net": "صافي الربح",
+      "invoices": "إجمالي الفواتير",
+      "vsPrevious": "مقارنة بالفترة السابقة"
+    },
+    "chart": {
+      "title": "النظرة المالية",
+      "description": "الإيرادات والمصروفات خلال الفترة المحددة.",
+      "revenue": "الإيرادات",
+      "expenses": "المصروفات",
+      "empty": "لا يوجد نشاط في هذه الفترة.",
+      "aria": "رسم بياني للإيرادات والمصروفات"
+    },
+    "expenses": {
+      "title": "توزيع المصروفات",
+      "description": "إلى أين ذهبت أموالك في هذه الفترة.",
+      "total": "إجمالي المصروفات",
+      "empty": "لا توجد مصروفات مسجلة في هذه الفترة."
+    },
+    "recent": {
+      "title": "أحدث المعاملات",
+      "description": "آخر الحركات المالية في مكتبك.",
+      "viewAll": "عرض الكل",
+      "date": "التاريخ",
+      "descriptionLabel": "الوصف",
+      "client": "العميل",
+      "category": "الفئة",
+      "amount": "المبلغ",
+      "status": "الحالة",
+      "empty": "لا توجد معاملات بعد."
+    },
+    "invoices": {
+      "title": "الفواتير",
+      "description": "التحصيل النقدي في لمحة.",
+      "viewAll": "كل الفواتير",
+      "outstanding": "قيد التحصيل",
+      "overdue": "متأخرة",
+      "paid": "مدفوعة",
+      "draft": "مسودات",
+      "sent": "مرسلة",
+      "count": "{count} فاتورة"
+    },
+    "topClients": {
+      "title": "أفضل العملاء",
+      "description": "الإيرادات حسب العميل في هذه الفترة.",
+      "empty": "لا توجد إيرادات عملاء بعد.",
+      "revenueLabel": "الإيرادات"
+    },
+    "quick": {
+      "title": "إجراءات سريعة",
+      "description": "المهام الشائعة على بُعد نقرة واحدة.",
+      "newTransaction": "إضافة معاملة",
+      "newInvoice": "فاتورة جديدة",
+      "addClient": "إضافة عميل",
+      "viewReports": "عرض التقارير"
+    },
+    "categories": {
+      "SALES": "المبيعات",
+      "SERVICES": "الخدمات",
+      "OPERATIONS": "العمليات",
+      "MARKETING": "التسويق",
+      "SOFTWARE": "البرمجيات",
+      "PAYROLL": "الرواتب",
+      "OTHER": "أخرى"
+    },
+    "statuses": {
+      "CLEARED": "مسوّاة",
+      "PENDING": "قيد الانتظار"
+    }
   },
   "onboarding": {
     "meta": {
@@ -92,9 +197,10 @@
       "verifiedNotice": "تم التحقق من بريدك الإلكتروني. يمكنك تسجيل الدخول.",
       "resetNotice": "تم تحديث كلمة المرور. سجّل الدخول بالكلمة الجديدة.",
       "registeredNotice": "تم إنشاء الحساب. تحقّق من بريدك لتفعيله.",
-      "unverifiedBody": "لم يتم التحقق من بريدك بعد. أعد إرسال رابط التحقق.",
-      "resendSuccess": "تم إرسال رابط التحقق.",
-      "resendVerification": "إعادة إرسال الرابط",
+      "unverifiedBody": "لم يتم التحقق من بريدك بعد. أدخل الرمز الذي أرسلناه أو اطلب رمزًا جديدًا.",
+      "resendSuccess": "تم إرسال رمز تحقق جديد.",
+      "resendVerification": "إعادة إرسال الرمز",
+      "enterCode": "إدخال رمز التحقق",
       "emailLabel": "البريد الإلكتروني",
       "emailPlaceholder": "you@firm.dz",
       "passwordLabel": "كلمة المرور",
@@ -124,9 +230,8 @@
       "hasAccount": "لديك حساب بالفعل؟",
       "loginLink": "تسجيل الدخول",
       "successTitle": "تحقّق من بريدك",
-      "successBody": "أرسلنا رابط تحقق إلى {email}.",
-      "resendSuccess": "تم إرسال رابط التحقق.",
-      "resendVerification": "إعادة إرسال الرابط",
+      "successBody": "أرسلنا رمز تحقق مكوّنًا من 6 أرقام إلى {email}.",
+      "enterCode": "إدخال رمز التحقق",
       "backToLogin": "العودة لتسجيل الدخول"
     },
     "forgot": {
@@ -158,20 +263,24 @@
       "requestNew": "طلب رابط جديد"
     },
     "verify": {
-      "title": "التحقق من البريد الإلكتروني",
-      "subtitle": "أكّد عنوانك لتفعيل حسابك.",
+      "title": "أدخل رمز التحقق",
+      "subtitle": "أرسلنا رمزًا مكوّنًا من 6 أرقام إلى بريدك الإلكتروني.",
       "successTitle": "تم التحقق من البريد",
       "successBody": "حسابك نشط. مرحبًا بك في LedgerFlow.",
-      "errorTitle": "رابط غير صالح أو منتهي",
-      "errorBody": "اطلب رابط تحقق جديدًا أدناه.",
+      "errorTitle": "مشكلة في التحقق",
+      "errorBody": "أدخل الرمز المكوّن من 6 أرقام من البريد، أو اطلب رمزًا جديدًا.",
       "goToDashboard": "الانتقال إلى لوحة التحكم",
-      "resendTitle": "إعادة إرسال التحقق",
-      "resendBody": "أدخل بريدك الإلكتروني لاستلام رابط جديد.",
-      "resendSuccess": "تم إرسال الرابط. تحقّق من بريدك.",
+      "codeLabel": "رمز التحقق",
+      "codePlaceholder": "123456",
+      "codeHint": "أدخل الرمز المكوّن من 6 أرقام من البريد. تنتهي صلاحيته خلال 10 دقائق.",
+      "verifySubmit": "التحقق من البريد",
+      "verifying": "جارٍ التحقق…",
+      "resendBody": "لم تستلم الرمز؟ تحقّق من مجلد الرسائل غير المرغوب فيها أو اطلب رمزًا جديدًا.",
+      "resendSuccess": "تم إرسال رمز جديد. تحقّق من بريدك.",
+      "resendCode": "إرسال رمز جديد",
+      "resending": "جارٍ الإرسال…",
       "emailLabel": "البريد الإلكتروني",
       "emailPlaceholder": "you@firm.dz",
-      "submitting": "جارٍ الإرسال…",
-      "submit": "إرسال الرابط",
       "backToLogin": "العودة لتسجيل الدخول"
     },
     "errors": {
@@ -181,10 +290,15 @@
       "invalidCredentials": "البريد أو كلمة المرور غير صحيحة.",
       "invalidRequest": "طلب غير صالح. تحقّق من الحقول.",
       "forbidden": "تم رفض الوصول.",
+      "invalidOrigin": "هذا العنوان غير مسموح له بتسجيل الدخول. افتح التطبيق على http://localhost:3000 أو أضف هذا العنوان إلى BETTER_AUTH_TRUSTED_ORIGINS.",
       "invalidEmail": "بريد إلكتروني غير صالح.",
       "required": "هذا الحقل مطلوب.",
       "nameTooShort": "يجب أن يحتوي الاسم على حرفين على الأقل.",
-      "weakPassword": "كلمة المرور ضعيفة جدًا."
+      "weakPassword": "كلمة المرور ضعيفة جدًا.",
+      "invalidCode": "الرمز غير صحيح.",
+      "codeExpired": "انتهت صلاحية هذا الرمز. اطلب رمزًا جديدًا.",
+      "tooManyAttempts": "محاولات كثيرة جدًا. اطلب رمزًا جديدًا.",
+      "codeFormat": "أدخل الرمز المكوّن من 6 أرقام من البريد."
     },
     "passwordIssues": {
       "tooShort": "12 حرفًا على الأقل",
@@ -228,7 +342,14 @@
       "clearFilters": "مسح الفلاتر",
       "emptyTitle": "لا يوجد عملاء بعد",
       "emptyDescription": "أنشئ أول عميل لتبدأ تنظيم الوثائق والفواتير والمواعيد حوله.",
-      "createClient": "إنشاء عميل"
+      "createClient": "إنشاء عميل",
+      "stats": {
+        "total": "إجمالي العملاء",
+        "active": "العملاء النشطون",
+        "companies": "الشركات",
+        "individuals": "الأفراد"
+      },
+      "export": "تصدير CSV"
     },
     "filters": {
       "search": "بحث",
@@ -422,6 +543,731 @@
       "mismatchBody": "أُرسلت هذه الدعوة إلى {email}. سجّل الدخول بهذا البريد لقبولها.",
       "signedInAs": "أنت مسجّل الدخول باسم {email}.",
       "wrongAccount": "مسجّل الدخول باسم {email}. بدّل الحساب لقبول دعوة أخرى."
+    },
+    "member": {
+      "roleLabel": "دور العضو",
+      "remove": "إزالة العضو",
+      "removeConfirm": "إزالة هذا العضو من مساحة العمل؟",
+      "failed": "تعذر تحديث العضو."
+    }
+  },
+  "transactions": {
+    "meta": {
+      "title": "المعاملات",
+      "description": "كل الإيرادات والمصروفات المسجلة لمكتبك."
+    },
+    "eyebrow": "الحركات المالية",
+    "title": "المعاملات",
+    "description": "كل الإيرادات والمصروفات المسجلة لمكتبك في سجل واحد قابل للتدقيق.",
+    "summary": {
+      "income": "الإيرادات",
+      "expenses": "المصروفات",
+      "net": "الرصيد الصافي",
+      "count": "المعاملات"
+    },
+    "filters": {
+      "search": "بحث",
+      "searchPlaceholder": "الوصف أو المرجع أو العميل…",
+      "type": "النوع",
+      "allTypes": "كل الأنواع",
+      "income": "إيراد",
+      "expense": "مصروف",
+      "category": "الفئة",
+      "allCategories": "كل الفئات",
+      "apply": "تطبيق",
+      "clear": "مسح"
+    },
+    "categories": {
+      "SALES": "المبيعات",
+      "SERVICES": "الخدمات",
+      "OPERATIONS": "العمليات",
+      "MARKETING": "التسويق",
+      "SOFTWARE": "البرمجيات",
+      "PAYROLL": "الرواتب",
+      "OTHER": "أخرى"
+    },
+    "statuses": {
+      "CLEARED": "مسوّاة",
+      "PENDING": "قيد الانتظار"
+    },
+    "table": {
+      "date": "التاريخ",
+      "description": "الوصف",
+      "client": "العميل",
+      "category": "الفئة",
+      "status": "الحالة",
+      "amount": "المبلغ",
+      "noClient": "—",
+      "emptyTitle": "لا توجد معاملات",
+      "emptyBody": "غيّر عوامل التصفية أو سجّل أول معاملة لك.",
+      "actions": "إجراءات",
+      "edit": "تعديل المعاملة"
+    },
+    "pagination": {
+      "showing": "{from}–{to} من {total}",
+      "previous": "السابق",
+      "next": "التالي"
+    },
+    "export": "تصدير CSV",
+    "new": "معاملة جديدة",
+    "types": {
+      "INCOME": "إيراد",
+      "EXPENSE": "مصروف"
+    },
+    "form": {
+      "detailsTitle": "تفاصيل المعاملة",
+      "detailsDescription": "سجّل المبلغ والتاريخ ومصدره.",
+      "type": "النوع",
+      "category": "الفئة",
+      "description": "الوصف",
+      "amount": "المبلغ",
+      "currency": "العملة",
+      "date": "التاريخ",
+      "status": "الحالة",
+      "client": "العميل",
+      "noClient": "بدون عميل",
+      "reference": "المرجع",
+      "cancel": "إلغاء",
+      "save": "حفظ المعاملة",
+      "saving": "جارٍ الحفظ…",
+      "fixErrors": "صحح الحقول المميزة ثم حاول مجدداً.",
+      "saveFailed": "تعذر حفظ المعاملة.",
+      "networkError": "خطأ في الشبكة. تحقق من اتصالك وحاول مجدداً.",
+      "types": {
+        "INCOME": "إيراد",
+        "EXPENSE": "مصروف"
+      },
+      "categories": {
+        "SALES": "مبيعات",
+        "SERVICES": "خدمات",
+        "OPERATIONS": "عمليات",
+        "MARKETING": "تسويق",
+        "SOFTWARE": "برمجيات",
+        "PAYROLL": "رواتب",
+        "OTHER": "أخرى"
+      },
+      "statuses": {
+        "CLEARED": "مسوّاة",
+        "PENDING": "معلّقة"
+      }
+    },
+    "newPage": {
+      "title": "معاملة جديدة",
+      "description": "سجّل إيراداً أو مصروفاً في دفتر الأستاذ.",
+      "back": "العودة إلى المعاملات"
+    },
+    "editPage": {
+      "title": "تعديل المعاملة",
+      "description": "حدّث هذه المعاملة.",
+      "back": "العودة إلى المعاملات"
+    },
+    "delete": {
+      "button": "حذف",
+      "confirm": "حذف هذه المعاملة؟ لا يمكن التراجع عن ذلك.",
+      "failed": "تعذر حذف المعاملة."
+    }
+  },
+  "invoices": {
+    "meta": {
+      "title": "الفواتير",
+      "description": "تابع الفواتير الصادرة والمدفوعة والمعلقة."
+    },
+    "eyebrow": "الفوترة",
+    "title": "الفواتير",
+    "description": "تابع ما تمت فوترته وما تم دفعه وما لا يزال معلقاً.",
+    "summary": {
+      "paid": "مدفوعة",
+      "outstanding": "قيد التحصيل",
+      "overdue": "متأخرة",
+      "draft": "مسودات"
+    },
+    "filters": {
+      "search": "بحث",
+      "searchPlaceholder": "رقم الفاتورة أو العميل…",
+      "status": "الحالة",
+      "all": "كل الفواتير",
+      "apply": "تطبيق",
+      "clear": "مسح"
+    },
+    "statuses": {
+      "DRAFT": "مسودة",
+      "SENT": "مرسلة",
+      "PAID": "مدفوعة",
+      "OVERDUE": "متأخرة"
+    },
+    "table": {
+      "number": "الفاتورة",
+      "client": "العميل",
+      "issueDate": "تاريخ الإصدار",
+      "dueDate": "تاريخ الاستحقاق",
+      "status": "الحالة",
+      "amount": "المبلغ",
+      "emptyTitle": "لا توجد فواتير",
+      "emptyBody": "غيّر عوامل التصفية لعرض المزيد من الفواتير.",
+      "select": "تحديد الفاتورة {number}",
+      "selectAll": "تحديد كل الفواتير"
+    },
+    "pagination": {
+      "showing": "{from}–{to} من {total}",
+      "previous": "السابق",
+      "next": "التالي"
+    },
+    "export": "تصدير CSV",
+    "count": "{count, plural, =0 {لا فواتير} one {فاتورة واحدة} other {# فواتير}}",
+    "new": "فاتورة جديدة",
+    "bulk": {
+      "selected": "{count} محددة",
+      "send": "تعيين كمرسلة",
+      "paid": "تعيين كمدفوعة",
+      "overdue": "تعيين كمتأخرة",
+      "clear": "مسح",
+      "failed": "تعذر تحديث الفواتير المحددة."
+    },
+    "form": {
+      "headerTitle": "بيانات الفاتورة",
+      "headerDescription": "العميل والرقم والتواريخ.",
+      "client": "العميل",
+      "selectClient": "اختر عميلاً",
+      "number": "رقم الفاتورة",
+      "issueDate": "تاريخ الإصدار",
+      "dueDate": "تاريخ الاستحقاق",
+      "currency": "العملة",
+      "linesTitle": "بنود الفاتورة",
+      "linesDescription": "ما تمت فوترته.",
+      "addLine": "إضافة بند",
+      "description": "الوصف",
+      "quantity": "الكمية",
+      "unitPrice": "سعر الوحدة",
+      "removeLine": "حذف البند",
+      "total": "المجموع",
+      "notes": "ملاحظات",
+      "cancel": "إلغاء",
+      "save": "حفظ الفاتورة",
+      "saving": "جارٍ الحفظ…",
+      "fixErrors": "صحح الحقول المميزة ثم حاول مجدداً.",
+      "saveFailed": "تعذر حفظ الفاتورة.",
+      "networkError": "خطأ في الشبكة. تحقق من اتصالك وحاول مجدداً."
+    },
+    "create": {
+      "title": "فاتورة جديدة",
+      "description": "أنشئ مسودة فاتورة ثم أرسلها عندما تكون جاهزة.",
+      "back": "العودة إلى الفواتير"
+    },
+    "editPage": {
+      "title": "تعديل الفاتورة",
+      "description": "حدّث مسودة الفاتورة {number}.",
+      "back": "العودة إلى الفاتورة"
+    },
+    "detail": {
+      "back": "العودة إلى الفواتير",
+      "edit": "تعديل",
+      "delete": "حذف",
+      "deleteConfirm": "حذف مسودة الفاتورة هذه؟ لا يمكن التراجع عن ذلك.",
+      "deleteFailed": "تعذر حذف الفاتورة.",
+      "exportRegister": "تصدير السجل",
+      "fallbackTitle": "فاتورة",
+      "total": "المجموع",
+      "issued": "تاريخ الإصدار",
+      "due": "الاستحقاق",
+      "currency": "العملة",
+      "status": "الحالة",
+      "linesTitle": "بنود الفاتورة",
+      "description": "الوصف",
+      "quantity": "الكمية",
+      "unitPrice": "سعر الوحدة",
+      "lineTotal": "المبلغ",
+      "subtotal": "المجموع الفرعي",
+      "notes": "ملاحظات",
+      "markSent": "تعيين كمرسلة",
+      "markPaid": "تعيين كمدفوعة",
+      "markOverdue": "تعيين كمتأخرة",
+      "statusFailed": "تعذر تحديث حالة الفاتورة.",
+      "statuses": {
+        "DRAFT": "مسودة",
+        "SENT": "مرسلة",
+        "PAID": "مدفوعة",
+        "OVERDUE": "متأخرة"
+      }
+    }
+  },
+  "reports": {
+    "meta": {
+      "title": "التقارير",
+      "description": "الأداء المالي وتوزيع المصروفات وإيرادات العملاء."
+    },
+    "eyebrow": "التحليلات",
+    "title": "التقارير",
+    "description": "رؤية واضحة للأداء المالي لمكتبك ومزيج العملاء.",
+    "rangeTitle": "فترة التقرير",
+    "export": "تصدير CSV",
+    "exportHint": "حمّل كل معاملات هذه الفترة.",
+    "kpis": {
+      "revenue": "الإيرادات",
+      "expenses": "المصروفات",
+      "net": "صافي الربح",
+      "margin": "هامش الربح الصافي"
+    },
+    "chartTitle": "الإيرادات مقابل المصروفات",
+    "chartDescription": "مقارنة شهرية للفترة المحددة.",
+    "expenseTitle": "توزيع المصروفات",
+    "expenseDescription": "حصة الإنفاق حسب الفئة.",
+    "clientsTitle": "أفضل العملاء",
+    "clientsDescription": "العملاء مرتبون حسب الإيرادات.",
+    "monthlyTitle": "الأداء الشهري",
+    "monthlyDescription": "الإيرادات والمصروفات وصافي الربح شهرياً.",
+    "columns": {
+      "month": "الشهر",
+      "revenue": "الإيرادات",
+      "expenses": "المصروفات",
+      "net": "صافي الربح",
+      "invoices": "الفواتير"
+    },
+    "empty": "لا توجد بيانات لهذه الفترة.",
+    "profit": "صافي الربح",
+    "invoiceRegister": {
+      "meta": {
+        "title": "سجل الفواتير",
+        "description": "كل الفواتير مع المجاميع حسب الحالة."
+      },
+      "back": "العودة إلى التقارير",
+      "eyebrow": "التقارير",
+      "title": "سجل الفواتير",
+      "description": "كل الفواتير مجمعة حسب الحالة مع تصدير CSV بنقرة واحدة.",
+      "export": "تصدير CSV",
+      "statuses": {
+        "DRAFT": "مسودة",
+        "SENT": "مرسلة",
+        "PAID": "مدفوعة",
+        "OVERDUE": "متأخرة"
+      },
+      "count": "{count, plural, =0 {لا فواتير} one {فاتورة واحدة} other {# فواتير}}",
+      "totalLabel": "إجمالي الفواتير",
+      "tableTitle": "كل الفواتير",
+      "columns": {
+        "number": "الفاتورة",
+        "client": "العميل",
+        "issued": "تاريخ الإصدار",
+        "due": "الاستحقاق",
+        "status": "الحالة",
+        "total": "المجموع"
+      },
+      "limitHint": "تُعرض أحدث 200 فاتورة. استخدم تصدير CSV للسجل الكامل."
+    }
+  },
+  "settings": {
+    "meta": {
+      "title": "الإعدادات",
+      "description": "إدارة حسابك ومساحة العمل وتفضيلات العرض."
+    },
+    "eyebrow": "مساحة العمل",
+    "title": "الإعدادات",
+    "description": "إدارة حسابك ومساحة العمل وتفضيلات العرض.",
+    "profileTitle": "الملف الشخصي",
+    "profileDescription": "بياناتك الشخصية ودورك في مساحة العمل.",
+    "name": "الاسم الكامل",
+    "email": "البريد الإلكتروني",
+    "role": "الدور",
+    "memberSince": "عضو منذ",
+    "verified": "البريد الإلكتروني موثّق",
+    "unverified": "البريد الإلكتروني غير موثّق",
+    "workspaceTitle": "مساحة العمل",
+    "workspaceDescription": "إعدادات يشاركها كل أعضاء مكتبك.",
+    "firmName": "اسم المكتب",
+    "slug": "رابط مساحة العمل",
+    "members": "أعضاء الفريق",
+    "manageTeam": "إدارة الفريق",
+    "preferencesTitle": "التفضيلات",
+    "preferencesDescription": "اجعل LedgerFlow يناسب طريقة عملك.",
+    "theme": "المظهر",
+    "themeHint": "بدّل بين الوضع الفاتح والداكن.",
+    "language": "اللغة",
+    "languageHint": "اختر لغة الواجهة.",
+    "securityTitle": "الأمان",
+    "securityDescription": "حسابك محمي ب:",
+    "securityEmail": "التحقق من البريد الإلكتروني",
+    "securityRate": "تحديد محاولات تسجيل الدخول",
+    "securitySession": "جلسات موقّعة وقابلة للإلغاء",
+    "teamTitle": "الفريق والصلاحيات",
+    "teamDescription": "ادعُ زملاءك وأدر أدوارهم.",
+    "auditTitle": "سجل التدقيق",
+    "auditDescription": "راجع كل تغيير مهم في مساحة العمل."
+  },
+  "notifications": {
+    "meta": {
+      "title": "الإشعارات",
+      "description": "راجع تذكيرات المهام وتنبيهات الفواتير ونشاط المكتب."
+    },
+    "eyebrow": "صندوق الوارد",
+    "title": "الإشعارات",
+    "description": "تذكيرات المهام والفواتير المتأخرة ونشاط المكتب في مكان واحد.",
+    "open": "فتح الإشعارات",
+    "unread": "{count} غير مقروء",
+    "markAll": "تحديد الكل كمقروء",
+    "loading": "جارٍ تحميل الإشعارات…",
+    "empty": "لا توجد إشعارات جديدة",
+    "emptyBody": "ستظهر تذكيرات المهام وتنبيهات الفواتير الجديدة هنا.",
+    "new": "جديد",
+    "viewAll": "عرض كل الإشعارات"
+  },
+  "tasks": {
+    "meta": {
+      "title": "المهام",
+      "description": "خطط للمهام ووزعها وتابع أعمال العملاء."
+    },
+    "eyebrow": "سير العمل",
+    "title": "المهام",
+    "description": "خطط للمهام ووزعها وتابع أعمال العملاء من قائمة مشتركة.",
+    "export": "تصدير",
+    "templates": "القوالب",
+    "new": "مهمة جديدة",
+    "total": "{count} مهمة",
+    "noClient": "بدون عميل",
+    "unassigned": "غير مسندة",
+    "views": {
+      "list": "قائمة",
+      "board": "لوحة",
+      "calendar": "تقويم"
+    },
+    "table": {
+      "task": "المهمة",
+      "client": "العميل",
+      "assignee": "المسند إليه",
+      "due": "الاستحقاق",
+      "priority": "الأولوية",
+      "status": "الحالة",
+      "emptyTitle": "لا توجد مهام بعد",
+      "emptyBody": "أنشئ أول مهمة لبدء متابعة أعمال العملاء."
+    },
+    "pagination": {
+      "page": "الصفحة {page} من {pages}",
+      "previous": "السابق",
+      "next": "التالي"
+    },
+    "priorities": {
+      "LOW": "منخفضة",
+      "MEDIUM": "متوسطة",
+      "HIGH": "عالية",
+      "URGENT": "عاجلة"
+    },
+    "statuses": {
+      "label": "الحالة",
+      "TODO": "قيد الانتظار",
+      "IN_PROGRESS": "قيد التنفيذ",
+      "DONE": "مكتملة",
+      "CANCELLED": "ملغاة"
+    },
+    "recurrences": {
+      "NONE": "لا تتكرر",
+      "DAILY": "يوميًا",
+      "WEEKLY": "أسبوعيًا",
+      "MONTHLY": "شهريًا"
+    },
+    "board": {
+      "empty": "لا شيء هنا",
+      "items": "عناصر القائمة"
+    },
+    "calendar": {
+      "hint": "مجمعة حسب تاريخ الاستحقاق",
+      "more": "+{count} أخرى"
+    },
+    "form": {
+      "detailsTitle": "تفاصيل المهمة",
+      "detailsDescription": "أدخل الأساسيات ثم اضبط الإسناد والجدول الزمني.",
+      "titleLabel": "العنوان",
+      "titlePlaceholder": "مثال: تجهيز إقرار ضريبة القيمة المضافة",
+      "descriptionLabel": "الوصف",
+      "descriptionPlaceholder": "أضف سياقًا أو روابط أو خطوات…",
+      "clientLabel": "العميل",
+      "noClient": "بدون عميل",
+      "assigneeLabel": "المسند إليه",
+      "unassigned": "غير مسندة",
+      "statusLabel": "الحالة",
+      "priorityLabel": "الأولوية",
+      "dueDateLabel": "تاريخ الاستحقاق",
+      "recurrenceLabel": "التكرار",
+      "recurrenceHint": "تُنشأ مهمة جديدة عند إكمال هذه المهمة.",
+      "checklistLabel": "قائمة التحقق",
+      "checklistPlaceholder": "خطوة واحدة في كل سطر",
+      "checklistHint": "يتحول كل سطر إلى عنصر في قائمة التحقق.",
+      "cancel": "إلغاء",
+      "save": "حفظ المهمة",
+      "saving": "جارٍ الحفظ…",
+      "saveFailed": "تعذر حفظ المهمة.",
+      "fixErrors": "صحح الحقول المحددة ثم حاول مرة أخرى.",
+      "networkError": "خطأ في الشبكة. تحقق من اتصالك وحاول مرة أخرى."
+    },
+    "filters": {
+      "search": "بحث",
+      "searchPlaceholder": "ابحث عن مهمة…",
+      "status": "الحالة",
+      "allStatuses": "كل الحالات",
+      "statusOptions": {
+        "TODO": "قيد الانتظار",
+        "IN_PROGRESS": "قيد التنفيذ",
+        "DONE": "مكتملة",
+        "CANCELLED": "ملغاة"
+      },
+      "priority": "الأولوية",
+      "allPriorities": "كل الأولويات",
+      "priorityOptions": {
+        "LOW": "منخفضة",
+        "MEDIUM": "متوسطة",
+        "HIGH": "عالية",
+        "URGENT": "عاجلة"
+      },
+      "apply": "تصفية",
+      "clear": "إعادة تعيين"
+    },
+    "comments": {
+      "empty": "لا توجد تعليقات بعد.",
+      "placeholder": "اكتب تعليقًا…",
+      "submit": "نشر",
+      "sending": "جارٍ الإرسال…",
+      "failed": "تعذر إرسال التعليق.",
+      "networkError": "خطأ في الشبكة. حاول مرة أخرى."
+    },
+    "checklist": {
+      "empty": "لا توجد خطوات بعد.",
+      "progress": "{done} من {total} مكتملة",
+      "placeholder": "أضف خطوة…",
+      "add": "إضافة",
+      "failed": "تعذر إضافة الخطوة.",
+      "networkError": "خطأ في الشبكة. حاول مرة أخرى."
+    },
+    "delete": {
+      "button": "حذف",
+      "confirm": "هل تريد حذف هذه المهمة؟ لا يمكن التراجع عن هذا الإجراء.",
+      "failed": "تعذر حذف المهمة.",
+      "networkError": "خطأ في الشبكة. حاول مرة أخرى."
+    },
+    "detail": {
+      "back": "العودة إلى المهام",
+      "edit": "تعديل",
+      "fallbackTitle": "مهمة",
+      "priorities": {
+        "LOW": "منخفضة",
+        "MEDIUM": "متوسطة",
+        "HIGH": "عالية",
+        "URGENT": "عاجلة"
+      },
+      "statuses": {
+        "TODO": "قيد الانتظار",
+        "IN_PROGRESS": "قيد التنفيذ",
+        "DONE": "مكتملة",
+        "CANCELLED": "ملغاة"
+      },
+      "recurrences": {
+        "NONE": "لا تتكرر",
+        "DAILY": "يوميًا",
+        "WEEKLY": "أسبوعيًا",
+        "MONTHLY": "شهريًا"
+      },
+      "client": "العميل",
+      "noClient": "بدون عميل",
+      "assignee": "المسند إليه",
+      "unassigned": "غير مسندة",
+      "dueDate": "تاريخ الاستحقاق",
+      "noDueDate": "بدون تاريخ استحقاق",
+      "createdBy": "أنشأها",
+      "commentsTitle": "التعليقات",
+      "checklistTitle": "قائمة التحقق"
+    },
+    "createPage": {
+      "title": "مهمة جديدة",
+      "description": "أضف مهمة واسندها إلى أحد أعضاء الفريق وحدد تاريخ استحقاق."
+    },
+    "edit": {
+      "title": "تعديل المهمة",
+      "description": "حدّث تفاصيل المهمة والإسناد والجدول الزمني."
+    },
+    "templatesPage": {
+      "title": "قوالب المهام",
+      "description": "أنشئ مهامًا متكررة بنقرة واحدة.",
+      "back": "العودة إلى المهام",
+      "existingTitle": "قوالبك",
+      "empty": "لا توجد قوالب بعد.",
+      "newTitle": "قالب جديد",
+      "offsetValue": "الاستحقاق بعد {days} يومًا",
+      "use": "استخدام",
+      "useFailed": "تعذر إنشاء المهمة من هذا القالب.",
+      "networkError": "خطأ في الشبكة. حاول مرة أخرى.",
+      "priorities": {
+        "LOW": "منخفضة",
+        "MEDIUM": "متوسطة",
+        "HIGH": "عالية",
+        "URGENT": "عاجلة"
+      },
+      "recurrences": {
+        "NONE": "لا تتكرر",
+        "DAILY": "يوميًا",
+        "WEEKLY": "أسبوعيًا",
+        "MONTHLY": "شهريًا"
+      },
+      "form": {
+        "name": "اسم القالب",
+        "namePlaceholder": "مثال: ضريبة القيمة المضافة الشهرية",
+        "title": "عنوان المهمة",
+        "titlePlaceholder": "مثال: تجهيز إقرار ضريبة القيمة المضافة",
+        "description": "الوصف",
+        "priority": "الأولوية",
+        "recurrence": "التكرار",
+        "offset": "فارق الاستحقاق (أيام)",
+        "submit": "إنشاء القالب",
+        "saving": "جارٍ الإنشاء…",
+        "invalid": "تحقق من حقول القالب.",
+        "failed": "تعذر إنشاء القالب.",
+        "networkError": "خطأ في الشبكة. حاول مرة أخرى.",
+        "priorities": {
+          "LOW": "منخفضة",
+          "MEDIUM": "متوسطة",
+          "HIGH": "عالية",
+          "URGENT": "عاجلة"
+        },
+        "recurrences": {
+          "NONE": "لا تتكرر",
+          "DAILY": "يوميًا",
+          "WEEKLY": "أسبوعيًا",
+          "MONTHLY": "شهريًا"
+        }
+      }
+    }
+  },
+  "notFound": {
+    "title": "الصفحة غير موجودة",
+    "description": "الصفحة المطلوبة غير موجودة أو تم نقلها.",
+    "back": "العودة إلى الصفحة الرئيسية"
+  },
+  "documents": {
+    "meta": {
+      "title": "المستندات",
+      "description": "احفظ ملفات العملاء ونظمها في مكتبة آمنة واحدة."
+    },
+    "eyebrow": "المكتبة",
+    "title": "المستندات",
+    "description": "العقود والإيصالات والمستندات الضريبية وملفات العملاء في مكتبة قابلة للبحث.",
+    "uploadButton": "رفع مستند",
+    "archived": "مؤرشف",
+    "tagsLabel": "الوسوم",
+    "download": "تنزيل",
+    "filters": {
+      "search": "بحث",
+      "searchPlaceholder": "ابحث عن المستندات…",
+      "category": "الفئة",
+      "allCategories": "كل الفئات",
+      "status": "الحالة",
+      "statuses": {
+        "active": "النشطة",
+        "archived": "المؤرشفة",
+        "all": "الكل"
+      },
+      "categories": {
+        "CONTRACT": "عقد",
+        "INVOICE": "فاتورة",
+        "RECEIPT": "إيصال",
+        "TAX": "ضريبي",
+        "IDENTITY": "هوية",
+        "BANK": "بنك",
+        "OTHER": "أخرى"
+      },
+      "apply": "تصفية",
+      "clear": "إعادة تعيين"
+    },
+    "table": {
+      "name": "المستند",
+      "category": "الفئة",
+      "client": "العميل",
+      "size": "الحجم",
+      "uploaded": "تاريخ الرفع",
+      "actions": "إجراءات",
+      "emptyTitle": "لا توجد مستندات",
+      "emptyBody": "ارفع أول مستند لبدء بناء المكتبة."
+    },
+    "pagination": {
+      "showing": "{from}–{to} من {total}",
+      "previous": "السابق",
+      "next": "التالي"
+    },
+    "upload": {
+      "title": "رفع مستند",
+      "description": "الوصف",
+      "back": "العودة إلى المستندات",
+      "fileTitle": "اختر ملفاً",
+      "fileDescription": "PDF أو صورة أو جدول أو مستند أو نص أو ZIP حتى 25 ميغابايت.",
+      "chooseFile": "اختر ملفاً",
+      "limits": "حتى 25 ميغابايت",
+      "fileRequired": "اختر ملفاً لرفعه.",
+      "tooLarge": "حجم هذا الملف يتجاوز 25 ميغابايت.",
+      "typeNotAllowed": "نوع هذا الملف غير مسموح.",
+      "name": "اسم المستند",
+      "namePlaceholder": "افتراضياً اسم الملف",
+      "category": "الفئة",
+      "categories": {
+        "CONTRACT": "عقد",
+        "INVOICE": "فاتورة",
+        "RECEIPT": "إيصال",
+        "TAX": "ضريبي",
+        "IDENTITY": "هوية",
+        "BANK": "بنك",
+        "OTHER": "أخرى"
+      },
+      "client": "العميل",
+      "noClient": "بدون عميل",
+      "tags": "الوسوم",
+      "tagsPlaceholder": "وسوم، مفصولة، بفواصل",
+      "submit": "رفع",
+      "uploading": "جارٍ الرفع…",
+      "failed": "تعذر رفع المستند.",
+      "networkError": "خطأ في الشبكة. تحقق من اتصالك وحاول مجدداً.",
+      "pageDescription": "أضف ملفاً واربطه بعميل وفئة."
+    },
+    "archive": {
+      "button": "أرشفة",
+      "confirm": "أرشفة هذا المستند؟ يمكنك استعادته لاحقاً.",
+      "restore": "استعادة",
+      "restoreConfirm": "استعادة هذا المستند؟",
+      "failed": "تعذر تحديث المستند.",
+      "networkError": "خطأ في الشبكة. حاول مجدداً."
+    },
+    "detail": {
+      "fallbackTitle": "مستند",
+      "back": "العودة إلى المستندات",
+      "previewTitle": "معاينة",
+      "archivedBody": "هذا المستند مؤرشف. استعده لمعاينة الملف.",
+      "noPreview": "لا تتوفر معاينة مباشرة. نزّل الملف لعرضه.",
+      "infoTitle": "التفاصيل",
+      "category": "الفئة",
+      "client": "العميل",
+      "size": "الحجم",
+      "uploadedBy": "رفعه",
+      "uploadedAt": "تاريخ الرفع",
+      "type": "نوع الملف"
+    }
+  },
+  "audit": {
+    "meta": {
+      "title": "سجل التدقيق",
+      "description": "راجع كل تغيير مهم في مساحة العمل."
+    },
+    "back": "العودة إلى الإعدادات",
+    "eyebrow": "الأمان",
+    "title": "سجل التدقيق",
+    "description": "سجل للإضافة فقط يوضح من غيّر ماذا ومتى.",
+    "filters": {
+      "search": "بحث",
+      "searchPlaceholder": "ابحث حسب الإجراء أو الكيان أو العضو…",
+      "action": "الإجراء",
+      "allActions": "كل الإجراءات",
+      "apply": "تصفية",
+      "clear": "إعادة تعيين"
+    },
+    "emptyTitle": "لا يوجد نشاط بعد",
+    "emptyBody": "ستظهر التغييرات المهمة هنا أثناء عمل فريقك.",
+    "entries": "{count, plural, =0 {لا توجد سجلات} one {سجل واحد} other {# سجلات}}",
+    "systemActor": "النظام",
+    "pagination": {
+      "showing": "{from}–{to} من {total}",
+      "previous": "السابق",
+      "next": "التالي"
     }
   }
 }

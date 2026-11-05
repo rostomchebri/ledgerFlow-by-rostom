@@ -84,7 +84,7 @@ export function InviteMemberForm({ roles }: InviteMemberFormProps) {
         </Alert>
       ) : null}
 
-      <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_10rem_auto] sm:items-end">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-[minmax(0,1fr)_10rem_auto] sm:items-end">
         <div className="space-y-1.5">
           <Label htmlFor="invite-email">{t("emailLabel")}</Label>
           <Input

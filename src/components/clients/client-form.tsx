@@ -140,13 +140,13 @@ export function ClientForm({ mode, clientId, initialValues }: ClientFormProps) {
         </Alert>
       ) : null}
 
-      <section className="rounded-lg border bg-card p-6 shadow-sm">
+      <section className="glass-card rounded-2xl p-6">
         <div className="mb-5 space-y-1">
-          <h2 className="text-base font-semibold">{t("identityTitle")}</h2>
+          <h2 className="text-base font-semibold tracking-[-0.01em]">{t("identityTitle")}</h2>
           <p className="text-sm text-muted-foreground">{t("identityDescription")}</p>
         </div>
 
-        <div className="grid gap-5 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
           <Field label={t("typeLabel")} htmlFor="type" required error={errors.type}>
             <Select
               id="type"
@@ -206,13 +206,13 @@ export function ClientForm({ mode, clientId, initialValues }: ClientFormProps) {
         </div>
       </section>
 
-      <section className="rounded-lg border bg-card p-6 shadow-sm">
+      <section className="glass-card rounded-2xl p-6">
         <div className="mb-5 space-y-1">
-          <h2 className="text-base font-semibold">{t("contactTitle")}</h2>
+          <h2 className="text-base font-semibold tracking-[-0.01em]">{t("contactTitle")}</h2>
           <p className="text-sm text-muted-foreground">{t("contactDescription")}</p>
         </div>
 
-        <div className="grid gap-5 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
           <Field label={t("emailLabel")} htmlFor="email" error={errors.email}>
             <Input
               id="email"
@@ -245,13 +245,13 @@ export function ClientForm({ mode, clientId, initialValues }: ClientFormProps) {
         </div>
       </section>
 
-      <section className="rounded-lg border bg-card p-6 shadow-sm">
+      <section className="glass-card rounded-2xl p-6">
         <div className="mb-5 space-y-1">
-          <h2 className="text-base font-semibold">{t("legalTitle")}</h2>
+          <h2 className="text-base font-semibold tracking-[-0.01em]">{t("legalTitle")}</h2>
           <p className="text-sm text-muted-foreground">{t("legalDescription")}</p>
         </div>
 
-        <div className="grid gap-5 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
           <Field label={t("taxIdLabel")} htmlFor="taxId" hint={t("taxIdHint")} error={errors.taxId}>
             <Input
               id="taxId"
@@ -283,13 +283,13 @@ export function ClientForm({ mode, clientId, initialValues }: ClientFormProps) {
         </div>
       </section>
 
-      <section className="rounded-lg border bg-card p-6 shadow-sm">
+      <section className="glass-card rounded-2xl p-6">
         <div className="mb-5 space-y-1">
-          <h2 className="text-base font-semibold">{t("addressTitle")}</h2>
+          <h2 className="text-base font-semibold tracking-[-0.01em]">{t("addressTitle")}</h2>
           <p className="text-sm text-muted-foreground">{t("addressDescription")}</p>
         </div>
 
-        <div className="grid gap-5 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
           <Field
             label={t("addressLine1Label")}
             htmlFor="addressLine1"
@@ -375,9 +375,9 @@ export function ClientForm({ mode, clientId, initialValues }: ClientFormProps) {
         </div>
       </section>
 
-      <section className="rounded-lg border bg-card p-6 shadow-sm">
+      <section className="glass-card rounded-2xl p-6">
         <div className="mb-5 space-y-1">
-          <h2 className="text-base font-semibold">{t("notesTitle")}</h2>
+          <h2 className="text-base font-semibold tracking-[-0.01em]">{t("notesTitle")}</h2>
           <p className="text-sm text-muted-foreground">{t("notesDescription")}</p>
         </div>
 

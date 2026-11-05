@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { authClient } from "@/lib/auth-client";
-import { authErrorKey, isEmailNotVerified, isRateLimited } from "@/lib/auth-errors";
+import { authErrorKey, isEmailNotVerified } from "@/lib/auth-errors";
 import { emailSchema } from "@/lib/validation/auth";
 
 type Notice = "verified" | "reset" | "registered" | undefined;
@@ -90,16 +90,20 @@ export function LoginForm({ callbackUrl, notice }: { callbackUrl: string; notice
 
     setResendState("sending");
 
-    const { error } = await authClient.sendVerificationEmail({
-      email: email.trim().toLowerCase(),
-      callbackURL: "/verify-email?verified=1",
+    const normalizedEmail = email.trim().toLowerCase();
+    const { error } = await authClient.emailOtp.sendVerificationOtp({
+      email: normalizedEmail,
+      type: "email-verification",
     });
 
-    setResendState(error && isRateLimited(error) ? "idle" : "sent");
-
-    if (error && isRateLimited(error)) {
-      setFormError("errors.rateLimited");
+    if (error) {
+      setResendState("idle");
+      setFormError(authErrorKey(error));
+      return;
     }
+
+    setResendState("sent");
+    window.location.assign(`/verify-email?email=${encodeURIComponent(normalizedEmail)}`);
   }
 
   return (
@@ -134,6 +138,12 @@ export function LoginForm({ callbackUrl, notice }: { callbackUrl: string; notice
                   {t("resendVerification")}
                 </Button>
               )}
+              <Link
+                href={`/verify-email?email=${encodeURIComponent(email.trim().toLowerCase())}`}
+                className="block text-xs font-medium text-primary underline-offset-4 hover:underline"
+              >
+                {t("enterCode")}
+              </Link>
             </div>
           ) : null}
         </Alert>

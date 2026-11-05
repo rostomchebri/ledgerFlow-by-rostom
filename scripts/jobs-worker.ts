@@ -8,6 +8,7 @@
 import { getWorkerBoss } from "../src/lib/jobs/boss";
 import { processJob } from "../src/lib/jobs/processor";
 import { JOB_NAMES } from "../src/lib/jobs/queues";
+import { env } from "../src/lib/env";
 import { logger } from "../src/lib/logger";
 
 async function main() {
@@ -23,7 +24,21 @@ async function main() {
     });
   }
 
-  logger.info("jobs.worker_ready", { queues: JOB_NAMES });
+  // NOTIF-03 — the worker owns the cron schedule. Running this on every
+  // worker start is idempotent: pg-boss upserts the schedule by queue name, so
+  // multiple worker containers converge on the same configuration.
+  await boss.schedule(
+    "notifications.reminder-sweep",
+    env.REMINDER_CRON,
+    {},
+    { tz: env.REMINDER_TIMEZONE },
+  );
+
+  logger.info("jobs.worker_ready", {
+    queues: JOB_NAMES,
+    reminderCron: env.REMINDER_CRON,
+    reminderTimezone: env.REMINDER_TIMEZONE,
+  });
 
   let stopping = false;
 

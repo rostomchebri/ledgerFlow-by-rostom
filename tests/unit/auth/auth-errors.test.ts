@@ -35,6 +35,14 @@ describe("auth error mapping", () => {
     expect(authErrorKey({ status: 400, code: "WEAK_PASSWORD" })).toBe("errors.weakPassword");
   });
 
+  it("maps verification-code failures", () => {
+    expect(authErrorKey({ status: 400, code: "INVALID_OTP" })).toBe("errors.invalidCode");
+    expect(authErrorKey({ status: 400, code: "OTP_EXPIRED" })).toBe("errors.codeExpired");
+    expect(authErrorKey({ status: 403, code: "TOO_MANY_ATTEMPTS" })).toBe(
+      "errors.tooManyAttempts",
+    );
+  });
+
   it("maps forbidden actions", () => {
     expect(authErrorKey({ status: 403 })).toBe("errors.forbidden");
   });

@@ -120,7 +120,7 @@ export default async function InvitationPage({ params }: InvitationPageProps) {
         firm: invitation.firm.name,
       })}
     >
-      <div className="rounded-lg border bg-muted/40 p-4">
+      <div className="glass-soft rounded-xl p-4">
         <p className="flex items-center gap-2 text-sm font-medium">
           <Building2 aria-hidden="true" className="h-4 w-4 text-muted-foreground" />
           {invitation.firm.name}

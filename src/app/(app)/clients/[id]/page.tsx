@@ -82,7 +82,9 @@ export default async function ClientDetailPage({ params }: ClientDetailPageProps
               className="h-12 w-12 text-sm"
             />
             <div className="min-w-0 space-y-2">
-              <h1 className="break-words text-2xl font-semibold tracking-tight">{client.name}</h1>
+              <h1 className="text-gradient break-words text-[28px] font-bold tracking-[-0.035em]">
+                {client.name}
+              </h1>
               <div className="flex flex-wrap items-center gap-2">
                 <ClientTypeBadge type={client.type} />
                 <ClientStatusBadge status={client.status} />
@@ -112,7 +114,7 @@ export default async function ClientDetailPage({ params }: ClientDetailPageProps
 
       {client.status === "ARCHIVED" ? <Alert>{t("archived")}</Alert> : null}
 
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_20rem]">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_20rem]">
         <div className="flex flex-col gap-6">
           <Card>
             <CardHeader>
@@ -126,7 +128,7 @@ export default async function ClientDetailPage({ params }: ClientDetailPageProps
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <dl className="grid gap-5 sm:grid-cols-2">
+              <dl className="grid grid-cols-1 gap-5 sm:grid-cols-2">
                 <DetailItem label={t("contactPerson")}>{client.contactName}</DetailItem>
                 <DetailItem label={t("email")}>
                   {client.email ? (

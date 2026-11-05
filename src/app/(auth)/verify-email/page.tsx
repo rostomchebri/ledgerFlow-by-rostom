@@ -4,7 +4,7 @@ import { CheckCircle2, MailCheck, ShieldAlert } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
 import { AuthCard } from "@/components/auth/auth-card";
-import { ResendVerificationForm } from "@/components/auth/resend-verification-form";
+import { VerifyEmailForm } from "@/components/auth/verify-email-form";
 import { Alert } from "@/components/ui/alert";
 import { buttonVariants } from "@/components/ui/button";
 import { getSession } from "@/lib/session";
@@ -54,12 +54,7 @@ export default async function VerifyEmailPage({
       <div className="space-y-5">
         {hasError ? <Alert variant="destructive">{t("errorBody")}</Alert> : null}
 
-        <div className="space-y-1">
-          <p className="text-sm font-medium">{t("resendTitle")}</p>
-          <p className="text-sm text-muted-foreground">{t("resendBody")}</p>
-        </div>
-
-        <ResendVerificationForm initialEmail={email} />
+        <VerifyEmailForm initialEmail={email} />
 
         <p className="text-center text-sm text-muted-foreground">
           <Link

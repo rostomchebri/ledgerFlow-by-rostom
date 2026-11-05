@@ -30,10 +30,10 @@ export async function ClientsTable({ clients, locale }: ClientsTableProps) {
   const t = await getTranslations("clients");
 
   return (
-    <div className="overflow-hidden rounded-lg border bg-card shadow-sm">
+    <div className="glass-card overflow-hidden rounded-2xl">
       <Table>
         <TableHeader>
-          <TableRow className="bg-muted/40 hover:bg-muted/40">
+          <TableRow className="bg-[hsl(var(--card)/0.32)] hover:bg-[hsl(var(--card)/0.32)]">
             <TableHead className="ps-4">{t("table.client")}</TableHead>
             <TableHead className="hidden md:table-cell">{t("table.type")}</TableHead>
             <TableHead className="hidden lg:table-cell">{t("table.contact")}</TableHead>

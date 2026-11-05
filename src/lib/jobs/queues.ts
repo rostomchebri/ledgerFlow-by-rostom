@@ -1,16 +1,22 @@
 /**
- * NOTIF-02 — queue catalogue.
+ * NOTIF-02 / NOTIF-03 — queue catalogue.
  *
  * Queue names are part of the database contract: never rename an existing
  * queue without a migration plan, because pg-boss stores the name on every
  * job. Add new queues to both `JOB_NAMES` and `JOB_PAYLOADS`.
  */
-export const JOB_NAMES = ["notifications.email-reminder"] as const;
+export const JOB_NAMES = ["notifications.reminder-sweep", "notifications.email-reminder"] as const;
 
 export type JobName = (typeof JOB_NAMES)[number];
 
 /** Payloads are plain JSON-serialisable objects. */
 export type JobPayloads = {
+  /**
+   * Finds every task due today or overdue, creates the in-app notification and
+   * fans out one e-mail reminder per task. Scheduled by the worker.
+   */
+  "notifications.reminder-sweep": Record<string, never>;
+  /** Sends the e-mail reminder for a single task (re-checked before sending). */
   "notifications.email-reminder": {
     taskId: string;
     firmId: string;

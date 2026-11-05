@@ -28,6 +28,11 @@ function optionalEmail() {
   );
 }
 
+const optionalId = z.preprocess(
+  emptyToUndefined,
+  z.string().trim().min(1).max(64, "Invalid member.").optional(),
+);
+
 const countryField = z.preprocess(
   (value) => {
     if (value === undefined || value === null) return undefined;
@@ -63,6 +68,7 @@ const clientFields = {
   postalCode: optionalText(20, "Postal code"),
   country: countryField,
   notes: optionalText(2000, "Notes"),
+  assignedToId: optionalId,
 };
 
 /**

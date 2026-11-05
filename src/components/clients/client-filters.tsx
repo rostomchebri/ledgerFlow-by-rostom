@@ -38,7 +38,7 @@ export function ClientFilters({ query }: ClientFiltersProps) {
   return (
     <form
       role="search"
-      className="rounded-lg border bg-card p-4 shadow-sm"
+      className="glass-card rounded-2xl p-4"
       onSubmit={(event) => {
         event.preventDefault();
         apply({ q: search });

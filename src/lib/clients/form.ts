@@ -17,6 +17,7 @@ export type ClientFormValues = {
   postalCode: string;
   country: string;
   notes: string;
+  assignedToId: string;
 };
 
 export const EMPTY_CLIENT_FORM_VALUES: ClientFormValues = {
@@ -33,6 +34,7 @@ export const EMPTY_CLIENT_FORM_VALUES: ClientFormValues = {
   postalCode: "",
   country: "DZ",
   notes: "",
+  assignedToId: "",
 };
 
 /** Converts a persisted client into editable form values. */
@@ -52,6 +54,7 @@ export function clientToFormValues(
     | "postalCode"
     | "country"
     | "notes"
+    | "assignedToId"
   >,
 ): ClientFormValues {
   return {
@@ -68,6 +71,7 @@ export function clientToFormValues(
     postalCode: client.postalCode ?? "",
     country: client.country || "DZ",
     notes: client.notes ?? "",
+    assignedToId: client.assignedToId ?? "",
   };
 }
 

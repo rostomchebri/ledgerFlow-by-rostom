@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 
 import { ApiError, apiErrorResponse } from "@/lib/api-error";
 import { readJson } from "@/lib/api";
+import { recordAudit } from "@/lib/audit/service";
 import { clientInputSchema, fieldErrorsFromZod, parseClientListQuery } from "@/lib/clients/schema";
 import { createClient, listClients } from "@/lib/clients/service";
 import { requireApiFirmContext } from "@/lib/firm-context";
@@ -51,6 +52,14 @@ export async function POST(request: Request) {
     }
 
     const client = await createClient(firmId, parsed.data, userId);
+    await recordAudit({
+      firmId,
+      actorId: userId,
+      action: "client.created",
+      entityType: "client",
+      entityId: client.id,
+      metadata: { name: client.name, type: client.type },
+    });
     return NextResponse.json({ data: client }, { status: 201 });
   } catch (error) {
     return apiErrorResponse(error);

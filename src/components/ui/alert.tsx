@@ -10,11 +10,11 @@ const icons = {
 };
 
 const styles = {
-  info: "border-border bg-muted/50 text-foreground",
+  info: "border-[hsl(var(--border)/0.75)] bg-[hsl(var(--card)/0.5)] text-foreground",
   success:
-    "border-emerald-200 bg-emerald-50 text-emerald-800 dark:border-emerald-900 dark:bg-emerald-950 dark:text-emerald-200",
+    "border-emerald-600/15 bg-emerald-500/[0.08] text-emerald-800 dark:border-emerald-400/20 dark:bg-emerald-400/[0.08] dark:text-emerald-200",
   destructive:
-    "border-destructive/30 bg-destructive/5 text-destructive dark:bg-destructive/10",
+    "border-destructive/25 bg-destructive/[0.07] text-destructive dark:bg-destructive/10",
 };
 
 export type AlertProps = React.ComponentProps<"div"> & {
@@ -26,7 +26,11 @@ export function Alert({ className, variant = "info", children, ...props }: Alert
   return (
     <div
       role={variant === "destructive" ? "alert" : "status"}
-      className={cn("flex items-start gap-3 rounded-md border p-4 text-sm", styles[variant], className)}
+      className={cn(
+        "flex items-start gap-3 rounded-xl border p-4 text-sm shadow-[0_1px_0_rgba(255,255,255,0.35)_inset] backdrop-blur-xl",
+        styles[variant],
+        className,
+      )}
       {...props}
     >
       <Icon aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0" />

@@ -10,7 +10,7 @@ export default function ClientsLoading() {
       </div>
       <Skeleton className="h-28 w-full rounded-lg" />
       <Skeleton className="h-4 w-28" />
-      <div className="space-y-2 rounded-lg border bg-card p-4">
+      <div className="glass-card space-y-2 rounded-2xl p-4">
         {Array.from({ length: 6 }).map((_, index) => (
           <Skeleton key={index} className="h-12 w-full" />
         ))}

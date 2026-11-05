@@ -20,7 +20,7 @@ export default function ClientsError({
   }, [error]);
 
   return (
-    <div className="mx-auto flex w-full max-w-2xl flex-col items-start gap-4 rounded-lg border bg-card p-8 shadow-sm">
+    <div className="glass-card mx-auto flex w-full max-w-2xl flex-col items-start gap-4 rounded-2xl p-8">
       <div className="space-y-1">
         <h1 className="text-xl font-semibold">{t("title")}</h1>
         <p className="text-sm text-muted-foreground">{t("description")}</p>

@@ -37,15 +37,26 @@ export function ThemeToggle({ className }: { className?: string }) {
       aria-label={label}
       title={label}
       className={cn(
-        "inline-flex h-9 w-9 items-center justify-center rounded-lg border border-sidebar-border bg-background text-muted-foreground transition-colors hover:bg-sidebar-accent hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+        "glass-icon-button h-9 w-9 border-[hsl(var(--border)/0.65)] bg-[hsl(var(--card)/0.45)]",
         className,
       )}
     >
-      {isDark ? (
-        <Sun aria-hidden="true" className="h-[18px] w-[18px]" />
-      ) : (
-        <Moon aria-hidden="true" className="h-[18px] w-[18px]" />
-      )}
+      <span className="relative flex h-[18px] w-[18px] items-center justify-center">
+        <Sun
+          aria-hidden="true"
+          className={cn(
+            "absolute h-[18px] w-[18px] transition-all duration-300",
+            isDark ? "rotate-0 scale-100 opacity-100" : "-rotate-90 scale-50 opacity-0",
+          )}
+        />
+        <Moon
+          aria-hidden="true"
+          className={cn(
+            "absolute h-[18px] w-[18px] transition-all duration-300",
+            isDark ? "rotate-90 scale-50 opacity-0" : "rotate-0 scale-100 opacity-100",
+          )}
+        />
+      </span>
     </button>
   );
 }

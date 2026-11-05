@@ -85,12 +85,21 @@ const config: Config = {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+        "4xl": "2rem",
       },
       boxShadow: {
-        card: "0 1px 2px rgba(15, 23, 42, 0.04), 0 10px 30px -18px rgba(15, 23, 42, 0.18)",
+        card: "0 1px 1px rgba(255, 255, 255, 0.55) inset, 0 18px 46px -26px rgba(21, 34, 66, 0.38)",
         "card-hover":
-          "0 2px 4px rgba(15, 23, 42, 0.04), 0 18px 40px -20px rgba(15, 23, 42, 0.24)",
-        popover: "0 18px 50px -16px rgba(15, 23, 42, 0.24)",
+          "0 1px 1px rgba(255, 255, 255, 0.7) inset, 0 28px 64px -30px rgba(21, 34, 66, 0.46)",
+        popover: "0 1px 0 rgba(255, 255, 255, 0.5) inset, 0 28px 70px -22px rgba(15, 23, 42, 0.34)",
+        glass: "0 1px 1px rgba(255, 255, 255, 0.6) inset, 0 18px 46px -26px rgba(21, 34, 66, 0.38)",
+        "glass-hover":
+          "0 1px 1px rgba(255, 255, 255, 0.75) inset, 0 28px 64px -30px rgba(21, 34, 66, 0.46)",
+        glow: "0 14px 34px -14px hsl(var(--primary) / 0.55)",
+        "inner-light": "inset 0 1px 0 rgba(255, 255, 255, 0.55)",
+      },
+      transitionTimingFunction: {
+        "out-soft": "cubic-bezier(0.22, 1, 0.36, 1)",
       },
       fontFamily: {
         sans: ["var(--font-sans)", "system-ui", "sans-serif"],
@@ -105,10 +114,30 @@ const config: Config = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+        "fade-up": {
+          from: { opacity: "0", transform: "translateY(10px)" },
+          to: { opacity: "1", transform: "translateY(0)" },
+        },
+        "fade-in": {
+          from: { opacity: "0" },
+          to: { opacity: "1" },
+        },
+        shimmer: {
+          "0%": { backgroundPosition: "-200% 0" },
+          "100%": { backgroundPosition: "200% 0" },
+        },
+        float: {
+          "0%, 100%": { transform: "translate3d(0, 0, 0)" },
+          "50%": { transform: "translate3d(0, -14px, 0)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "fade-up": "fade-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) both",
+        "fade-in": "fade-in 0.4s ease-out both",
+        shimmer: "shimmer 2.4s linear infinite",
+        float: "float 9s ease-in-out infinite",
       },
     },
   },

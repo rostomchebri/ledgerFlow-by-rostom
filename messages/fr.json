@@ -7,7 +7,8 @@
     "appName": "LedgerFlow",
     "language": "Langue",
     "soon": "Bientôt",
-    "signOut": "Se déconnecter"
+    "signOut": "Se déconnecter",
+    "viewAll": "Tout voir"
   },
   "roles": {
     "OWNER": "Propriétaire",
@@ -23,12 +24,38 @@
     "invoices": "Factures",
     "tasks": "Tâches",
     "reports": "Rapports",
-    "settings": "Paramètres"
+    "settings": "Paramètres",
+    "dashboard": "Tableau de bord",
+    "transactions": "Transactions",
+    "notifications": "Notifications"
   },
   "shell": {
     "workspace": "Espace comptable",
     "signedInAs": "Connecté en tant que",
-    "demoWorkspace": "Espace démo · sans authentification"
+    "demoWorkspace": "Espace démo · sans authentification",
+    "searchPlaceholder": "Rechercher clients, factures…",
+    "notifications": "Notifications",
+    "notificationsTitle": "Notifications",
+    "notificationsUnread": "{count} non lue(s)",
+    "markAllRead": "Tout marquer comme lu",
+    "notificationsHint": "Vous êtes à jour. Les nouvelles activités apparaîtront ici.",
+    "notificationInvoiceTitle": "Facture payée",
+    "notificationInvoiceBody": "Atlas Consulting a payé la facture INV-2026-018.",
+    "notificationInvoiceTime": "il y a 12 minutes",
+    "notificationTaskTitle": "Échéance proche",
+    "notificationTaskBody": "La déclaration de TVA de Nour Trading arrive dans 2 jours.",
+    "notificationTaskTime": "il y a 1 heure",
+    "profileMenu": "Menu du profil",
+    "openMenu": "Ouvrir le menu",
+    "closeMenu": "Fermer le menu",
+    "collapseSidebar": "Réduire la barre latérale",
+    "expandSidebar": "Déployer la barre latérale",
+    "themeLight": "Passer en mode clair",
+    "themeDark": "Passer en mode sombre",
+    "supportTitle": "Besoin d'aide ?",
+    "supportBody": "Notre équipe vous aide à tirer le meilleur de LedgerFlow.",
+    "supportCta": "Contacter le support",
+    "role": "Rôle"
   },
   "landing": {
     "badge": "CLIENT-02 · gestion des clients",
@@ -40,8 +67,8 @@
   },
   "dashboard": {
     "title": "Tableau de bord",
-    "welcome": "Bienvenue, {name}",
-    "subtitle": "Votre espace de travail LedgerFlow.",
+    "welcome": "Bon retour, {name}",
+    "subtitle": "Voici la situation de votre cabinet. Suivez les revenus, maîtrisez les dépenses et gardez chaque facture sous contrôle.",
     "openClients": "Clients",
     "statusLabel": "Statut du compte",
     "verified": "Vérifié",
@@ -54,7 +81,85 @@
     "securityItemRateLimit": "Limitation du taux de tentatives",
     "securityItemSession": "Sessions signées et révocables",
     "quickTitle": "Raccourcis",
-    "quickBody": "Accédez aux modules disponibles."
+    "quickBody": "Accédez aux modules disponibles.",
+    "eyebrow": "Vue financière",
+    "dateRange": "Période",
+    "ranges": {
+      "month": "Ce mois-ci",
+      "lastMonth": "Le mois dernier",
+      "year": "Cette année"
+    },
+    "kpi": {
+      "revenue": "Revenus totaux",
+      "expenses": "Dépenses totales",
+      "net": "Bénéfice net",
+      "invoices": "Total factures",
+      "vsPrevious": "vs période précédente"
+    },
+    "chart": {
+      "title": "Vue financière",
+      "description": "Revenus et dépenses sur la période sélectionnée.",
+      "revenue": "Revenus",
+      "expenses": "Dépenses",
+      "empty": "Aucune activité pour cette période.",
+      "aria": "Graphique des revenus et dépenses"
+    },
+    "expenses": {
+      "title": "Répartition des dépenses",
+      "description": "Où va votre argent cette période.",
+      "total": "Total des dépenses",
+      "empty": "Aucune dépense enregistrée pour cette période."
+    },
+    "recent": {
+      "title": "Transactions récentes",
+      "description": "Les derniers mouvements de votre cabinet.",
+      "viewAll": "Tout voir",
+      "date": "Date",
+      "descriptionLabel": "Description",
+      "client": "Client",
+      "category": "Catégorie",
+      "amount": "Montant",
+      "status": "Statut",
+      "empty": "Aucune transaction pour le moment."
+    },
+    "invoices": {
+      "title": "Factures",
+      "description": "Vos encaissements en un coup d'œil.",
+      "viewAll": "Toutes les factures",
+      "outstanding": "En attente",
+      "overdue": "En retard",
+      "paid": "Payées",
+      "draft": "Brouillons",
+      "sent": "Envoyées",
+      "count": "{count} factures"
+    },
+    "topClients": {
+      "title": "Meilleurs clients",
+      "description": "Revenus par client sur cette période.",
+      "empty": "Aucun revenu client pour le moment.",
+      "revenueLabel": "Revenus"
+    },
+    "quick": {
+      "title": "Actions rapides",
+      "description": "Les tâches courantes, en un clic.",
+      "newTransaction": "Ajouter une transaction",
+      "newInvoice": "Nouvelle facture",
+      "addClient": "Ajouter un client",
+      "viewReports": "Voir les rapports"
+    },
+    "categories": {
+      "SALES": "Ventes",
+      "SERVICES": "Services",
+      "OPERATIONS": "Opérations",
+      "MARKETING": "Marketing",
+      "SOFTWARE": "Logiciels",
+      "PAYROLL": "Salaires",
+      "OTHER": "Autres"
+    },
+    "statuses": {
+      "CLEARED": "Réglée",
+      "PENDING": "En attente"
+    }
   },
   "onboarding": {
     "meta": {
@@ -92,9 +197,10 @@
       "verifiedNotice": "Votre e-mail est vérifié. Vous pouvez vous connecter.",
       "resetNotice": "Votre mot de passe a été mis à jour. Connectez-vous avec le nouveau.",
       "registeredNotice": "Compte créé. Vérifiez votre boîte mail pour l'activer.",
-      "unverifiedBody": "Votre e-mail n'est pas encore vérifié. Renvoyez le lien de vérification.",
-      "resendSuccess": "Lien de vérification envoyé.",
-      "resendVerification": "Renvoyer le lien",
+      "unverifiedBody": "Votre e-mail n'est pas encore vérifié. Saisissez le code reçu ou demandez-en un nouveau.",
+      "resendSuccess": "Un nouveau code de vérification a été envoyé.",
+      "resendVerification": "Renvoyer le code",
+      "enterCode": "Saisir le code de vérification",
       "emailLabel": "Adresse e-mail",
       "emailPlaceholder": "vous@cabinet.dz",
       "passwordLabel": "Mot de passe",
@@ -124,9 +230,8 @@
       "hasAccount": "Vous avez déjà un compte ?",
       "loginLink": "Se connecter",
       "successTitle": "Vérifiez votre boîte mail",
-      "successBody": "Nous avons envoyé un lien de vérification à {email}.",
-      "resendSuccess": "Lien de vérification envoyé.",
-      "resendVerification": "Renvoyer le lien",
+      "successBody": "Nous avons envoyé un code de vérification à 6 chiffres à {email}.",
+      "enterCode": "Saisir le code de vérification",
       "backToLogin": "Retour à la connexion"
     },
     "forgot": {
@@ -158,20 +263,24 @@
       "requestNew": "Demander un nouveau lien"
     },
     "verify": {
-      "title": "Vérification de l'e-mail",
-      "subtitle": "Confirmez votre adresse pour activer votre compte.",
+      "title": "Saisissez votre code de vérification",
+      "subtitle": "Nous avons envoyé un code à 6 chiffres à votre adresse e-mail.",
       "successTitle": "E-mail vérifié",
       "successBody": "Votre compte est actif. Bienvenue sur LedgerFlow.",
-      "errorTitle": "Lien invalide ou expiré",
-      "errorBody": "Demandez un nouveau lien de vérification ci-dessous.",
+      "errorTitle": "Problème de vérification",
+      "errorBody": "Saisissez le code à 6 chiffres reçu par e-mail ou demandez-en un nouveau.",
       "goToDashboard": "Aller au tableau de bord",
-      "resendTitle": "Renvoyer la vérification",
-      "resendBody": "Saisissez votre e-mail pour recevoir un nouveau lien.",
-      "resendSuccess": "Lien envoyé. Vérifiez votre boîte mail.",
+      "codeLabel": "Code de vérification",
+      "codePlaceholder": "123456",
+      "codeHint": "Saisissez le code à 6 chiffres reçu par e-mail. Il expire dans 10 minutes.",
+      "verifySubmit": "Vérifier l'e-mail",
+      "verifying": "Vérification…",
+      "resendBody": "Vous n'avez pas reçu le code ? Vérifiez vos spams ou demandez-en un nouveau.",
+      "resendSuccess": "Un nouveau code a été envoyé. Vérifiez votre boîte mail.",
+      "resendCode": "Envoyer un nouveau code",
+      "resending": "Envoi…",
       "emailLabel": "Adresse e-mail",
       "emailPlaceholder": "vous@cabinet.dz",
-      "submitting": "Envoi…",
-      "submit": "Envoyer le lien",
       "backToLogin": "Retour à la connexion"
     },
     "errors": {
@@ -181,10 +290,15 @@
       "invalidCredentials": "E-mail ou mot de passe incorrect.",
       "invalidRequest": "Requête invalide. Vérifiez les champs.",
       "forbidden": "Accès refusé.",
+      "invalidOrigin": "Cette adresse n’est pas autorisée à se connecter. Ouvrez l’application sur http://localhost:3000 ou ajoutez cette URL à BETTER_AUTH_TRUSTED_ORIGINS.",
       "invalidEmail": "Adresse e-mail invalide.",
       "required": "Ce champ est obligatoire.",
       "nameTooShort": "Le nom doit contenir au moins 2 caractères.",
-      "weakPassword": "Mot de passe trop faible."
+      "weakPassword": "Mot de passe trop faible.",
+      "invalidCode": "Le code est incorrect.",
+      "codeExpired": "Ce code a expiré. Demandez-en un nouveau.",
+      "tooManyAttempts": "Trop de tentatives. Demandez un nouveau code.",
+      "codeFormat": "Saisissez le code à 6 chiffres reçu par e-mail."
     },
     "passwordIssues": {
       "tooShort": "Au moins 12 caractères",
@@ -228,7 +342,14 @@
       "clearFilters": "Effacer les filtres",
       "emptyTitle": "Aucun client pour le moment",
       "emptyDescription": "Créez votre premier client pour commencer à organiser documents, factures et échéances.",
-      "createClient": "Créer un client"
+      "createClient": "Créer un client",
+      "stats": {
+        "total": "Clients au total",
+        "active": "Clients actifs",
+        "companies": "Entreprises",
+        "individuals": "Particuliers"
+      },
+      "export": "Exporter CSV"
     },
     "filters": {
       "search": "Rechercher",
@@ -422,6 +543,731 @@
       "mismatchBody": "Cette invitation a été envoyée à {email}. Connectez-vous avec cette adresse pour l’accepter.",
       "signedInAs": "Vous êtes connecté en tant que {email}.",
       "wrongAccount": "Connecté en tant que {email}. Changez de compte pour accepter une autre invitation."
+    },
+    "member": {
+      "roleLabel": "Rôle du membre",
+      "remove": "Retirer le membre",
+      "removeConfirm": "Retirer ce membre de l'espace de travail ?",
+      "failed": "Impossible de mettre à jour le membre."
+    }
+  },
+  "transactions": {
+    "meta": {
+      "title": "Transactions",
+      "description": "Tous les revenus et dépenses enregistrés pour votre cabinet."
+    },
+    "eyebrow": "Mouvements financiers",
+    "title": "Transactions",
+    "description": "Tous les revenus et dépenses de votre cabinet, dans un registre auditable.",
+    "summary": {
+      "income": "Revenus",
+      "expenses": "Dépenses",
+      "net": "Solde net",
+      "count": "Transactions"
+    },
+    "filters": {
+      "search": "Rechercher",
+      "searchPlaceholder": "Description, référence ou client…",
+      "type": "Type",
+      "allTypes": "Tous les types",
+      "income": "Revenus",
+      "expense": "Dépenses",
+      "category": "Catégorie",
+      "allCategories": "Toutes les catégories",
+      "apply": "Appliquer",
+      "clear": "Effacer"
+    },
+    "categories": {
+      "SALES": "Ventes",
+      "SERVICES": "Services",
+      "OPERATIONS": "Opérations",
+      "MARKETING": "Marketing",
+      "SOFTWARE": "Logiciels",
+      "PAYROLL": "Salaires",
+      "OTHER": "Autres"
+    },
+    "statuses": {
+      "CLEARED": "Réglée",
+      "PENDING": "En attente"
+    },
+    "table": {
+      "date": "Date",
+      "description": "Description",
+      "client": "Client",
+      "category": "Catégorie",
+      "status": "Statut",
+      "amount": "Montant",
+      "noClient": "—",
+      "emptyTitle": "Aucune transaction trouvée",
+      "emptyBody": "Modifiez les filtres ou enregistrez votre première transaction.",
+      "actions": "Actions",
+      "edit": "Modifier la transaction"
+    },
+    "pagination": {
+      "showing": "{from}–{to} sur {total}",
+      "previous": "Précédent",
+      "next": "Suivant"
+    },
+    "export": "Exporter en CSV",
+    "new": "Nouvelle transaction",
+    "types": {
+      "INCOME": "Revenu",
+      "EXPENSE": "Dépense"
+    },
+    "form": {
+      "detailsTitle": "Détails de la transaction",
+      "detailsDescription": "Indiquez le montant, la date et son origine.",
+      "type": "Type",
+      "category": "Catégorie",
+      "description": "Description",
+      "amount": "Montant",
+      "currency": "Devise",
+      "date": "Date",
+      "status": "Statut",
+      "client": "Client",
+      "noClient": "Aucun client",
+      "reference": "Référence",
+      "cancel": "Annuler",
+      "save": "Enregistrer la transaction",
+      "saving": "Enregistrement…",
+      "fixErrors": "Corrigez les champs signalés et réessayez.",
+      "saveFailed": "Impossible d'enregistrer la transaction.",
+      "networkError": "Erreur réseau. Vérifiez votre connexion et réessayez.",
+      "types": {
+        "INCOME": "Revenu",
+        "EXPENSE": "Dépense"
+      },
+      "categories": {
+        "SALES": "Ventes",
+        "SERVICES": "Services",
+        "OPERATIONS": "Opérations",
+        "MARKETING": "Marketing",
+        "SOFTWARE": "Logiciels",
+        "PAYROLL": "Paie",
+        "OTHER": "Autre"
+      },
+      "statuses": {
+        "CLEARED": "Réglée",
+        "PENDING": "En attente"
+      }
+    },
+    "newPage": {
+      "title": "Nouvelle transaction",
+      "description": "Enregistrez un revenu ou une dépense dans le grand livre.",
+      "back": "Retour aux transactions"
+    },
+    "editPage": {
+      "title": "Modifier la transaction",
+      "description": "Mettez à jour cette transaction.",
+      "back": "Retour aux transactions"
+    },
+    "delete": {
+      "button": "Supprimer",
+      "confirm": "Supprimer cette transaction ? Cette action est irréversible.",
+      "failed": "Impossible de supprimer la transaction."
+    }
+  },
+  "invoices": {
+    "meta": {
+      "title": "Factures",
+      "description": "Suivez les factures émises, payées et en attente."
+    },
+    "eyebrow": "Facturation",
+    "title": "Factures",
+    "description": "Suivez ce qui a été facturé, payé et reste en attente.",
+    "summary": {
+      "paid": "Payées",
+      "outstanding": "En attente",
+      "overdue": "En retard",
+      "draft": "Brouillons"
+    },
+    "filters": {
+      "search": "Rechercher",
+      "searchPlaceholder": "Numéro de facture ou client…",
+      "status": "Statut",
+      "all": "Toutes les factures",
+      "apply": "Appliquer",
+      "clear": "Effacer"
+    },
+    "statuses": {
+      "DRAFT": "Brouillon",
+      "SENT": "Envoyée",
+      "PAID": "Payée",
+      "OVERDUE": "En retard"
+    },
+    "table": {
+      "number": "Facture",
+      "client": "Client",
+      "issueDate": "Émise le",
+      "dueDate": "Échéance",
+      "status": "Statut",
+      "amount": "Montant",
+      "emptyTitle": "Aucune facture trouvée",
+      "emptyBody": "Modifiez les filtres pour voir plus de factures.",
+      "select": "Sélectionner la facture {number}",
+      "selectAll": "Sélectionner toutes les factures"
+    },
+    "pagination": {
+      "showing": "{from}–{to} sur {total}",
+      "previous": "Précédent",
+      "next": "Suivant"
+    },
+    "export": "Exporter en CSV",
+    "count": "{count, plural, =0 {Aucune facture} one {# facture} other {# factures}}",
+    "new": "Nouvelle facture",
+    "bulk": {
+      "selected": "{count} sélectionnée(s)",
+      "send": "Marquer envoyée",
+      "paid": "Marquer payée",
+      "overdue": "Marquer en retard",
+      "clear": "Effacer",
+      "failed": "Impossible de mettre à jour les factures sélectionnées."
+    },
+    "form": {
+      "headerTitle": "En-tête de la facture",
+      "headerDescription": "Client, numéro et dates.",
+      "client": "Client",
+      "selectClient": "Sélectionner un client",
+      "number": "Numéro de facture",
+      "issueDate": "Date d'émission",
+      "dueDate": "Date d'échéance",
+      "currency": "Devise",
+      "linesTitle": "Lignes",
+      "linesDescription": "Ce qui a été facturé.",
+      "addLine": "Ajouter une ligne",
+      "description": "Description",
+      "quantity": "Qté",
+      "unitPrice": "Prix unitaire",
+      "removeLine": "Supprimer la ligne",
+      "total": "Total",
+      "notes": "Notes",
+      "cancel": "Annuler",
+      "save": "Enregistrer la facture",
+      "saving": "Enregistrement…",
+      "fixErrors": "Corrigez les champs signalés et réessayez.",
+      "saveFailed": "Impossible d'enregistrer la facture.",
+      "networkError": "Erreur réseau. Vérifiez votre connexion et réessayez."
+    },
+    "create": {
+      "title": "Nouvelle facture",
+      "description": "Créez un brouillon, puis envoyez-le lorsqu'il est prêt.",
+      "back": "Retour aux factures"
+    },
+    "editPage": {
+      "title": "Modifier la facture",
+      "description": "Mettez à jour le brouillon {number}.",
+      "back": "Retour à la facture"
+    },
+    "detail": {
+      "back": "Retour aux factures",
+      "edit": "Modifier",
+      "delete": "Supprimer",
+      "deleteConfirm": "Supprimer ce brouillon de facture ? Cette action est irréversible.",
+      "deleteFailed": "Impossible de supprimer la facture.",
+      "exportRegister": "Exporter le registre",
+      "fallbackTitle": "Facture",
+      "total": "Total",
+      "issued": "Émise le",
+      "due": "Échéance",
+      "currency": "Devise",
+      "status": "Statut",
+      "linesTitle": "Lignes",
+      "description": "Description",
+      "quantity": "Qté",
+      "unitPrice": "Prix unitaire",
+      "lineTotal": "Montant",
+      "subtotal": "Sous-total",
+      "notes": "Notes",
+      "markSent": "Marquer envoyée",
+      "markPaid": "Marquer payée",
+      "markOverdue": "Marquer en retard",
+      "statusFailed": "Impossible de mettre à jour le statut de la facture.",
+      "statuses": {
+        "DRAFT": "Brouillon",
+        "SENT": "Envoyée",
+        "PAID": "Payée",
+        "OVERDUE": "En retard"
+      }
+    }
+  },
+  "reports": {
+    "meta": {
+      "title": "Rapports",
+      "description": "Performance financière, répartition des dépenses et revenus clients."
+    },
+    "eyebrow": "Analyses",
+    "title": "Rapports",
+    "description": "Une vue claire de la performance financière et du mix client de votre cabinet.",
+    "rangeTitle": "Période de reporting",
+    "export": "Exporter en CSV",
+    "exportHint": "Téléchargez toutes les transactions de cette période.",
+    "kpis": {
+      "revenue": "Revenus",
+      "expenses": "Dépenses",
+      "net": "Bénéfice net",
+      "margin": "Marge nette"
+    },
+    "chartTitle": "Revenus vs dépenses",
+    "chartDescription": "Comparaison mensuelle sur la période sélectionnée.",
+    "expenseTitle": "Répartition des dépenses",
+    "expenseDescription": "Part des dépenses par catégorie.",
+    "clientsTitle": "Meilleurs clients",
+    "clientsDescription": "Clients classés par revenus.",
+    "monthlyTitle": "Performance mensuelle",
+    "monthlyDescription": "Revenus, dépenses et bénéfice net par mois.",
+    "columns": {
+      "month": "Mois",
+      "revenue": "Revenus",
+      "expenses": "Dépenses",
+      "net": "Bénéfice net",
+      "invoices": "Factures"
+    },
+    "empty": "Aucune donnée pour cette période.",
+    "profit": "Bénéfice net",
+    "invoiceRegister": {
+      "meta": {
+        "title": "Registre des factures",
+        "description": "Toutes les factures avec les totaux par statut."
+      },
+      "back": "Retour aux rapports",
+      "eyebrow": "Rapports",
+      "title": "Registre des factures",
+      "description": "Toutes les factures, groupées par statut, avec un export CSV en un clic.",
+      "export": "Exporter CSV",
+      "statuses": {
+        "DRAFT": "Brouillon",
+        "SENT": "Envoyée",
+        "PAID": "Payée",
+        "OVERDUE": "En retard"
+      },
+      "count": "{count, plural, =0 {Aucune facture} one {# facture} other {# factures}}",
+      "totalLabel": "Total facturé",
+      "tableTitle": "Toutes les factures",
+      "columns": {
+        "number": "Facture",
+        "client": "Client",
+        "issued": "Émise le",
+        "due": "Échéance",
+        "status": "Statut",
+        "total": "Total"
+      },
+      "limitHint": "Les 200 factures les plus récentes sont affichées. Utilisez l'export CSV pour le registre complet."
+    }
+  },
+  "settings": {
+    "meta": {
+      "title": "Paramètres",
+      "description": "Gérez votre compte, votre espace et vos préférences."
+    },
+    "eyebrow": "Espace de travail",
+    "title": "Paramètres",
+    "description": "Gérez votre compte, votre espace et vos préférences.",
+    "profileTitle": "Profil",
+    "profileDescription": "Vos informations personnelles et votre rôle dans cet espace.",
+    "name": "Nom complet",
+    "email": "Adresse e-mail",
+    "role": "Rôle",
+    "memberSince": "Membre depuis",
+    "verified": "E-mail vérifié",
+    "unverified": "E-mail non vérifié",
+    "workspaceTitle": "Espace de travail",
+    "workspaceDescription": "Paramètres partagés par toute votre équipe.",
+    "firmName": "Nom du cabinet",
+    "slug": "URL de l'espace",
+    "members": "Membres de l'équipe",
+    "manageTeam": "Gérer l'équipe",
+    "preferencesTitle": "Préférences",
+    "preferencesDescription": "Adaptez LedgerFlow à votre façon de travailler.",
+    "theme": "Thème",
+    "themeHint": "Passez du mode clair au mode sombre.",
+    "language": "Langue",
+    "languageHint": "Choisissez la langue de l'interface.",
+    "securityTitle": "Sécurité",
+    "securityDescription": "Votre compte est protégé par :",
+    "securityEmail": "Vérification de l'e-mail",
+    "securityRate": "Limitation des tentatives de connexion",
+    "securitySession": "Sessions signées et révocables",
+    "teamTitle": "Équipe et accès",
+    "teamDescription": "Invitez des collègues et gérez leurs rôles.",
+    "auditTitle": "Journal d'audit",
+    "auditDescription": "Consultez chaque changement important de l'espace de travail."
+  },
+  "notifications": {
+    "meta": {
+      "title": "Notifications",
+      "description": "Consultez les rappels de tâches, les alertes de factures et l’activité du cabinet."
+    },
+    "eyebrow": "Boîte de réception",
+    "title": "Notifications",
+    "description": "Rappels de tâches, factures en retard et activité du cabinet au même endroit.",
+    "open": "Ouvrir les notifications",
+    "unread": "{count} non lue(s)",
+    "markAll": "Tout marquer comme lu",
+    "loading": "Chargement des notifications…",
+    "empty": "Vous êtes à jour",
+    "emptyBody": "Les nouveaux rappels et alertes de factures apparaîtront ici.",
+    "new": "Nouveau",
+    "viewAll": "Voir toutes les notifications"
+  },
+  "tasks": {
+    "meta": {
+      "title": "Tâches",
+      "description": "Planifiez, attribuez et suivez le travail client."
+    },
+    "eyebrow": "Flux de travail",
+    "title": "Tâches",
+    "description": "Planifiez, attribuez et suivez le travail client depuis une file partagée.",
+    "export": "Exporter",
+    "templates": "Modèles",
+    "new": "Nouvelle tâche",
+    "total": "{count} tâches",
+    "noClient": "Aucun client",
+    "unassigned": "Non attribuée",
+    "views": {
+      "list": "Liste",
+      "board": "Tableau",
+      "calendar": "Calendrier"
+    },
+    "table": {
+      "task": "Tâche",
+      "client": "Client",
+      "assignee": "Assigné à",
+      "due": "Échéance",
+      "priority": "Priorité",
+      "status": "Statut",
+      "emptyTitle": "Aucune tâche pour le moment",
+      "emptyBody": "Créez votre première tâche pour suivre le travail client."
+    },
+    "pagination": {
+      "page": "Page {page} sur {pages}",
+      "previous": "Précédent",
+      "next": "Suivant"
+    },
+    "priorities": {
+      "LOW": "Faible",
+      "MEDIUM": "Moyenne",
+      "HIGH": "Élevée",
+      "URGENT": "Urgente"
+    },
+    "statuses": {
+      "label": "Statut",
+      "TODO": "À faire",
+      "IN_PROGRESS": "En cours",
+      "DONE": "Terminée",
+      "CANCELLED": "Annulée"
+    },
+    "recurrences": {
+      "NONE": "Ne se répète pas",
+      "DAILY": "Quotidienne",
+      "WEEKLY": "Hebdomadaire",
+      "MONTHLY": "Mensuelle"
+    },
+    "board": {
+      "empty": "Rien ici",
+      "items": "éléments de liste"
+    },
+    "calendar": {
+      "hint": "Regroupées par échéance",
+      "more": "+{count} de plus"
+    },
+    "form": {
+      "detailsTitle": "Détails de la tâche",
+      "detailsDescription": "Renseignez l’essentiel, puis ajustez l’assignation et le planning.",
+      "titleLabel": "Titre",
+      "titlePlaceholder": "Ex. Préparer la déclaration de TVA",
+      "descriptionLabel": "Description",
+      "descriptionPlaceholder": "Ajoutez du contexte, des liens ou des étapes…",
+      "clientLabel": "Client",
+      "noClient": "Aucun client",
+      "assigneeLabel": "Assigné à",
+      "unassigned": "Non attribuée",
+      "statusLabel": "Statut",
+      "priorityLabel": "Priorité",
+      "dueDateLabel": "Échéance",
+      "recurrenceLabel": "Récurrence",
+      "recurrenceHint": "Une nouvelle tâche est créée lorsque celle-ci est terminée.",
+      "checklistLabel": "Liste de contrôle",
+      "checklistPlaceholder": "Une étape par ligne",
+      "checklistHint": "Chaque ligne devient un élément de la liste de contrôle.",
+      "cancel": "Annuler",
+      "save": "Enregistrer la tâche",
+      "saving": "Enregistrement…",
+      "saveFailed": "Impossible d’enregistrer la tâche.",
+      "fixErrors": "Corrigez les champs signalés puis réessayez.",
+      "networkError": "Erreur réseau. Vérifiez votre connexion et réessayez."
+    },
+    "filters": {
+      "search": "Rechercher",
+      "searchPlaceholder": "Rechercher une tâche…",
+      "status": "Statut",
+      "allStatuses": "Tous les statuts",
+      "statusOptions": {
+        "TODO": "À faire",
+        "IN_PROGRESS": "En cours",
+        "DONE": "Terminée",
+        "CANCELLED": "Annulée"
+      },
+      "priority": "Priorité",
+      "allPriorities": "Toutes les priorités",
+      "priorityOptions": {
+        "LOW": "Faible",
+        "MEDIUM": "Moyenne",
+        "HIGH": "Élevée",
+        "URGENT": "Urgente"
+      },
+      "apply": "Filtrer",
+      "clear": "Réinitialiser"
+    },
+    "comments": {
+      "empty": "Aucun commentaire pour le moment.",
+      "placeholder": "Écrire un commentaire…",
+      "submit": "Publier",
+      "sending": "Envoi…",
+      "failed": "Impossible d’envoyer le commentaire.",
+      "networkError": "Erreur réseau. Réessayez."
+    },
+    "checklist": {
+      "empty": "Aucune étape pour le moment.",
+      "progress": "{done} sur {total} terminées",
+      "placeholder": "Ajouter une étape…",
+      "add": "Ajouter",
+      "failed": "Impossible d’ajouter l’étape.",
+      "networkError": "Erreur réseau. Réessayez."
+    },
+    "delete": {
+      "button": "Supprimer",
+      "confirm": "Supprimer cette tâche ? Cette action est irréversible.",
+      "failed": "Impossible de supprimer la tâche.",
+      "networkError": "Erreur réseau. Réessayez."
+    },
+    "detail": {
+      "back": "Retour aux tâches",
+      "edit": "Modifier",
+      "fallbackTitle": "Tâche",
+      "priorities": {
+        "LOW": "Faible",
+        "MEDIUM": "Moyenne",
+        "HIGH": "Élevée",
+        "URGENT": "Urgente"
+      },
+      "statuses": {
+        "TODO": "À faire",
+        "IN_PROGRESS": "En cours",
+        "DONE": "Terminée",
+        "CANCELLED": "Annulée"
+      },
+      "recurrences": {
+        "NONE": "Ne se répète pas",
+        "DAILY": "Quotidienne",
+        "WEEKLY": "Hebdomadaire",
+        "MONTHLY": "Mensuelle"
+      },
+      "client": "Client",
+      "noClient": "Aucun client",
+      "assignee": "Assigné à",
+      "unassigned": "Non attribuée",
+      "dueDate": "Échéance",
+      "noDueDate": "Aucune échéance",
+      "createdBy": "Créée par",
+      "commentsTitle": "Commentaires",
+      "checklistTitle": "Liste de contrôle"
+    },
+    "createPage": {
+      "title": "Nouvelle tâche",
+      "description": "Ajoutez une tâche, attribuez-la à un coéquipier et fixez une échéance."
+    },
+    "edit": {
+      "title": "Modifier la tâche",
+      "description": "Mettez à jour les détails, l’assignation et le planning."
+    },
+    "templatesPage": {
+      "title": "Modèles de tâches",
+      "description": "Créez des tâches récurrentes en un clic.",
+      "back": "Retour aux tâches",
+      "existingTitle": "Vos modèles",
+      "empty": "Aucun modèle pour le moment.",
+      "newTitle": "Nouveau modèle",
+      "offsetValue": "Échéance dans {days} jours",
+      "use": "Utiliser",
+      "useFailed": "Impossible de créer une tâche depuis ce modèle.",
+      "networkError": "Erreur réseau. Réessayez.",
+      "priorities": {
+        "LOW": "Faible",
+        "MEDIUM": "Moyenne",
+        "HIGH": "Élevée",
+        "URGENT": "Urgente"
+      },
+      "recurrences": {
+        "NONE": "Ne se répète pas",
+        "DAILY": "Quotidienne",
+        "WEEKLY": "Hebdomadaire",
+        "MONTHLY": "Mensuelle"
+      },
+      "form": {
+        "name": "Nom du modèle",
+        "namePlaceholder": "Ex. TVA mensuelle",
+        "title": "Titre de la tâche",
+        "titlePlaceholder": "Ex. Préparer la déclaration de TVA",
+        "description": "Description",
+        "priority": "Priorité",
+        "recurrence": "Récurrence",
+        "offset": "Décalage d’échéance (jours)",
+        "submit": "Créer le modèle",
+        "saving": "Création…",
+        "invalid": "Vérifiez les champs du modèle.",
+        "failed": "Impossible de créer le modèle.",
+        "networkError": "Erreur réseau. Réessayez.",
+        "priorities": {
+          "LOW": "Faible",
+          "MEDIUM": "Moyenne",
+          "HIGH": "Élevée",
+          "URGENT": "Urgente"
+        },
+        "recurrences": {
+          "NONE": "Ne se répète pas",
+          "DAILY": "Quotidienne",
+          "WEEKLY": "Hebdomadaire",
+          "MONTHLY": "Mensuelle"
+        }
+      }
+    }
+  },
+  "notFound": {
+    "title": "Page introuvable",
+    "description": "La page demandée n'existe pas ou a été déplacée.",
+    "back": "Retour à l'accueil"
+  },
+  "documents": {
+    "meta": {
+      "title": "Documents",
+      "description": "Stockez et organisez les fichiers clients dans une bibliothèque sécurisée."
+    },
+    "eyebrow": "Bibliothèque",
+    "title": "Documents",
+    "description": "Contrats, reçus, documents fiscaux et fichiers clients dans une bibliothèque consultable.",
+    "uploadButton": "Ajouter un document",
+    "archived": "Archivé",
+    "tagsLabel": "Étiquettes",
+    "download": "Télécharger",
+    "filters": {
+      "search": "Rechercher",
+      "searchPlaceholder": "Rechercher des documents…",
+      "category": "Catégorie",
+      "allCategories": "Toutes les catégories",
+      "status": "Statut",
+      "statuses": {
+        "active": "Actifs",
+        "archived": "Archivés",
+        "all": "Tous"
+      },
+      "categories": {
+        "CONTRACT": "Contrat",
+        "INVOICE": "Facture",
+        "RECEIPT": "Reçu",
+        "TAX": "Fiscal",
+        "IDENTITY": "Identité",
+        "BANK": "Banque",
+        "OTHER": "Autre"
+      },
+      "apply": "Filtrer",
+      "clear": "Réinitialiser"
+    },
+    "table": {
+      "name": "Document",
+      "category": "Catégorie",
+      "client": "Client",
+      "size": "Taille",
+      "uploaded": "Ajouté le",
+      "actions": "Actions",
+      "emptyTitle": "Aucun document",
+      "emptyBody": "Ajoutez votre premier document pour commencer la bibliothèque."
+    },
+    "pagination": {
+      "showing": "{from}–{to} sur {total}",
+      "previous": "Précédent",
+      "next": "Suivant"
+    },
+    "upload": {
+      "title": "Ajouter un document",
+      "description": "Description",
+      "back": "Retour aux documents",
+      "fileTitle": "Choisir un fichier",
+      "fileDescription": "PDF, image, tableur, document, texte ou ZIP jusqu'à 25 Mo.",
+      "chooseFile": "Choisir un fichier",
+      "limits": "Jusqu'à 25 Mo",
+      "fileRequired": "Choisissez un fichier à ajouter.",
+      "tooLarge": "Ce fichier dépasse 25 Mo.",
+      "typeNotAllowed": "Ce type de fichier n'est pas autorisé.",
+      "name": "Nom du document",
+      "namePlaceholder": "Par défaut, le nom du fichier",
+      "category": "Catégorie",
+      "categories": {
+        "CONTRACT": "Contrat",
+        "INVOICE": "Facture",
+        "RECEIPT": "Reçu",
+        "TAX": "Fiscal",
+        "IDENTITY": "Identité",
+        "BANK": "Banque",
+        "OTHER": "Autre"
+      },
+      "client": "Client",
+      "noClient": "Aucun client",
+      "tags": "Étiquettes",
+      "tagsPlaceholder": "étiquettes, séparées, par, des, virgules",
+      "submit": "Ajouter",
+      "uploading": "Ajout en cours…",
+      "failed": "Impossible d'ajouter le document.",
+      "networkError": "Erreur réseau. Vérifiez votre connexion et réessayez.",
+      "pageDescription": "Ajoutez un fichier et rattachez-le au client et à la catégorie."
+    },
+    "archive": {
+      "button": "Archiver",
+      "confirm": "Archiver ce document ? Vous pourrez le restaurer plus tard.",
+      "restore": "Restaurer",
+      "restoreConfirm": "Restaurer ce document ?",
+      "failed": "Impossible de mettre à jour le document.",
+      "networkError": "Erreur réseau. Réessayez."
+    },
+    "detail": {
+      "fallbackTitle": "Document",
+      "back": "Retour aux documents",
+      "previewTitle": "Aperçu",
+      "archivedBody": "Ce document est archivé. Restaurez-le pour afficher l'aperçu.",
+      "noPreview": "Aucun aperçu disponible. Téléchargez le fichier pour le consulter.",
+      "infoTitle": "Détails",
+      "category": "Catégorie",
+      "client": "Client",
+      "size": "Taille",
+      "uploadedBy": "Ajouté par",
+      "uploadedAt": "Ajouté le",
+      "type": "Type de fichier"
+    }
+  },
+  "audit": {
+    "meta": {
+      "title": "Journal d'audit",
+      "description": "Consultez chaque changement important de l'espace de travail."
+    },
+    "back": "Retour aux paramètres",
+    "eyebrow": "Sécurité",
+    "title": "Journal d'audit",
+    "description": "Un historique ajouté uniquement, indiquant qui a modifié quoi et quand.",
+    "filters": {
+      "search": "Rechercher",
+      "searchPlaceholder": "Rechercher par action, entité ou membre…",
+      "action": "Action",
+      "allActions": "Toutes les actions",
+      "apply": "Filtrer",
+      "clear": "Réinitialiser"
+    },
+    "emptyTitle": "Aucune activité",
+    "emptyBody": "Les changements importants apparaîtront ici.",
+    "entries": "{count, plural, =0 {Aucune entrée} one {# entrée} other {# entrées}}",
+    "systemActor": "Système",
+    "pagination": {
+      "showing": "{from}–{to} sur {total}",
+      "previous": "Précédent",
+      "next": "Suivant"
     }
   }
 }

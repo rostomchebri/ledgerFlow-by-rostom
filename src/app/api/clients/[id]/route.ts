@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 
 import { ApiError, apiErrorResponse } from "@/lib/api-error";
 import { readJson } from "@/lib/api";
+import { recordAudit } from "@/lib/audit/service";
 import { clientUpdateSchema, fieldErrorsFromZod } from "@/lib/clients/schema";
 import {
   ClientNotFoundError,
@@ -40,7 +41,7 @@ export async function GET(_request: Request, { params }: RouteContext) {
 /** PATCH /api/clients/:id — partial update (tenant-scoped). */
 export async function PATCH(request: Request, { params }: RouteContext) {
   try {
-    const { firmId, role } = await requireApiFirmContext();
+    const { firmId, role, userId } = await requireApiFirmContext();
     assertPermission(role, "client.write");
 
     const { id } = await params;
@@ -58,6 +59,14 @@ export async function PATCH(request: Request, { params }: RouteContext) {
     }
 
     const client = await updateClient(firmId, id, parsed.data);
+    await recordAudit({
+      firmId,
+      actorId: userId,
+      action: parsed.data.assignedToId !== undefined ? "client.assigned" : "client.updated",
+      entityType: "client",
+      entityId: client.id,
+      metadata: { name: client.name, assignedToId: client.assignedToId },
+    });
     return NextResponse.json({ data: client });
   } catch (error) {
     return apiErrorResponse(toApiError(error));
@@ -67,11 +76,19 @@ export async function PATCH(request: Request, { params }: RouteContext) {
 /** DELETE /api/clients/:id — soft delete (archive). Restore is POST /restore. */
 export async function DELETE(_request: Request, { params }: RouteContext) {
   try {
-    const { firmId, role } = await requireApiFirmContext();
+    const { firmId, role, userId } = await requireApiFirmContext();
     assertPermission(role, "client.archive");
 
     const { id } = await params;
     const client = await setClientArchived(firmId, id, true);
+    await recordAudit({
+      firmId,
+      actorId: userId,
+      action: "client.archived",
+      entityType: "client",
+      entityId: client.id,
+      metadata: { name: client.name },
+    });
     return NextResponse.json({ data: client });
   } catch (error) {
     return apiErrorResponse(toApiError(error));

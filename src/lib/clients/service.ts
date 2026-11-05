@@ -65,11 +65,22 @@ export async function getClientOrThrow(firmId: string, clientId: string): Promis
   return client;
 }
 
+async function assertAssignee(firmId: string, assignedToId: string | undefined) {
+  if (!assignedToId) return;
+  const member = await db.firmMember.findFirst({
+    where: { firmId, userId: assignedToId },
+    select: { id: true },
+  });
+  if (!member) throw new ClientConflictError("The selected assignee is not a firm member.");
+}
+
 export async function createClient(
   firmId: string,
   input: ClientInput,
   actorId: string | null = null,
 ): Promise<Client> {
+  await assertAssignee(firmId, input.assignedToId);
+
   return db.client.create({
     data: {
       ...input,
@@ -86,6 +97,8 @@ export async function updateClient(
 ): Promise<Client> {
   const existing = await getClient(firmId, clientId);
   if (!existing) throw new ClientNotFoundError();
+
+  await assertAssignee(firmId, input.assignedToId);
 
   return db.client.update({
     where: { id: existing.id },
