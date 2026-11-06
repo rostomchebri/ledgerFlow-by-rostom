@@ -18,6 +18,10 @@
   },
   "nav": {
     "mainLabel": "Navigation principale",
+    "groups": {
+      "workspace": "Espace de travail",
+      "account": "Compte"
+    },
     "overview": "Vue d'ensemble",
     "clients": "Clients",
     "documents": "Documents",
@@ -1149,6 +1153,11 @@
     "archived": "Archivé",
     "tagsLabel": "Étiquettes",
     "download": "Télécharger",
+    "downloadError": "Le fichier n'a pas pu être téléchargé. Veuillez réessayer.",
+    "downloadMissing": "Ce fichier n'est plus disponible dans le stockage.",
+    "downloadForbidden": "Vous n'avez pas l'autorisation de télécharger ce fichier.",
+    "downloadUnavailable": "Le stockage des documents est temporairement indisponible.",
+    "downloadNetwork": "Erreur réseau. Vérifiez votre connexion et réessayez.",
     "filters": {
       "search": "Rechercher",
       "searchPlaceholder": "Rechercher des documents…",

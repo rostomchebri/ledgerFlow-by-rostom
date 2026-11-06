@@ -9,8 +9,13 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  // Pooled connection (PgBouncer) for application traffic on Neon.
+  url       = env("DATABASE_URL")
+  // Direct connection for migrations, introspection and other session-scoped
+  // operations. On Neon this is DATABASE_URL_UNPOOLED; locally it can match
+  // DATABASE_URL.
+  directUrl = env("DATABASE_URL_UNPOOLED")
 }
 
 model User {
@@ -358,20 +363,24 @@ enum DocumentCategory {
 }
 
 model Document {
-  id           String           @id @default(cuid())
-  firmId       String
-  clientId     String?
-  uploadedById String?
-  name         String
-  description  String?
-  category     DocumentCategory @default(OTHER)
-  tags         String[]         @default([])
-  mimeType     String
-  size         Int
-  storageKey   String           @unique
-  deletedAt    DateTime?
-  createdAt    DateTime         @default(now())
-  updatedAt    DateTime         @updatedAt
+  id               String           @id @default(cuid())
+  firmId           String
+  clientId         String?
+  uploadedById     String?
+  name             String
+  /**
+   * Original upload filename, used to preserve the name and extension on download.
+   */
+  originalFilename String?
+  description      String?
+  category         DocumentCategory @default(OTHER)
+  tags             String[]         @default([])
+  mimeType         String
+  size             Int
+  storageKey       String           @unique
+  deletedAt        DateTime?
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
 
   firm       Firm    @relation(fields: [firmId], references: [id], onDelete: Cascade)
   client     Client? @relation(fields: [clientId], references: [id], onDelete: SetNull)

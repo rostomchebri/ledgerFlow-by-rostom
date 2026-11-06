@@ -8,6 +8,7 @@ export type ApiErrorCode =
   | "NOT_FOUND"
   | "CONFLICT"
   | "RATE_LIMITED"
+  | "SERVICE_UNAVAILABLE"
   | "INTERNAL_ERROR";
 
 const STATUS_BY_CODE: Record<ApiErrorCode, number> = {
@@ -17,6 +18,7 @@ const STATUS_BY_CODE: Record<ApiErrorCode, number> = {
   NOT_FOUND: 404,
   CONFLICT: 409,
   RATE_LIMITED: 429,
+  SERVICE_UNAVAILABLE: 503,
   INTERNAL_ERROR: 500,
 };
 

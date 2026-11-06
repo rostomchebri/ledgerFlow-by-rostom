@@ -100,6 +100,8 @@ const config: Config = {
       },
       transitionTimingFunction: {
         "out-soft": "cubic-bezier(0.22, 1, 0.36, 1)",
+        spring: "cubic-bezier(0.34, 1.32, 0.64, 1)",
+        "in-out-soft": "cubic-bezier(0.65, 0, 0.35, 1)",
       },
       fontFamily: {
         sans: ["var(--font-sans)", "system-ui", "sans-serif"],

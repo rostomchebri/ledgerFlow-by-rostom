@@ -36,8 +36,14 @@ function attachLogging(boss: PgBoss): void {
 }
 
 async function createBoss(options: { worker: boolean }): Promise<PgBoss> {
+  // The worker holds long-lived connections and runs maintenance, so prefer the
+  // direct (non-pooled) Neon URL. The web producer uses the pooled URL.
+  const connectionString = options.worker
+    ? (env.DATABASE_URL_UNPOOLED ?? env.DATABASE_URL)
+    : env.DATABASE_URL;
+
   const boss = new PgBoss({
-    connectionString: env.DATABASE_URL,
+    connectionString,
     schema: env.JOBS_SCHEMA,
     application_name: options.worker ? "ledgerflow-worker" : "ledgerflow-web",
     supervise: options.worker,

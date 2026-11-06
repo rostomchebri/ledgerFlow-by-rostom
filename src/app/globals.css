@@ -62,6 +62,28 @@
 
     --radius: 1rem;
 
+    /* ── Motion system ──────────────────────────────────────────────────
+       One set of durations/curves keeps interactions coherent. Fast is for
+       hover/press, base for popovers and state changes, slow for surfaces
+       that travel across the screen (the nav indicator, the drawer). */
+    --motion-fast: 140ms;
+    --motion-base: 220ms;
+    --motion-slow: 340ms;
+    --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+    --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+    --ease-spring: cubic-bezier(0.34, 1.32, 0.64, 1);
+
+    /* Sidebar-specific glass: slightly denser than cards so navigation text
+       stays legible over any page content. */
+    --sidebar-glass: rgba(252, 253, 255, 0.72);
+    --sidebar-glass-strong: rgba(255, 255, 255, 0.88);
+    --sidebar-sheen: rgba(255, 255, 255, 0.7);
+    --sidebar-edge: rgba(255, 255, 255, 0.78);
+    --sidebar-shadow: 0 28px 70px -44px rgba(15, 23, 42, 0.52);
+    --sidebar-nav-hover: rgba(255, 255, 255, 0.5);
+    --sidebar-active: hsl(var(--primary) / 0.14);
+    --sidebar-active-border: hsl(var(--primary) / 0.24);
+
     /* ── Liquid Glass surfaces ───────────────────────────────────────── */
     --glass-surface: rgba(255, 255, 255, 0.36);
     --glass-surface-strong: rgba(255, 255, 255, 0.55);
@@ -136,6 +158,15 @@
     --chart-3: 33 92% 62%;
     --chart-4: 263 78% 72%;
     --chart-5: 158 56% 50%;
+
+    --sidebar-glass: rgba(17, 26, 43, 0.72);
+    --sidebar-glass-strong: rgba(32, 45, 68, 0.82);
+    --sidebar-sheen: rgba(255, 255, 255, 0.09);
+    --sidebar-edge: rgba(255, 255, 255, 0.11);
+    --sidebar-shadow: 0 28px 80px -38px rgba(0, 0, 0, 0.92);
+    --sidebar-nav-hover: rgba(255, 255, 255, 0.06);
+    --sidebar-active: hsl(var(--primary) / 0.2);
+    --sidebar-active-border: hsl(var(--primary) / 0.3);
 
     /* Dark glass keeps the same layering but with luminous low-opacity
        surfaces instead of white ones. */
@@ -362,41 +393,216 @@
       0 16px 40px -26px rgba(0, 0, 0, 0.75);
   }
 
-  /* Desktop sidebar glass, layered to read as a floating pane. */
+  /*
+   * Desktop sidebar glass. Restrained rather than showy: a denser translucent
+   * pane with one broad top reflection, a hairline inner edge and a soft
+   * ambient shadow. The blur is deliberately below the card value so text and
+   * icons stay crisp.
+   */
   .glass-sidebar {
-    background-color: var(--glass-surface);
+    position: relative;
+    isolation: isolate;
+    background-color: var(--sidebar-glass);
     background-image:
-      linear-gradient(
-        180deg,
-        color-mix(in srgb, var(--glass-surface-strong) 92%, white 8%) 0%,
-        transparent 56%,
-        color-mix(in srgb, var(--glass-surface-soft) 86%, transparent) 100%
-      ),
-      linear-gradient(
-        112deg,
-        color-mix(in srgb, var(--glass-sheen) 40%, transparent) 0%,
-        transparent 48%
-      );
-    -webkit-backdrop-filter: blur(36px) saturate(195%) brightness(1.04);
-    backdrop-filter: blur(36px) saturate(195%) brightness(1.04);
+      linear-gradient(180deg, var(--sidebar-glass-strong) 0%, transparent 46%, transparent 100%),
+      linear-gradient(118deg, var(--sidebar-sheen) 0%, transparent 42%);
+    border-inline-end: 1px solid var(--sidebar-edge);
+    -webkit-backdrop-filter: blur(28px) saturate(165%);
+    backdrop-filter: blur(28px) saturate(165%);
     box-shadow:
-      1px 0 0 rgba(255, 255, 255, 0.42) inset,
-      22px 0 80px -44px rgba(15, 23, 42, 0.52);
+      var(--sidebar-shadow),
+      inset 0 1px 0 var(--sidebar-sheen);
   }
 
-  .dark .glass-sidebar {
-    background-color: var(--glass-surface);
-    background-image:
+  .glass-sidebar::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    border-radius: inherit;
+    background:
+      radial-gradient(110% 32% at 16% -6%, var(--sidebar-sheen), transparent 62%),
       linear-gradient(
-        180deg,
-        rgba(38, 51, 76, 0.72) 0%,
-        rgba(26, 37, 58, 0.56) 55%,
-        rgba(19, 28, 45, 0.46) 100%
-      ),
-      linear-gradient(112deg, rgba(255, 255, 255, 0.08) 0%, transparent 52%);
+        90deg,
+        transparent 82%,
+        color-mix(in srgb, var(--sidebar-sheen) 28%, transparent) 100%
+      );
+    opacity: 0.6;
+    pointer-events: none;
+  }
+
+  .glass-sidebar::after {
+    content: "";
+    position: absolute;
+    inset-block: 7%;
+    inset-inline-end: -1px;
+    width: 1px;
+    background: linear-gradient(180deg, transparent, var(--glass-border-soft), transparent);
+    pointer-events: none;
+  }
+
+  .glass-sidebar > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Active navigation pill: a single shared surface that glides between items. */
+  .nav-active-indicator {
+    position: absolute;
+    left: 0;
+    right: auto;
+    top: 0;
+    border-radius: 0.75rem;
+    border: 1px solid var(--sidebar-active-border);
+    background: linear-gradient(180deg, var(--sidebar-active), transparent);
     box-shadow:
-      1px 0 0 rgba(255, 255, 255, 0.07) inset,
-      22px 0 80px -44px rgba(0, 0, 0, 0.9);
+      inset 0 1px 0 rgba(255, 255, 255, 0.5),
+      0 10px 26px -20px hsl(var(--primary) / 0.8);
+    -webkit-backdrop-filter: blur(12px) saturate(150%);
+    backdrop-filter: blur(12px) saturate(150%);
+    transition:
+      transform var(--motion-slow) var(--ease-out),
+      width var(--motion-slow) var(--ease-out),
+      height var(--motion-base) var(--ease-out),
+      opacity 180ms ease;
+    will-change: transform;
+    pointer-events: none;
+  }
+
+  .dark .nav-active-indicator {
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.12),
+      0 10px 26px -20px rgba(0, 0, 0, 0.9);
+  }
+
+  /* Collapsed-sidebar tooltip; shown on hover and keyboard focus. */
+  .nav-tooltip {
+    position: absolute;
+    top: 50%;
+    inset-inline-start: calc(100% + 0.7rem);
+    z-index: 60;
+    padding: 0.35rem 0.6rem;
+    border: 1px solid var(--glass-border-soft);
+    border-radius: 0.5rem;
+    background: hsl(var(--popover) / 0.96);
+    color: hsl(var(--popover-foreground));
+    font-size: 0.72rem;
+    font-weight: 600;
+    line-height: 1.2;
+    white-space: nowrap;
+    box-shadow: 0 16px 36px -20px rgba(15, 23, 42, 0.55);
+    -webkit-backdrop-filter: blur(16px) saturate(160%);
+    backdrop-filter: blur(16px) saturate(160%);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-50%) scale(0.96);
+    transition:
+      opacity var(--motion-fast) ease,
+      transform var(--motion-base) var(--ease-out);
+  }
+
+  [dir="rtl"] .nav-tooltip {
+    inset-inline-start: auto;
+    inset-inline-end: calc(100% + 0.7rem);
+  }
+
+  .group:hover > .nav-tooltip,
+  .group:focus-visible > .nav-tooltip {
+    opacity: 1;
+    transform: translateY(-50%) scale(1);
+  }
+
+  /* Page change transition. Applied by `PageTransition` on every route. */
+  .page-enter {
+    animation: page-enter var(--motion-slow) var(--ease-out) both;
+  }
+
+  @keyframes page-enter {
+    from {
+      opacity: 0;
+      transform: translate3d(0, 8px, 0);
+    }
+    to {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+    }
+  }
+
+  /* Popovers: short travel + fade, never a bounce. */
+  .popover-enter {
+    transform-origin: top right;
+    animation: popover-enter 180ms var(--ease-out) both;
+  }
+
+  [dir="rtl"] .popover-enter {
+    transform-origin: top left;
+  }
+
+  @keyframes popover-enter {
+    from {
+      opacity: 0;
+      transform: translate3d(0, -6px, 0) scale(0.98);
+    }
+    to {
+      opacity: 1;
+      transform: translate3d(0, 0, 0) scale(1);
+    }
+  }
+
+  /* Mobile search reveal. */
+  .reveal-down {
+    animation: reveal-down 200ms var(--ease-out) both;
+  }
+
+  @keyframes reveal-down {
+    from {
+      opacity: 0;
+      transform: translate3d(0, -6px, 0);
+    }
+    to {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+    }
+  }
+
+  /* Mobile drawer + scrim. */
+  .drawer-panel {
+    animation: drawer-in var(--motion-slow) var(--ease-out) both;
+  }
+
+  [dir="rtl"] .drawer-panel {
+    animation-name: drawer-in-rtl;
+  }
+
+  .drawer-backdrop {
+    animation: backdrop-in var(--motion-base) ease-out both;
+  }
+
+  @keyframes drawer-in {
+    from {
+      transform: translate3d(-100%, 0, 0);
+    }
+    to {
+      transform: translate3d(0, 0, 0);
+    }
+  }
+
+  @keyframes drawer-in-rtl {
+    from {
+      transform: translate3d(100%, 0, 0);
+    }
+    to {
+      transform: translate3d(0, 0, 0);
+    }
+  }
+
+  @keyframes backdrop-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
   }
 
   /*
@@ -447,7 +653,6 @@
     position: absolute;
     border-radius: 999px;
     opacity: var(--ambient-orb-alpha);
-    will-change: transform;
   }
 
   .ambient-orb--1 {
@@ -460,7 +665,6 @@
       hsl(var(--canvas-glow-1) / 0.9),
       transparent 66%
     );
-    animation: ambient-drift-a 28s ease-in-out infinite alternate;
   }
 
   .ambient-orb--2 {
@@ -473,7 +677,6 @@
       hsl(var(--canvas-glow-2) / 0.82),
       transparent 68%
     );
-    animation: ambient-drift-b 34s ease-in-out infinite alternate;
   }
 
   .ambient-orb--3 {
@@ -486,7 +689,6 @@
       hsl(var(--canvas-glow-3) / 0.72),
       transparent 70%
     );
-    animation: ambient-drift-c 40s ease-in-out infinite alternate;
   }
 
   .ambient-orb--4 {
@@ -495,7 +697,6 @@
     width: 32rem;
     height: 32rem;
     background: radial-gradient(circle at 50% 50%, hsl(var(--chart-4) / 0.5), transparent 70%);
-    animation: ambient-drift-b 30s ease-in-out infinite alternate-reverse;
   }
 
   .ambient-orb--5 {
@@ -504,35 +705,10 @@
     width: 30rem;
     height: 30rem;
     background: radial-gradient(circle at 50% 50%, hsl(var(--chart-5) / 0.46), transparent 72%);
-    animation: ambient-drift-c 36s ease-in-out infinite alternate-reverse;
   }
 
-  @keyframes ambient-drift-a {
-    from {
-      transform: translate3d(0, 0, 0) scale(1);
-    }
-    to {
-      transform: translate3d(4rem, 3rem, 0) scale(1.08);
-    }
-  }
 
-  @keyframes ambient-drift-b {
-    from {
-      transform: translate3d(0, 0, 0) scale(1.04);
-    }
-    to {
-      transform: translate3d(-3.5rem, 4rem, 0) scale(0.96);
-    }
-  }
 
-  @keyframes ambient-drift-c {
-    from {
-      transform: translate3d(0, 0, 0) scale(1);
-    }
-    to {
-      transform: translate3d(-4rem, -3rem, 0) scale(1.07);
-    }
-  }
 
   /* Form controls share the same frosted material. */
   .glass-field {
@@ -812,6 +988,20 @@
     .liquid-glass-logo:hover,
     .liquid-glass-logo:hover .liquid-glass-logo__mark {
       transform: none;
+    }
+
+    /* Navigation still updates, it just snaps instead of travelling. */
+    .page-enter,
+    .popover-enter,
+    .reveal-down,
+    .drawer-panel,
+    .drawer-backdrop {
+      animation: none;
+    }
+
+    .nav-active-indicator,
+    .nav-tooltip {
+      transition: none;
     }
 
     html {

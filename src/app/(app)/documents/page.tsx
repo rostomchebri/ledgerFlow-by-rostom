@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Download, FileText, FolderOpen, Plus, Search } from "lucide-react";
+import { FileText, Plus, Search } from "lucide-react";
 import { getLocale, getTranslations } from "next-intl/server";
 
 import { DocumentArchiveButton } from "@/components/documents/document-archive-button";
+import { DocumentDownloadButton } from "@/components/documents/document-download-button";
 import { DocumentFilters } from "@/components/documents/document-filters";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
@@ -162,20 +163,12 @@ export default async function DocumentsPage({ searchParams }: DocumentsPageProps
                       </td>
                       <td className="px-5 py-3.5">
                         <div className="flex items-center justify-end gap-1">
-                          <a
-                            href={`/api/documents/${document.id}/download`}
-                            target="_blank"
-                            rel="noreferrer"
-                            className={buttonVariants({ variant: "ghost", size: "sm" })}
-                            title={t("download")}
-                          >
-                            {document.deletedAt ? (
-                              <FolderOpen aria-hidden="true" className="h-3.5 w-3.5" />
-                            ) : (
-                              <Download aria-hidden="true" className="h-3.5 w-3.5" />
-                            )}
-                            <span className="sr-only">{t("download")}</span>
-                          </a>
+                          <DocumentDownloadButton
+                            documentId={document.id}
+                            fallbackFilename={document.originalFilename ?? document.name}
+                            label={t("download")}
+                            iconOnly
+                          />
                           {canWrite ? (
                             <DocumentArchiveButton
                               documentId={document.id}

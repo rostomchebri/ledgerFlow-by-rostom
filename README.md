@@ -46,6 +46,24 @@ pnpm test:e2e                                    # Playwright (needs a seeded DB
 
 Mailpit UI: http://localhost:8025 · MinIO console: http://localhost:9001
 
+## Neon (hosted Postgres)
+
+The project is linked to a Neon project through `neon.ts` (`.neon` is
+git-ignored). `neon deploy` provisions the services declared in `neon.ts` and
+pulls the branch environment into `.env`; it writes both `DATABASE_URL` (pooled,
+used by the app) and `DATABASE_URL_UNPOOLED` (direct, used by Prisma migrations
+and the jobs worker). Apply migrations with:
+
+```bash
+neon deploy
+pnpm db:deploy        # uses DATABASE_URL_UNPOOLED via prisma directUrl
+pnpm db:seed          # optional demo account
+```
+
+For a feature branch, run `neon checkout <branch> --create` before starting the
+app so the branch's pooled/direct URLs replace the ones in `.env`. When the CLI
+is not installed globally, use `npx neon@latest <command>`.
+
 ## Internationalization (FR / AR / EN)
 
 - Locale is stored in the `NEXT_LOCALE` cookie (no URL prefix), resolved in `src/i18n/request.ts`.

@@ -9,10 +9,12 @@ import {
 } from "@/lib/documents/service";
 import {
   documentMetadataSchema,
+  MAX_DOCUMENT_SIZE,
   parseDocumentListQuery,
 } from "@/lib/documents/schema";
 import { requireApiFirmContext } from "@/lib/firm-context";
 import { assertPermission } from "@/lib/rbac";
+import { StorageNotConfiguredError } from "@/lib/storage";
 
 export async function GET(request: Request) {
   try {
@@ -37,6 +39,9 @@ export async function POST(request: Request) {
 
     const file = form.get("file");
     if (!(file instanceof File)) throw new ApiError("BAD_REQUEST", "A file is required.");
+    if (file.size > MAX_DOCUMENT_SIZE) {
+      throw new ApiError("BAD_REQUEST", "Files must be 25 MB or smaller.");
+    }
 
     const parsed = documentMetadataSchema.safeParse({
       name: (form.get("name") as string | null) || file.name,
@@ -63,13 +68,18 @@ export async function POST(request: Request) {
           buffer,
           filename: file.name,
           mimeType: file.type,
-          size: file.size,
         },
       });
       return NextResponse.json({ data: document }, { status: 201 });
     } catch (error) {
       if (error instanceof DocumentValidationError) {
         throw new ApiError("BAD_REQUEST", error.message);
+      }
+      if (error instanceof StorageNotConfiguredError) {
+        throw new ApiError(
+          "SERVICE_UNAVAILABLE",
+          "Document storage is not configured. Contact an administrator.",
+        );
       }
       throw error;
     }

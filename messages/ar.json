@@ -18,6 +18,10 @@
   },
   "nav": {
     "mainLabel": "التنقل الرئيسي",
+    "groups": {
+      "workspace": "مساحة العمل",
+      "account": "الحساب"
+    },
     "overview": "نظرة عامة",
     "clients": "العملاء",
     "documents": "الوثائق",
@@ -1149,6 +1153,11 @@
     "archived": "مؤرشف",
     "tagsLabel": "الوسوم",
     "download": "تنزيل",
+    "downloadError": "تعذّر تنزيل الملف. يرجى المحاولة مرة أخرى.",
+    "downloadMissing": "هذا الملف لم يعد متوفرًا في مساحة التخزين.",
+    "downloadForbidden": "ليس لديك إذن لتنزيل هذا الملف.",
+    "downloadUnavailable": "تخزين المستندات غير متاح مؤقتًا.",
+    "downloadNetwork": "خطأ في الشبكة. تحقّق من اتصالك وحاول مرة أخرى.",
     "filters": {
       "search": "بحث",
       "searchPlaceholder": "ابحث عن المستندات…",

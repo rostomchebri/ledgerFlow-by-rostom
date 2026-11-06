@@ -153,7 +153,7 @@ export function TopBar({ user, initials, firmName, roleLabel, onOpenMenu }: TopB
             {profileOpen ? (
               <div
                 role="menu"
-                className="glass-card absolute end-0 top-full z-50 mt-2 w-72 overflow-hidden rounded-2xl bg-[hsl(var(--popover)/0.92)] shadow-popover"
+                className="glass-card popover-enter absolute end-0 top-full z-50 mt-2 w-72 overflow-hidden rounded-2xl bg-[hsl(var(--popover)/0.92)] shadow-popover"
               >
                 <div className="flex items-center gap-3 border-b border-[hsl(var(--border)/0.55)] bg-[hsl(var(--card)/0.35)] px-4 py-4">
                   <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-white/25 bg-gradient-to-br from-primary to-[hsl(var(--chart-4))] text-xs font-bold text-primary-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.3)]">
@@ -185,7 +185,7 @@ export function TopBar({ user, initials, firmName, roleLabel, onOpenMenu }: TopB
       </div>
 
       {mobileSearchOpen ? (
-        <div className="border-t border-[hsl(var(--border)/0.5)] px-4 py-2.5 md:hidden">
+        <div className="reveal-down border-t border-[hsl(var(--border)/0.5)] px-4 py-2.5 md:hidden">
           {searchForm}
         </div>
       ) : null}

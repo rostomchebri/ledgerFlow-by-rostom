@@ -132,7 +132,7 @@ export function NotificationBell() {
       {open ? (
         <div
           role="menu"
-          className="glass-card absolute end-0 top-full z-50 mt-2 w-[min(23rem,calc(100vw-2rem))] overflow-hidden rounded-2xl bg-[hsl(var(--popover)/0.95)] shadow-popover"
+          className="glass-card popover-enter absolute end-0 top-full z-50 mt-2 w-[min(23rem,calc(100vw-2rem))] overflow-hidden rounded-2xl bg-[hsl(var(--popover)/0.95)] shadow-popover"
         >
           <div className="flex items-center justify-between border-b border-[hsl(var(--border)/0.55)] px-4 py-3.5">
             <div>

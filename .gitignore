@@ -47,3 +47,9 @@ Thumbs.db
 
 # typescript
 *.tsbuildinfo
+.neon
+
+# generated Vercel env file
+.vercel-env.production
+.vercel
+.env*

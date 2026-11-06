@@ -15,6 +15,7 @@ import { useEffect, useState } from "react";
 import { AppNav } from "@/components/app-nav";
 import { LiquidGlassLogo } from "@/components/brand/liquid-glass-logo";
 import { LocaleSwitcher } from "@/components/i18n/locale-switcher";
+import { PageTransition } from "@/components/shell/page-transition";
 import { ThemeToggle } from "@/components/shell/theme-toggle";
 import { TopBar } from "@/components/shell/top-bar";
 import { buttonVariants } from "@/components/ui/button";
@@ -32,6 +33,7 @@ const SIDEBAR_STORAGE_KEY = "ledgerflow-sidebar";
 
 export function AppShell({ user, initials, firmName, roleLabel, children }: AppShellProps) {
   const t = useTranslations("shell");
+  const tNav = useTranslations("nav");
   const [mobileOpen, setMobileOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
 
@@ -77,7 +79,7 @@ export function AppShell({ user, initials, firmName, roleLabel, children }: AppS
     <div className="relative min-h-screen">
       <aside
         className={cn(
-          "glass-sidebar fixed inset-y-0 start-0 z-40 hidden flex-col border-e border-[hsl(var(--sidebar-border)/0.55)] transition-[width] duration-300 ease-out-soft lg:flex",
+          "glass-sidebar fixed inset-y-0 start-0 z-40 hidden flex-col transition-[width] duration-300 ease-out-soft lg:flex",
           collapsed ? "w-[86px]" : "w-[272px]",
         )}
       >
@@ -121,7 +123,7 @@ export function AppShell({ user, initials, firmName, roleLabel, children }: AppS
         </header>
 
         <main className="mx-auto w-full max-w-[1500px] flex-1 px-4 py-6 lg:px-8 lg:py-8 xl:px-10">
-          <div className="animate-fade-up">{children}</div>
+          <PageTransition>{children}</PageTransition>
         </main>
       </div>
 
@@ -131,9 +133,14 @@ export function AppShell({ user, initials, firmName, roleLabel, children }: AppS
             type="button"
             aria-label={t("closeMenu")}
             onClick={() => setMobileOpen(false)}
-            className="absolute inset-0 bg-slate-950/35 backdrop-blur-md"
+            className="drawer-backdrop absolute inset-0 bg-slate-950/35 backdrop-blur-md"
           />
-          <aside className="glass-sidebar absolute inset-y-0 start-0 flex w-[min(20rem,88vw)] flex-col border-e border-[hsl(var(--sidebar-border)/0.55)] shadow-2xl">
+          <aside
+            role="dialog"
+            aria-modal="true"
+            aria-label={tNav("mainLabel")}
+            className="glass-sidebar drawer-panel absolute inset-y-0 start-0 flex w-[min(20rem,88vw)] flex-col shadow-2xl"
+          >
             <button
               type="button"
               onClick={() => setMobileOpen(false)}
@@ -169,7 +176,6 @@ function SidebarContent({
   onNavigate?: () => void;
 }) {
   const t = useTranslations("shell");
-  const tNav = useTranslations("nav");
 
   return (
     <>
@@ -205,18 +211,11 @@ function SidebarContent({
 
       <div
         className={cn(
-          "flex-1 overflow-y-auto overflow-x-hidden",
-          collapsed ? "px-2 py-4" : "px-4 py-5",
+          // Collapsed mode keeps overflow visible so the CSS tooltips can
+          // escape the 86px rail; expanded mode scrolls normally.
+          collapsed ? "flex-1 overflow-visible px-2 py-4" : "flex-1 overflow-y-auto overflow-x-hidden px-4 py-5",
         )}
       >
-        <p
-          className={cn(
-            "px-3 pb-2 text-[10px] font-bold uppercase tracking-[0.16em] text-muted-foreground/70",
-            collapsed && "sr-only",
-          )}
-        >
-          {tNav("mainLabel")}
-        </p>
         <AppNav collapsed={collapsed} onNavigate={onNavigate} />
 
         {collapsed ? (

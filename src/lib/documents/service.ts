@@ -5,20 +5,24 @@ import type { Prisma } from "@prisma/client";
 
 import { recordAudit } from "@/lib/audit/service";
 import { db } from "@/lib/db";
-import { getStorage, buildStorageKey } from "@/lib/storage";
+import { getStorage, buildStorageKey, StorageObjectNotFoundError } from "@/lib/storage";
 import { toWebStream } from "@/lib/storage/stream";
 
-import {
-  ALLOWED_DOCUMENT_TYPES,
-  MAX_DOCUMENT_SIZE,
-  type DocumentListQuery,
-  type DocumentMetadataInput,
-} from "./schema";
+import { normalizeOriginalFilename, resolveMimeType } from "./file";
+import { MAX_DOCUMENT_SIZE, type DocumentListQuery, type DocumentMetadataInput } from "./schema";
 
 export class DocumentNotFoundError extends Error {
   constructor() {
     super("Document not found.");
     this.name = "DocumentNotFoundError";
+  }
+}
+
+/** The row exists but the object is missing from object storage. */
+export class DocumentContentUnavailableError extends Error {
+  constructor() {
+    super("The stored file could not be found.");
+    this.name = "DocumentContentUnavailableError";
   }
 }
 
@@ -32,8 +36,8 @@ export class DocumentValidationError extends Error {
 export type UploadFileInput = {
   buffer: Buffer;
   filename: string;
-  mimeType: string;
-  size: number;
+  /** Browser-reported type; may be empty or `application/octet-stream`. */
+  mimeType?: string;
 };
 
 function documentWhere(firmId: string, query: DocumentListQuery): Prisma.DocumentWhereInput {
@@ -118,14 +122,20 @@ export async function uploadDocument(input: {
   metadata: DocumentMetadataInput;
   file: UploadFileInput;
 }) {
-  if (input.file.size <= 0) throw new DocumentValidationError("The file is empty.");
-  if (input.file.size > MAX_DOCUMENT_SIZE) {
+  // Never trust a client-supplied size: the buffer we actually received is the
+  // authoritative length for both validation and the `content-length` header.
+  const size = input.file.buffer.byteLength;
+  if (size <= 0) throw new DocumentValidationError("The file is empty.");
+  if (size > MAX_DOCUMENT_SIZE) {
     throw new DocumentValidationError("Files must be 25 MB or smaller.");
   }
-  if (!(ALLOWED_DOCUMENT_TYPES as readonly string[]).includes(input.file.mimeType)) {
+
+  const mimeType = resolveMimeType(input.file.mimeType, input.file.filename);
+  if (!mimeType) {
     throw new DocumentValidationError("This file type is not allowed.");
   }
 
+  const originalFilename = normalizeOriginalFilename(input.file.filename);
   await assertClient(input.firmId, input.metadata.clientId);
 
   const id = randomUUID();
@@ -133,7 +143,7 @@ export async function uploadDocument(input: {
     firmId: input.firmId,
     category: "documents",
     id,
-    filename: input.file.filename,
+    filename: originalFilename,
     clientId: input.metadata.clientId,
   });
   const storage = getStorage();
@@ -141,7 +151,7 @@ export async function uploadDocument(input: {
   await storage.put({
     key: storageKey,
     body: input.file.buffer,
-    contentType: input.file.mimeType,
+    contentType: mimeType,
     metadata: { firmId: input.firmId, documentId: id },
   });
 
@@ -153,11 +163,12 @@ export async function uploadDocument(input: {
         clientId: input.metadata.clientId ?? null,
         uploadedById: input.actorId,
         name: input.metadata.name,
+        originalFilename,
         description: input.metadata.description ?? null,
         category: input.metadata.category,
         tags: input.metadata.tags,
-        mimeType: input.file.mimeType,
-        size: input.file.size,
+        mimeType,
+        size,
         storageKey,
       },
     });
@@ -207,17 +218,34 @@ export async function setDocumentDeleted(input: {
 }
 
 export async function getDocumentDownload(firmId: string, documentId: string) {
+  // The tenant scope is enforced by `getDocument`, so a document that belongs
+  // to another firm is indistinguishable from a missing one.
   const document = await getDocument(firmId, documentId);
   if (!document) throw new DocumentNotFoundError();
 
-  const object = await getStorage().get(document.storageKey);
-  return { document, object };
+  try {
+    const object = await getStorage().get(document.storageKey);
+    return { document, object };
+  } catch (error) {
+    if (error instanceof StorageObjectNotFoundError) {
+      throw new DocumentContentUnavailableError();
+    }
+    throw error;
+  }
 }
 
 export async function getDocumentContent(
   firmId: string,
   documentId: string,
-): Promise<{ document: NonNullable<Awaited<ReturnType<typeof getDocument>>>; body: ReadableStream<Uint8Array> }> {
+): Promise<{
+  document: NonNullable<Awaited<ReturnType<typeof getDocument>>>;
+  body: ReadableStream<Uint8Array>;
+  contentLength?: number;
+}> {
   const { document, object } = await getDocumentDownload(firmId, documentId);
-  return { document, body: toWebStream(object.body) };
+  return {
+    document,
+    body: toWebStream(object.body),
+    contentLength: object.contentLength,
+  };
 }

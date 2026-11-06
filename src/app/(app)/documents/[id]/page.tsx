@@ -2,9 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
-import { ArrowLeft, Download } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 
 import { DocumentArchiveButton } from "@/components/documents/document-archive-button";
+import { DocumentDownloadButton } from "@/components/documents/document-download-button";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -44,14 +45,13 @@ export default async function DocumentDetailPage({ params }: DocumentDetailPageP
           {t("detail.back")}
         </Link>
         <div className="flex flex-wrap items-center gap-2">
-          <a
-            href={`${src}?download=1`}
-            className={buttonVariants({ variant: "outline" })}
-            download
-          >
-            <Download aria-hidden="true" className="h-4 w-4" />
-            {t("download")}
-          </a>
+          <DocumentDownloadButton
+            documentId={document.id}
+            fallbackFilename={document.originalFilename ?? document.name}
+            label={t("download")}
+            variant="outline"
+            size="default"
+          />
           {canWrite ? (
             <DocumentArchiveButton
               documentId={document.id}

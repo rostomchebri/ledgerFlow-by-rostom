@@ -18,6 +18,10 @@
   },
   "nav": {
     "mainLabel": "Main navigation",
+    "groups": {
+      "workspace": "Workspace",
+      "account": "Account"
+    },
     "overview": "Overview",
     "clients": "Clients",
     "documents": "Documents",
@@ -1149,6 +1153,11 @@
     "archived": "Archived",
     "tagsLabel": "Tags",
     "download": "Download",
+    "downloadError": "The file could not be downloaded. Please try again.",
+    "downloadMissing": "This file is no longer available in storage.",
+    "downloadForbidden": "You do not have permission to download this file.",
+    "downloadUnavailable": "Document storage is temporarily unavailable.",
+    "downloadNetwork": "Network error. Check your connection and try again.",
     "filters": {
       "search": "Search",
       "searchPlaceholder": "Search documents…",

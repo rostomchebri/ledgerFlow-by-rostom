@@ -37,12 +37,14 @@ export function s3ConfigFromEnv(): S3StorageConfig {
     );
   }
 
+  // Neon Object Storage injects AWS_* variables; a self-hosted MinIO/S3 setup
+  // uses the explicit S3_* ones. Accept either so the adapter stays portable.
   return {
-    endpoint: env.S3_ENDPOINT,
-    region: env.S3_REGION,
+    endpoint: env.S3_ENDPOINT ?? env.AWS_ENDPOINT_URL_S3,
+    region: env.AWS_REGION ?? env.S3_REGION,
     bucket: env.S3_BUCKET,
-    accessKeyId: env.S3_ACCESS_KEY_ID,
-    secretAccessKey: env.S3_SECRET_ACCESS_KEY,
+    accessKeyId: env.S3_ACCESS_KEY_ID ?? env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: env.S3_SECRET_ACCESS_KEY ?? env.AWS_SECRET_ACCESS_KEY,
     forcePathStyle: env.S3_FORCE_PATH_STYLE,
   };
 }

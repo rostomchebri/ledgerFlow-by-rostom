@@ -65,9 +65,20 @@ All variables are validated by `src/lib/env.ts`. Production refuses to start
 with the development `BETTER_AUTH_SECRET`.
 
 Required at runtime: `NEXT_PUBLIC_APP_URL`, `BETTER_AUTH_URL`,
-`BETTER_AUTH_SECRET`, `DATABASE_URL`, `S3_*`, and the `POSTGRES_*` variables used
-by the database container. `REMINDER_CRON` and `REMINDER_TIMEZONE` control the
-NOTIF-03 sweep and are safe to change per deployment.
+`BETTER_AUTH_SECRET`, `DATABASE_URL`, `DATABASE_URL_UNPOOLED`, `S3_BUCKET`, the
+storage credentials, and the `POSTGRES_*` variables used by the database
+container. `DATABASE_URL` is the pooled application connection;
+`DATABASE_URL_UNPOOLED` is the direct connection used by Prisma migrations and
+the jobs worker. On a self-hosted Postgres without a pooler, both can point at
+the same database. `REMINDER_CRON` and `REMINDER_TIMEZONE` control the NOTIF-03
+sweep and are safe to change per deployment.
+
+Storage accepts either the explicit `S3_ENDPOINT`, `S3_REGION`,
+`S3_ACCESS_KEY_ID`, `S3_SECRET_ACCESS_KEY` variables (MinIO/S3/R2) or the
+standard `AWS_ENDPOINT_URL_S3`, `AWS_REGION`, `AWS_ACCESS_KEY_ID`,
+`AWS_SECRET_ACCESS_KEY` variables that Neon Object Storage injects.
+`S3_BUCKET` is always required, and `S3_FORCE_PATH_STYLE=true` is the safe
+default for path-style providers such as Neon and MinIO.
 
 E-mail requires **one** of these configurations:
 

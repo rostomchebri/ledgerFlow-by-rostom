@@ -34,6 +34,7 @@ COPY . .
 ENV NODE_ENV=production \
     NEXT_STANDALONE=1 \
     DATABASE_URL=postgresql://build:build@localhost:5432/build?schema=public \
+    DATABASE_URL_UNPOOLED=postgresql://build:build@localhost:5432/build?schema=public \
     BETTER_AUTH_SECRET=build-only-secret-replaced-at-runtime-000000 \
     BETTER_AUTH_URL=http://localhost:3000 \
     NEXT_PUBLIC_APP_URL=http://localhost:3000

@@ -37,6 +37,7 @@ jobs:
     env:
       NEXT_PUBLIC_APP_URL: http://localhost:3000
       DATABASE_URL: postgresql://ledgerflow:ledgerflow@localhost:5432/ledgerflow?schema=public
+      DATABASE_URL_UNPOOLED: postgresql://ledgerflow:ledgerflow@localhost:5432/ledgerflow?schema=public
       BETTER_AUTH_SECRET: ci-only-secret-not-used-in-production
       BETTER_AUTH_URL: http://localhost:3000
     steps:
@@ -72,6 +73,7 @@ jobs:
           --health-retries 12
     env:
       DATABASE_URL: postgresql://ledgerflow:ledgerflow@localhost:5432/ledgerflow?schema=public
+      DATABASE_URL_UNPOOLED: postgresql://ledgerflow:ledgerflow@localhost:5432/ledgerflow?schema=public
       NEXT_PUBLIC_APP_URL: http://localhost:3000
       BETTER_AUTH_URL: http://localhost:3000
       BETTER_AUTH_SECRET: ci-only-secret-not-used-in-production-000000

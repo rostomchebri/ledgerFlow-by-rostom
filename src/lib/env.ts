@@ -29,6 +29,8 @@ const envSchema = z.object({
     .string()
     .min(1)
     .default("postgresql://ledgerflow:ledgerflow@localhost:5432/ledgerflow?schema=public"),
+  /** Direct (non-pooled) connection for Prisma migrations and the jobs worker. */
+  DATABASE_URL_UNPOOLED: optionalString,
 
   BETTER_AUTH_SECRET: z.string().min(32).default(DEV_SECRET),
   BETTER_AUTH_URL: z.string().url().default("http://localhost:3000"),
@@ -45,6 +47,15 @@ const envSchema = z.object({
   S3_ACCESS_KEY_ID: z.string().min(1).optional(),
   S3_SECRET_ACCESS_KEY: z.string().min(1).optional(),
   S3_FORCE_PATH_STYLE: booleanFromString,
+  /*
+   * Neon Object Storage injects the AWS-standard names below. The application
+   * prefers the explicit S3_* variables and falls back to these, so a Neon
+   * bucket works locally and on Vercel without duplicating credentials.
+   */
+  AWS_ENDPOINT_URL_S3: z.string().url().optional(),
+  AWS_REGION: z.string().min(1).optional(),
+  AWS_ACCESS_KEY_ID: z.string().min(1).optional(),
+  AWS_SECRET_ACCESS_KEY: z.string().min(1).optional(),
 
   // NOTIF-02 — pg-boss reuses DATABASE_URL and isolates its tables in a schema.
   JOBS_SCHEMA: z.string().min(1).default("pgboss"),
