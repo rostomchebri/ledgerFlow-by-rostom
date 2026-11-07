@@ -3,7 +3,14 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { Fragment, useCallback, useEffect, useRef, useState } from "react";
+import {
+  Fragment,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type PointerEvent as ReactPointerEvent,
+} from "react";
 import type { LucideIcon } from "lucide-react";
 
 import { findActiveNavItem, type NavItem } from "@/lib/navigation";
@@ -64,7 +71,12 @@ function itemClasses(orientation: Orientation, compact: boolean, active: boolean
       : "dock-item--horizontal min-w-0 flex-1 rounded-[1.15rem]",
     active
       ? "text-primary"
-      : "text-muted-foreground hover:bg-[var(--dock-item-hover)] hover:text-foreground",
+      : cn(
+          "text-muted-foreground hover:text-foreground",
+          // The moving glass capsule is the only hover surface on desktop. On
+          // touch layouts, keep a pressed-state wash so taps still feel alive.
+          orientation === "horizontal" && "active:bg-[var(--dock-item-hover)]",
+        ),
   );
 }
 
@@ -112,9 +124,10 @@ function ItemContent({
 }
 
 /**
- * The dock's navigation list. One shared indicator is measured against the
- * active slot and glides between items, so the highlight feels continuous
- * rather than being re-created on every route change.
+ * The dock's navigation list. Two measured surfaces share the same geometry
+ * model: the active surface rests on the current route, while the hover
+ * surface follows the pointer between slots. Both are single elements, so the
+ * highlight physically travels instead of being re-painted per item.
  */
 export function AppNav({
   items,
@@ -130,8 +143,9 @@ export function AppNav({
   const t = useTranslations("nav");
   const navRef = useRef<HTMLElement>(null);
   const slotRefs = useRef(new Map<string, HTMLElement>());
-  const [indicator, setIndicator] = useState<IndicatorGeometry | null>(null);
-  const [positioned, setPositioned] = useState(false);
+  const [activeIndicator, setActiveIndicator] = useState<IndicatorGeometry | null>(null);
+  const [hoverIndicator, setHoverIndicator] = useState<IndicatorGeometry | null>(null);
+  const [hoveredKey, setHoveredKey] = useState<string | null>(null);
 
   const resolvedActiveKey =
     activeKey ?? (action?.active ? action.key : findActiveNavItem(pathname)?.key);
@@ -143,34 +157,44 @@ export function AppNav({
 
   const measure = useCallback(() => {
     const nav = navRef.current;
-    const node = resolvedActiveKey ? slotRefs.current.get(resolvedActiveKey) : undefined;
 
-    if (!nav || !node) {
-      setIndicator(null);
+    if (!nav) {
+      setActiveIndicator(null);
+      setHoverIndicator(null);
       return;
     }
 
     const navRect = nav.getBoundingClientRect();
-    const slotRect = node.getBoundingClientRect();
-    const next = {
-      top: slotRect.top - navRect.top,
-      left: slotRect.left - navRect.left,
-      width: slotRect.width,
-      height: slotRect.height,
+
+    const geometryFor = (key: string | null | undefined): IndicatorGeometry | null => {
+      const node = key ? slotRefs.current.get(key) : undefined;
+      if (!node) return null;
+
+      const slotRect = node.getBoundingClientRect();
+      return {
+        top: slotRect.top - navRect.top,
+        left: slotRect.left - navRect.left,
+        width: slotRect.width,
+        height: slotRect.height,
+      };
     };
 
-    setIndicator((previous) => (sameGeometry(previous, next) ? previous : next));
-  }, [resolvedActiveKey]);
+    const nextActive = geometryFor(resolvedActiveKey);
+    const nextHover = geometryFor(hoveredKey ?? resolvedActiveKey);
+
+    setActiveIndicator((previous) => {
+      if (!nextActive) return null;
+      return sameGeometry(previous, nextActive) ? previous : nextActive;
+    });
+    setHoverIndicator((previous) => {
+      if (!nextHover) return null;
+      return sameGeometry(previous, nextHover) ? previous : nextHover;
+    });
+  }, [hoveredKey, resolvedActiveKey]);
 
   useEffect(() => {
     measure();
   }, [measure, compact, orientation]);
-
-  useEffect(() => {
-    if (!indicator || positioned) return;
-    const frame = window.requestAnimationFrame(() => setPositioned(true));
-    return () => window.cancelAnimationFrame(frame);
-  }, [indicator, positioned]);
 
   useEffect(() => {
     const nav = navRef.current;
@@ -181,27 +205,66 @@ export function AppNav({
     return () => observer.disconnect();
   }, [measure]);
 
+  /**
+   * Pointer delegation keeps the effect to one listener per dock. Only true
+   * mice drive the hover surface; touch and pen input keep the active state.
+   */
+  const handlePointerOver = useCallback((event: ReactPointerEvent<HTMLElement>) => {
+    if (event.pointerType !== "mouse") return;
+
+    const target =
+      event.target instanceof Element
+        ? event.target.closest<HTMLElement>("[data-dock-key]")
+        : null;
+    const key = target?.dataset.dockKey;
+
+    if (key) setHoveredKey(key);
+  }, []);
+
+  const handlePointerLeave = useCallback((event: ReactPointerEvent<HTMLElement>) => {
+    if (event.pointerType !== "mouse") return;
+    setHoveredKey(null);
+  }, []);
+
   return (
     <nav
       id={id}
       ref={navRef}
       aria-label={t("mainLabel")}
+      onPointerOver={handlePointerOver}
+      onPointerLeave={handlePointerLeave}
       className={cn(
         "relative flex",
         orientation === "vertical" ? "flex-col gap-0.5" : "items-stretch gap-0.5",
         className,
       )}
     >
-      {indicator ? (
+      {activeIndicator ? (
         <span
           aria-hidden="true"
-          className="dock-indicator"
+          className="dock-indicator dock-indicator--active"
           data-orientation={orientation}
+          data-hovering={hoveredKey ? "true" : undefined}
           style={{
-            width: `${indicator.width}px`,
-            height: `${indicator.height}px`,
-            opacity: positioned ? 1 : 0,
-            transform: `translate3d(${indicator.left}px, ${indicator.top}px, 0)`,
+            width: `${activeIndicator.width}px`,
+            height: `${activeIndicator.height}px`,
+            transform: `translate3d(${activeIndicator.left}px, ${activeIndicator.top}px, 0)`,
+          }}
+        >
+          <span aria-hidden="true" className="dock-indicator__glint" />
+        </span>
+      ) : null}
+
+      {hoverIndicator ? (
+        <span
+          aria-hidden="true"
+          className="dock-indicator dock-indicator--hover"
+          data-orientation={orientation}
+          data-visible={hoveredKey ? "true" : "false"}
+          style={{
+            width: `${hoverIndicator.width}px`,
+            height: `${hoverIndicator.height}px`,
+            transform: `translate3d(${hoverIndicator.left}px, ${hoverIndicator.top}px, 0)`,
           }}
         >
           <span aria-hidden="true" className="dock-indicator__glint" />
@@ -224,6 +287,7 @@ export function AppNav({
               onClick={onNavigate}
               aria-current={active ? "page" : undefined}
               aria-label={compact ? label : undefined}
+              data-dock-key={item.key}
               className={itemClasses(orientation, compact, active)}
             >
               <ItemContent icon={Icon} label={label} active={active} compact={compact} />
@@ -240,6 +304,7 @@ export function AppNav({
           aria-current={action.active ? "page" : undefined}
           aria-expanded={action.expanded}
           aria-controls={action.controls}
+          data-dock-key={action.key}
           className={itemClasses(orientation, compact, Boolean(action.active))}
         >
           <ItemContent

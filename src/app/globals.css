@@ -119,6 +119,9 @@
     --dock-active: hsl(var(--primary) / 0.1);
     --dock-active-strong: hsl(var(--primary) / 0.2);
     --dock-active-edge: hsl(var(--primary) / 0.24);
+    --dock-hover: hsl(var(--primary) / 0.14);
+    --dock-hover-strong: hsl(var(--primary) / 0.25);
+    --dock-hover-edge: hsl(var(--primary) / 0.36);
     --dock-glow: hsl(var(--primary) / 0.32);
     --dock-blur: blur(34px) saturate(195%) brightness(1.03);
     --dock-shadow:
@@ -222,6 +225,9 @@
     --dock-active: hsl(var(--primary) / 0.16);
     --dock-active-strong: hsl(var(--primary) / 0.28);
     --dock-active-edge: hsl(var(--primary) / 0.34);
+    --dock-hover: hsl(var(--primary) / 0.2);
+    --dock-hover-strong: hsl(var(--primary) / 0.35);
+    --dock-hover-edge: hsl(var(--primary) / 0.5);
     --dock-glow: hsl(var(--primary) / 0.45);
     --dock-blur: blur(38px) saturate(180%) brightness(1.08);
     --dock-shadow:
@@ -663,6 +669,82 @@
 
   .dock-indicator[data-orientation="horizontal"] {
     border-radius: 1.15rem;
+  }
+
+  /*
+   * Magnetic hover surface. This is the same glass object as the active
+   * indicator, but with a stronger rim, glow and specular sheen. It rests
+   * invisibly over the active route and becomes visible as the pointer enters
+   * a slot, then travels with the pointer between slots.
+   */
+  .dock-indicator--active[data-hovering="true"] {
+    opacity: 0.32;
+  }
+
+  .dock-indicator--hover {
+    z-index: 1;
+    border-color: var(--dock-hover-edge);
+    background:
+      radial-gradient(
+        125% 115% at 50% 0%,
+        var(--dock-hover-strong) 0%,
+        var(--dock-hover) 58%,
+        transparent 100%
+      ),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.44), transparent 74%);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.82),
+      inset 0 -1px 0 rgba(255, 255, 255, 0.22),
+      0 16px 34px -18px var(--dock-glow),
+      0 0 34px -8px var(--dock-glow);
+    opacity: 0;
+    /* Hiding waits until the capsule has mostly returned to the active slot. */
+    transition:
+      transform 480ms var(--ease-dock),
+      width 380ms var(--ease-dock),
+      height 300ms var(--ease-out),
+      border-radius 240ms ease,
+      opacity 180ms ease 260ms;
+  }
+
+  .dock-indicator--hover[data-visible="true"] {
+    opacity: 1;
+    transition:
+      transform 480ms var(--ease-dock),
+      width 380ms var(--ease-dock),
+      height 300ms var(--ease-out),
+      border-radius 240ms ease,
+      opacity 140ms ease;
+  }
+
+  .dock-indicator--hover::after {
+    content: "";
+    position: absolute;
+    inset: 1px;
+    border-radius: inherit;
+    background: radial-gradient(
+      90% 82% at 50% 0%,
+      rgba(255, 255, 255, 0.34),
+      transparent 62%
+    );
+    opacity: 0.8;
+    pointer-events: none;
+  }
+
+  .dark .dock-indicator--hover {
+    background:
+      radial-gradient(
+        125% 115% at 50% 0%,
+        var(--dock-hover-strong) 0%,
+        var(--dock-hover) 58%,
+        transparent 100%
+      ),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.12), transparent 74%);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.26),
+      inset 0 -1px 0 rgba(255, 255, 255, 0.06),
+      0 18px 38px -18px rgba(0, 0, 0, 0.9),
+      0 0 38px -8px var(--dock-glow);
   }
 
   .dock-indicator__glint {
@@ -1218,6 +1300,7 @@
     .dock-search,
     .dock-utility,
     .dock-indicator,
+    .dock-indicator--hover[data-visible="true"],
     .nav-tooltip {
       transition: none;
     }
