@@ -31,13 +31,16 @@
     "settings": "Settings",
     "dashboard": "Dashboard",
     "transactions": "Transactions",
-    "notifications": "Notifications"
+    "notifications": "Notifications",
+    "more": "More"
   },
   "shell": {
     "workspace": "Accounting workspace",
     "signedInAs": "Signed in as",
     "demoWorkspace": "Demo workspace · no auth yet",
     "searchPlaceholder": "Search clients, invoices…",
+    "search": "Search",
+    "closeSearch": "Close search",
     "notifications": "Notifications",
     "notificationsTitle": "Notifications",
     "notificationsUnread": "{count} unread",

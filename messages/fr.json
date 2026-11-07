@@ -31,13 +31,16 @@
     "settings": "Paramètres",
     "dashboard": "Tableau de bord",
     "transactions": "Transactions",
-    "notifications": "Notifications"
+    "notifications": "Notifications",
+    "more": "Plus"
   },
   "shell": {
     "workspace": "Espace comptable",
     "signedInAs": "Connecté en tant que",
     "demoWorkspace": "Espace démo · sans authentification",
     "searchPlaceholder": "Rechercher clients, factures…",
+    "search": "Rechercher",
+    "closeSearch": "Fermer la recherche",
     "notifications": "Notifications",
     "notificationsTitle": "Notifications",
     "notificationsUnread": "{count} non lue(s)",

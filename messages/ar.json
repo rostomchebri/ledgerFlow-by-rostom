@@ -31,13 +31,16 @@
     "settings": "الإعدادات",
     "dashboard": "لوحة التحكم",
     "transactions": "المعاملات",
-    "notifications": "الإشعارات"
+    "notifications": "الإشعارات",
+    "more": "المزيد"
   },
   "shell": {
     "workspace": "مساحة عمل محاسبية",
     "signedInAs": "مسجّل الدخول باسم",
     "demoWorkspace": "مساحة تجريبية · بدون مصادقة بعد",
     "searchPlaceholder": "ابحث عن العملاء أو الفواتير…",
+    "search": "بحث",
+    "closeSearch": "إغلاق البحث",
     "notifications": "الإشعارات",
     "notificationsTitle": "الإشعارات",
     "notificationsUnread": "{count} غير مقروء",

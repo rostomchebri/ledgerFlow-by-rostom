@@ -3,64 +3,36 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
-import {
-  ArrowLeftRight,
-  BarChart3,
-  Bell,
-  CheckSquare,
-  FolderOpen,
-  LayoutDashboard,
-  ReceiptText,
-  Settings,
-  Users,
-  type LucideIcon,
-} from "lucide-react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { Fragment, useCallback, useEffect, useRef, useState } from "react";
+import type { LucideIcon } from "lucide-react";
 
+import { findActiveNavItem, type NavItem } from "@/lib/navigation";
 import { cn } from "@/lib/utils";
 
-type NavKey =
-  | "dashboard"
-  | "transactions"
-  | "reports"
-  | "invoices"
-  | "clients"
-  | "documents"
-  | "tasks"
-  | "notifications"
-  | "settings";
+type Orientation = "vertical" | "horizontal";
 
-type NavItem = {
-  labelKey: NavKey;
-  href:
-    | "/dashboard"
-    | "/transactions"
-    | "/reports"
-    | "/invoices"
-    | "/clients"
-    | "/documents"
-    | "/tasks"
-    | "/notifications"
-    | "/settings";
+type NavAction = {
+  key: string;
+  label: string;
   icon: LucideIcon;
+  active?: boolean;
+  expanded?: boolean;
+  controls?: string;
+  onSelect: () => void;
 };
 
-const NAV_ITEMS: NavItem[] = [
-  { labelKey: "dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { labelKey: "transactions", href: "/transactions", icon: ArrowLeftRight },
-  { labelKey: "reports", href: "/reports", icon: BarChart3 },
-  { labelKey: "invoices", href: "/invoices", icon: ReceiptText },
-  { labelKey: "clients", href: "/clients", icon: Users },
-  { labelKey: "documents", href: "/documents", icon: FolderOpen },
-  { labelKey: "tasks", href: "/tasks", icon: CheckSquare },
-];
-
-const SECONDARY_ITEMS: NavItem[] = [
-  { labelKey: "notifications", href: "/notifications", icon: Bell },
-  { labelKey: "settings", href: "/settings", icon: Settings },
-];
-
-const ALL_ITEMS = [...NAV_ITEMS, ...SECONDARY_ITEMS];
+type AppNavProps = {
+  items: readonly NavItem[];
+  orientation?: Orientation;
+  /** Desktop rail mode: icons only, with accessible tooltips. */
+  compact?: boolean;
+  /** Force a slot to be active (used by the mobile "More" control). */
+  activeKey?: string;
+  action?: NavAction;
+  className?: string;
+  id?: string;
+  onNavigate?: () => void;
+};
 
 type IndicatorGeometry = {
   top: number;
@@ -69,128 +41,109 @@ type IndicatorGeometry = {
   height: number;
 };
 
-function isActivePath(pathname: string, href: NavItem["href"]): boolean {
-  return pathname === href || pathname.startsWith(`${href}/`);
+function sameGeometry(a: IndicatorGeometry | null, b: IndicatorGeometry): boolean {
+  if (!a) return false;
+  return (
+    Math.abs(a.top - b.top) < 0.25 &&
+    Math.abs(a.left - b.left) < 0.25 &&
+    Math.abs(a.width - b.width) < 0.25 &&
+    Math.abs(a.height - b.height) < 0.25
+  );
 }
 
-function NavLink({
-  item,
-  active,
-  collapsed,
-  onNavigate,
-  registerRef,
-}: {
-  item: NavItem;
-  active: boolean;
-  collapsed?: boolean;
-  onNavigate?: () => void;
-  registerRef: (href: NavItem["href"], node: HTMLAnchorElement | null) => void;
-}) {
-  const t = useTranslations("nav");
-  const Icon = item.icon;
-  const label = t(item.labelKey);
+function itemClasses(orientation: Orientation, compact: boolean, active: boolean) {
+  return cn(
+    "group relative z-10 flex select-none flex-col items-center justify-center outline-none",
+    "transition-[color,background-color] duration-200 ease-out-soft",
+    "focus-visible:ring-2 focus-visible:ring-ring/40",
+    orientation === "vertical"
+      ? cn(
+          "rounded-[1rem]",
+          compact ? "mx-auto h-11 w-11" : "dock-item--vertical w-full px-1",
+        )
+      : "dock-item--horizontal min-w-0 flex-1 rounded-[1.15rem]",
+    active
+      ? "text-primary"
+      : "text-muted-foreground hover:bg-[var(--dock-item-hover)] hover:text-foreground",
+  );
+}
 
+function ItemContent({
+  icon: Icon,
+  label,
+  active,
+  compact,
+}: {
+  icon: LucideIcon;
+  label: string;
+  active: boolean;
+  compact: boolean;
+}) {
   return (
-    <Link
-      href={item.href}
-      ref={(node) => registerRef(item.href, node)}
-      onClick={onNavigate}
-      aria-current={active ? "page" : undefined}
-      aria-label={collapsed ? label : undefined}
-      className={cn(
-        "group relative z-10 flex items-center gap-3 rounded-xl text-sm font-medium outline-none transition-[color,background-color,transform] duration-200 ease-out-soft focus-visible:ring-2 focus-visible:ring-ring/40",
-        collapsed ? "mx-auto h-11 w-11 justify-center" : "px-3 py-2.5",
-        active
-          ? "text-primary"
-          : "text-sidebar-foreground/70 hover:bg-[var(--sidebar-nav-hover)] hover:text-sidebar-foreground",
-      )}
-    >
+    <>
       <span
+        aria-hidden="true"
         className={cn(
-          "flex shrink-0 items-center justify-center rounded-lg transition-[transform,color] duration-300 ease-out-soft",
-          collapsed ? "h-10 w-10" : "h-8 w-8",
-          active
-            ? "scale-[1.06] text-primary"
-            : "text-muted-foreground group-hover:scale-[1.06] group-hover:text-foreground",
-          "group-active:scale-95",
+          "flex h-[1.35rem] w-[1.35rem] shrink-0 items-center justify-center transition-transform duration-300 ease-out-soft group-active:scale-90",
+          active ? "scale-[1.07]" : "group-hover:scale-[1.05]",
+          active && "drop-shadow-[0_2px_6px_var(--dock-glow)]",
         )}
       >
-        <Icon aria-hidden="true" className="h-[18px] w-[18px]" />
+        <Icon className="h-[19px] w-[19px]" strokeWidth={active ? 2.15 : 1.9} />
       </span>
 
-      {!collapsed ? (
-        <>
-          <span className="flex-1 truncate">{label}</span>
-          <span
-            aria-hidden="true"
-            className={cn(
-              "h-1.5 w-1.5 rounded-full bg-primary transition-[opacity,transform] duration-300 ease-out-soft",
-              active ? "scale-100 opacity-100" : "scale-0 opacity-0",
-            )}
-          />
-        </>
-      ) : (
+      {compact ? (
         <span aria-hidden="true" className="nav-tooltip">
           {label}
         </span>
+      ) : (
+        <span
+          className={cn(
+            "max-w-full truncate leading-none transition-[font-weight,opacity] duration-200",
+            "mt-[3px] text-[10px] tracking-[0.01em] max-[380px]:text-[9px] max-[380px]:tracking-[-0.01em]",
+            active ? "font-semibold opacity-100" : "font-medium opacity-90",
+          )}
+        >
+          {label}
+        </span>
       )}
-    </Link>
+    </>
   );
 }
 
-function NavGroup({
-  label,
-  collapsed,
-  children,
-}: {
-  label: string;
-  collapsed: boolean;
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="flex flex-col gap-1">
-      <p
-        className={cn(
-          "px-3 pb-1.5 pt-1 text-[10px] font-bold uppercase tracking-[0.16em] text-muted-foreground/70",
-          collapsed && "sr-only",
-        )}
-      >
-        {label}
-      </p>
-      {children}
-    </div>
-  );
-}
-
+/**
+ * The dock's navigation list. One shared indicator is measured against the
+ * active slot and glides between items, so the highlight feels continuous
+ * rather than being re-created on every route change.
+ */
 export function AppNav({
+  items,
+  orientation = "vertical",
+  compact = false,
+  activeKey,
+  action,
   className,
-  collapsed = false,
+  id,
   onNavigate,
-}: {
-  className?: string;
-  collapsed?: boolean;
-  onNavigate?: () => void;
-}) {
+}: AppNavProps) {
   const pathname = usePathname();
   const t = useTranslations("nav");
   const navRef = useRef<HTMLElement>(null);
-  const itemRefs = useRef(new Map<NavItem["href"], HTMLAnchorElement>());
+  const slotRefs = useRef(new Map<string, HTMLElement>());
   const [indicator, setIndicator] = useState<IndicatorGeometry | null>(null);
   const [positioned, setPositioned] = useState(false);
 
-  const activeHref = ALL_ITEMS.find((item) => isActivePath(pathname, item.href))?.href;
+  const resolvedActiveKey =
+    activeKey ?? (action?.active ? action.key : findActiveNavItem(pathname)?.key);
 
-  const registerRef = useCallback(
-    (href: NavItem["href"], node: HTMLAnchorElement | null) => {
-      if (node) itemRefs.current.set(href, node);
-      else itemRefs.current.delete(href);
-    },
-    [],
-  );
+  const registerRef = useCallback((key: string, node: HTMLElement | null) => {
+    if (node) slotRefs.current.set(key, node);
+    else slotRefs.current.delete(key);
+  }, []);
 
   const measure = useCallback(() => {
     const nav = navRef.current;
-    const node = activeHref ? itemRefs.current.get(activeHref) : undefined;
+    const node = resolvedActiveKey ? slotRefs.current.get(resolvedActiveKey) : undefined;
 
     if (!nav || !node) {
       setIndicator(null);
@@ -198,18 +151,20 @@ export function AppNav({
     }
 
     const navRect = nav.getBoundingClientRect();
-    const linkRect = node.getBoundingClientRect();
-    setIndicator({
-      top: linkRect.top - navRect.top,
-      left: linkRect.left - navRect.left,
-      width: linkRect.width,
-      height: linkRect.height,
-    });
-  }, [activeHref]);
+    const slotRect = node.getBoundingClientRect();
+    const next = {
+      top: slotRect.top - navRect.top,
+      left: slotRect.left - navRect.left,
+      width: slotRect.width,
+      height: slotRect.height,
+    };
+
+    setIndicator((previous) => (sameGeometry(previous, next) ? previous : next));
+  }, [resolvedActiveKey]);
 
   useEffect(() => {
     measure();
-  }, [measure, collapsed]);
+  }, [measure, compact, orientation]);
 
   useEffect(() => {
     if (!indicator || positioned) return;
@@ -228,14 +183,20 @@ export function AppNav({
 
   return (
     <nav
+      id={id}
       ref={navRef}
-      className={cn("relative flex flex-col gap-4", className)}
       aria-label={t("mainLabel")}
+      className={cn(
+        "relative flex",
+        orientation === "vertical" ? "flex-col gap-0.5" : "items-stretch gap-0.5",
+        className,
+      )}
     >
       {indicator ? (
         <span
           aria-hidden="true"
-          className="nav-active-indicator"
+          className="dock-indicator"
+          data-orientation={orientation}
           style={{
             width: `${indicator.width}px`,
             height: `${indicator.height}px`,
@@ -243,37 +204,52 @@ export function AppNav({
             transform: `translate3d(${indicator.left}px, ${indicator.top}px, 0)`,
           }}
         >
-          {!collapsed ? (
-            <span className="absolute inset-y-2 start-0 w-[3px] rounded-full bg-primary/80" />
-          ) : null}
+          <span aria-hidden="true" className="dock-indicator__glint" />
         </span>
       ) : null}
 
-      <NavGroup label={t("groups.workspace")} collapsed={collapsed}>
-        {NAV_ITEMS.map((item) => (
-          <NavLink
-            key={item.labelKey}
-            item={item}
-            active={item.href === activeHref}
-            collapsed={collapsed}
-            onNavigate={onNavigate}
-            registerRef={registerRef}
-          />
-        ))}
-      </NavGroup>
+      {items.map((item, index) => {
+        const active = item.key === resolvedActiveKey;
+        const Icon = item.icon;
+        const label = t(item.key);
+        const showDivider =
+          orientation === "vertical" && index > 0 && item.group !== items[index - 1]?.group;
 
-      <NavGroup label={t("groups.account")} collapsed={collapsed}>
-        {SECONDARY_ITEMS.map((item) => (
-          <NavLink
-            key={item.labelKey}
-            item={item}
-            active={item.href === activeHref}
-            collapsed={collapsed}
-            onNavigate={onNavigate}
-            registerRef={registerRef}
+        return (
+          <Fragment key={item.key}>
+            {showDivider ? <span aria-hidden="true" className="dock-divider" /> : null}
+            <Link
+              href={item.href}
+              ref={(node) => registerRef(item.key, node)}
+              onClick={onNavigate}
+              aria-current={active ? "page" : undefined}
+              aria-label={compact ? label : undefined}
+              className={itemClasses(orientation, compact, active)}
+            >
+              <ItemContent icon={Icon} label={label} active={active} compact={compact} />
+            </Link>
+          </Fragment>
+        );
+      })}
+
+      {action ? (
+        <button
+          type="button"
+          ref={(node) => registerRef(action.key, node)}
+          onClick={action.onSelect}
+          aria-current={action.active ? "page" : undefined}
+          aria-expanded={action.expanded}
+          aria-controls={action.controls}
+          className={itemClasses(orientation, compact, Boolean(action.active))}
+        >
+          <ItemContent
+            icon={action.icon}
+            label={action.label}
+            active={Boolean(action.active)}
+            compact={compact}
           />
-        ))}
-      </NavGroup>
+        </button>
+      ) : null}
     </nav>
   );
 }

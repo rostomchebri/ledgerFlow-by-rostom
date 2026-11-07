@@ -108,6 +108,29 @@
     --canvas-glow-2: 263 78% 66%;
     --canvas-glow-3: 187 72% 54%;
     --canvas-glow-alpha: 0.22;
+
+    /* Floating navigation dock. Denser than a card so labels stay legible,
+       lighter than the old sidebar so the page shows through the glass. */
+    --dock-glass: rgba(250, 252, 255, 0.56);
+    --dock-glass-strong: rgba(255, 255, 255, 0.74);
+    --dock-edge: rgba(255, 255, 255, 0.88);
+    --dock-highlight: rgba(255, 255, 255, 0.98);
+    --dock-item-hover: rgba(255, 255, 255, 0.54);
+    --dock-active: hsl(var(--primary) / 0.1);
+    --dock-active-strong: hsl(var(--primary) / 0.2);
+    --dock-active-edge: hsl(var(--primary) / 0.24);
+    --dock-glow: hsl(var(--primary) / 0.32);
+    --dock-blur: blur(34px) saturate(195%) brightness(1.03);
+    --dock-shadow:
+      inset 0 1px 0 var(--dock-highlight), inset 0 -1px 0 rgba(255, 255, 255, 0.28),
+      inset 0 26px 46px -38px rgba(255, 255, 255, 0.95),
+      0 24px 60px -30px rgba(15, 23, 42, 0.42), 0 3px 10px -6px rgba(15, 23, 42, 0.16);
+    --dock-shadow-lift:
+      inset 0 1px 0 rgba(255, 255, 255, 1), inset 0 -1px 0 rgba(255, 255, 255, 0.32),
+      inset 0 26px 46px -38px rgba(255, 255, 255, 1),
+      0 30px 74px -30px rgba(15, 23, 42, 0.48), 0 4px 14px -6px rgba(15, 23, 42, 0.2);
+    --sheet-glass: rgba(250, 252, 255, 0.9);
+    --ease-dock: cubic-bezier(0.32, 1.16, 0.36, 1);
   }
 
   .dark {
@@ -190,6 +213,26 @@
     --ambient-orb-alpha: 0.5;
     --ambient-grid-alpha: 0.06;
     --canvas-glow-alpha: 0.3;
+
+    --dock-glass: rgba(19, 29, 46, 0.66);
+    --dock-glass-strong: rgba(39, 55, 81, 0.46);
+    --dock-edge: rgba(255, 255, 255, 0.14);
+    --dock-highlight: rgba(255, 255, 255, 0.24);
+    --dock-item-hover: rgba(255, 255, 255, 0.07);
+    --dock-active: hsl(var(--primary) / 0.16);
+    --dock-active-strong: hsl(var(--primary) / 0.28);
+    --dock-active-edge: hsl(var(--primary) / 0.34);
+    --dock-glow: hsl(var(--primary) / 0.45);
+    --dock-blur: blur(38px) saturate(180%) brightness(1.08);
+    --dock-shadow:
+      inset 0 1px 0 var(--dock-highlight), inset 0 -1px 0 rgba(255, 255, 255, 0.05),
+      inset 0 26px 46px -38px rgba(255, 255, 255, 0.12),
+      0 28px 68px -28px rgba(0, 0, 0, 0.86), 0 3px 12px -6px rgba(0, 0, 0, 0.6);
+    --dock-shadow-lift:
+      inset 0 1px 0 rgba(255, 255, 255, 0.3), inset 0 -1px 0 rgba(255, 255, 255, 0.08),
+      inset 0 26px 46px -38px rgba(255, 255, 255, 0.18),
+      0 34px 82px -28px rgba(0, 0, 0, 0.95), 0 4px 16px -6px rgba(0, 0, 0, 0.7);
+    --sheet-glass: rgba(17, 27, 44, 0.92);
   }
 
   * {
@@ -394,85 +437,247 @@
   }
 
   /*
-   * Desktop sidebar glass. Restrained rather than showy: a denser translucent
-   * pane with one broad top reflection, a hairline inner edge and a soft
-   * ambient shadow. The blur is deliberately below the card value so text and
-   * icons stay crisp.
+   * Floating navigation dock. The material is built in three layers: a
+   * translucent pane, a refracted rim that catches the light on the top edge,
+   * and a broad specular sheen. Blur is high enough to read as glass while
+   * preserving crisp labels.
    */
-  .glass-sidebar {
+  .dock-shell {
     position: relative;
     isolation: isolate;
-    background-color: var(--sidebar-glass);
+    border: 1px solid var(--dock-edge);
+    border-radius: 1.7rem;
+    background-color: var(--dock-glass);
     background-image:
-      linear-gradient(180deg, var(--sidebar-glass-strong) 0%, transparent 46%, transparent 100%),
-      linear-gradient(118deg, var(--sidebar-sheen) 0%, transparent 42%);
-    border-inline-end: 1px solid var(--sidebar-edge);
-    -webkit-backdrop-filter: blur(28px) saturate(165%);
-    backdrop-filter: blur(28px) saturate(165%);
-    box-shadow:
-      var(--sidebar-shadow),
-      inset 0 1px 0 var(--sidebar-sheen);
+      linear-gradient(
+        158deg,
+        var(--dock-glass-strong) 0%,
+        transparent 44%,
+        transparent 100%
+      ),
+      linear-gradient(
+        90deg,
+        transparent 72%,
+        color-mix(in srgb, var(--dock-highlight) 14%, transparent) 100%
+      );
+    box-shadow: var(--dock-shadow);
+    -webkit-backdrop-filter: var(--dock-blur);
+    backdrop-filter: var(--dock-blur);
+    transition:
+      background-color 260ms ease,
+      border-color 260ms ease,
+      box-shadow 300ms ease;
   }
 
-  .glass-sidebar::before {
+  .dock-shell::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(
+      152deg,
+      var(--dock-highlight),
+      transparent 30%,
+      transparent 64%,
+      color-mix(in srgb, var(--dock-highlight) 52%, transparent)
+    );
+    opacity: 0.72;
+    pointer-events: none;
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+  }
+
+  .dock-shell::after {
     content: "";
     position: absolute;
     inset: 0;
     z-index: 0;
     border-radius: inherit;
     background:
-      radial-gradient(110% 32% at 16% -6%, var(--sidebar-sheen), transparent 62%),
+      radial-gradient(
+        130% 56% at 18% -4%,
+        color-mix(in srgb, var(--dock-highlight) 38%, transparent),
+        transparent 58%
+      ),
       linear-gradient(
-        90deg,
-        transparent 82%,
-        color-mix(in srgb, var(--sidebar-sheen) 28%, transparent) 100%
+        118deg,
+        transparent 32%,
+        color-mix(in srgb, var(--dock-highlight) 16%, transparent) 45%,
+        transparent 60%
       );
-    opacity: 0.6;
+    opacity: 0.82;
     pointer-events: none;
   }
 
-  .glass-sidebar::after {
-    content: "";
-    position: absolute;
-    inset-block: 7%;
-    inset-inline-end: -1px;
-    width: 1px;
-    background: linear-gradient(180deg, transparent, var(--glass-border-soft), transparent);
-    pointer-events: none;
-  }
-
-  .glass-sidebar > * {
+  .dock-shell > * {
     position: relative;
     z-index: 1;
   }
 
-  /* Active navigation pill: a single shared surface that glides between items. */
-  .nav-active-indicator {
-    position: absolute;
-    left: 0;
-    right: auto;
-    top: 0;
-    border-radius: 0.75rem;
-    border: 1px solid var(--sidebar-active-border);
-    background: linear-gradient(180deg, var(--sidebar-active), transparent);
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.5),
-      0 10px 26px -20px hsl(var(--primary) / 0.8);
-    -webkit-backdrop-filter: blur(12px) saturate(150%);
-    backdrop-filter: blur(12px) saturate(150%);
+  /* Detached circular search control, same glass recipe. */
+  .dock-search {
+    position: relative;
+    isolation: isolate;
+    border: 1px solid var(--dock-edge);
+    background-color: var(--dock-glass);
+    background-image: radial-gradient(
+      120% 120% at 30% 4%,
+      var(--dock-glass-strong) 0%,
+      transparent 58%
+    );
+    box-shadow: var(--dock-shadow);
+    -webkit-backdrop-filter: var(--dock-blur);
+    backdrop-filter: var(--dock-blur);
     transition:
-      transform var(--motion-slow) var(--ease-out),
-      width var(--motion-slow) var(--ease-out),
-      height var(--motion-base) var(--ease-out),
-      opacity 180ms ease;
-    will-change: transform;
+      transform 240ms var(--ease-out),
+      box-shadow 260ms ease,
+      border-color 220ms ease,
+      color 180ms ease;
+  }
+
+  .dock-search::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(
+      100% 70% at 32% 0%,
+      color-mix(in srgb, var(--dock-highlight) 58%, transparent),
+      transparent 62%
+    );
+    opacity: 0.9;
     pointer-events: none;
   }
 
-  .dark .nav-active-indicator {
+  .dock-search:hover {
+    transform: translateY(-1px) scale(1.045);
+    border-color: color-mix(in srgb, var(--dock-edge) 64%, hsl(var(--primary) / 0.3));
+    box-shadow: var(--dock-shadow-lift);
+    color: hsl(var(--foreground));
+  }
+
+  .dock-search:active {
+    transform: scale(0.955);
+  }
+
+  .dock-item--vertical {
+    height: clamp(2.5rem, 5.1vh, 3rem);
+  }
+
+  .dock-item--horizontal {
+    height: 3.5rem;
+  }
+
+  /* Compact rail utilities: support + collapse. */
+  .dock-utility {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 1.9rem;
+    width: 1.9rem;
+    border-radius: 0.7rem;
+    border: 1px solid transparent;
+    color: hsl(var(--muted-foreground));
+    outline: none;
+    transition:
+      color 170ms ease,
+      background-color 170ms ease,
+      border-color 170ms ease,
+      transform 170ms ease;
+  }
+
+  .dock-utility:hover {
+    border-color: var(--glass-border-soft);
+    background: var(--dock-item-hover);
+    color: hsl(var(--foreground));
+  }
+
+  .dock-utility:active {
+    transform: scale(0.94);
+  }
+
+  .dock-utility:focus-visible {
+    box-shadow: 0 0 0 3px hsl(var(--ring) / 0.22);
+  }
+
+  .dock-divider {
+    display: block;
+    flex: none;
+    width: 1.7rem;
+    height: 1px;
+    margin: 0.22rem auto;
+    background: hsl(var(--border) / 0.48);
+  }
+
+  /* Shared active value: one glass surface glides between dock slots. */
+  .dock-indicator {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 0;
+    border-radius: 1rem;
+    border: 1px solid var(--dock-active-edge);
+    background:
+      radial-gradient(
+        120% 110% at 50% 0%,
+        var(--dock-active-strong) 0%,
+        var(--dock-active) 56%,
+        transparent 100%
+      ),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.34), transparent 72%);
     box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.12),
-      0 10px 26px -20px rgba(0, 0, 0, 0.9);
+      inset 0 1px 0 rgba(255, 255, 255, 0.62),
+      0 10px 24px -16px var(--dock-glow),
+      0 0 22px -8px var(--dock-glow);
+    -webkit-backdrop-filter: blur(10px) saturate(160%);
+    backdrop-filter: blur(10px) saturate(160%);
+    transition:
+      transform 500ms var(--ease-dock),
+      width 420ms var(--ease-dock),
+      height 320ms var(--ease-out),
+      border-radius 260ms ease,
+      opacity 180ms ease;
+    will-change: transform, width, height;
+    pointer-events: none;
+  }
+
+  .dark .dock-indicator {
+    background:
+      radial-gradient(
+        120% 110% at 50% 0%,
+        var(--dock-active-strong) 0%,
+        var(--dock-active) 56%,
+        transparent 100%
+      ),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.1), transparent 72%);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.16),
+      0 12px 28px -16px rgba(0, 0, 0, 0.9),
+      0 0 26px -8px var(--dock-glow);
+  }
+
+  .dock-indicator[data-orientation="horizontal"] {
+    border-radius: 1.15rem;
+  }
+
+  .dock-indicator__glint {
+    position: absolute;
+    inset-inline: 18%;
+    top: 2px;
+    height: 1px;
+    border-radius: 999px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      color-mix(in srgb, var(--dock-highlight) 82%, transparent),
+      transparent
+    );
+    opacity: 0.85;
   }
 
   /* Collapsed-sidebar tooltip; shown on hover and keyboard focus. */
@@ -565,33 +770,43 @@
     }
   }
 
-  /* Mobile drawer + scrim. */
-  .drawer-panel {
-    animation: drawer-in var(--motion-slow) var(--ease-out) both;
+  /* Mobile "More" bottom sheet + scrim. */
+  .glass-sheet {
+    border-top: 1px solid var(--dock-edge);
+    background-color: var(--sheet-glass);
+    background-image: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--dock-glass-strong) 68%, transparent) 0%,
+      transparent 42%
+    );
+    -webkit-backdrop-filter: var(--dock-blur);
+    backdrop-filter: var(--dock-blur);
+    box-shadow:
+      inset 0 1px 0 var(--dock-highlight),
+      0 -28px 70px -30px rgba(15, 23, 42, 0.42);
   }
 
-  [dir="rtl"] .drawer-panel {
-    animation-name: drawer-in-rtl;
+  .dark .glass-sheet {
+    box-shadow:
+      inset 0 1px 0 var(--dock-highlight),
+      0 -30px 80px -28px rgba(0, 0, 0, 0.92);
   }
 
-  .drawer-backdrop {
+  .sheet-panel {
+    animation: sheet-in var(--motion-slow) var(--ease-dock) both;
+  }
+
+  .sheet-backdrop {
     animation: backdrop-in var(--motion-base) ease-out both;
   }
 
-  @keyframes drawer-in {
+  @keyframes sheet-in {
     from {
-      transform: translate3d(-100%, 0, 0);
+      opacity: 0;
+      transform: translate3d(0, 32px, 0);
     }
     to {
-      transform: translate3d(0, 0, 0);
-    }
-  }
-
-  @keyframes drawer-in-rtl {
-    from {
-      transform: translate3d(100%, 0, 0);
-    }
-    to {
+      opacity: 1;
       transform: translate3d(0, 0, 0);
     }
   }
@@ -994,12 +1209,15 @@
     .page-enter,
     .popover-enter,
     .reveal-down,
-    .drawer-panel,
-    .drawer-backdrop {
+    .sheet-panel,
+    .sheet-backdrop {
       animation: none;
     }
 
-    .nav-active-indicator,
+    .dock-shell,
+    .dock-search,
+    .dock-utility,
+    .dock-indicator,
     .nav-tooltip {
       transition: none;
     }

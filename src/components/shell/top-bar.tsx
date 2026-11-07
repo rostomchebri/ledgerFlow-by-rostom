@@ -3,13 +3,14 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { useEffect, useRef, useState } from "react";
-import { ChevronDown, Menu, Search, X } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { ChevronDown, Search, X } from "lucide-react";
 
 import { SignOutButton } from "@/components/auth/sign-out-button";
 import { LiquidGlassLogo } from "@/components/brand/liquid-glass-logo";
 import { LocaleSwitcher } from "@/components/i18n/locale-switcher";
 import { NotificationBell } from "@/components/shell/notification-bell";
+import { ThemeToggle } from "@/components/shell/theme-toggle";
 import { cn } from "@/lib/utils";
 
 type TopBarProps = {
@@ -17,30 +18,54 @@ type TopBarProps = {
   initials: string;
   firmName: string;
   roleLabel: string;
-  onOpenMenu: () => void;
+  /** Increment to focus the one existing search field (dock button, ⌘K). */
+  searchSignal: number;
 };
 
-export function TopBar({ user, initials, firmName, roleLabel, onOpenMenu }: TopBarProps) {
+export function TopBar({
+  user,
+  initials,
+  firmName,
+  roleLabel,
+  searchSignal,
+}: TopBarProps) {
   const t = useTranslations("shell");
   const router = useRouter();
   const searchRef = useRef<HTMLInputElement>(null);
   const profileRef = useRef<HTMLDivElement>(null);
   const [query, setQuery] = useState("");
   const [profileOpen, setProfileOpen] = useState(false);
-  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+
+  const focusSearch = useCallback(() => {
+    if (window.innerWidth < 768) setSearchOpen(true);
+
+    // Two frames: the first lets a freshly revealed field mount and paint,
+    // the second moves focus without interrupting the reveal animation.
+    window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(() => {
+        searchRef.current?.focus();
+        searchRef.current?.select();
+      });
+    });
+  }, []);
+
+  useEffect(() => {
+    if (searchSignal === 0) return;
+    focusSearch();
+  }, [focusSearch, searchSignal]);
 
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
       if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
         event.preventDefault();
-        setMobileSearchOpen(window.innerWidth < 768);
-        requestAnimationFrame(() => searchRef.current?.focus());
+        focusSearch();
       }
     }
 
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, []);
+  }, [focusSearch]);
 
   useEffect(() => {
     function onPointerDown(event: MouseEvent) {
@@ -56,7 +81,7 @@ export function TopBar({ user, initials, firmName, roleLabel, onOpenMenu }: TopB
     event.preventDefault();
     const value = query.trim();
     router.push(value ? `/clients?q=${encodeURIComponent(value)}` : "/clients");
-    setMobileSearchOpen(false);
+    setSearchOpen(false);
   }
 
   const searchForm = (
@@ -71,7 +96,7 @@ export function TopBar({ user, initials, firmName, roleLabel, onOpenMenu }: TopB
         value={query}
         onChange={(event) => setQuery(event.target.value)}
         placeholder={t("searchPlaceholder")}
-        aria-label={t("searchPlaceholder")}
+        aria-label={t("search")}
         className="glass-field h-11 w-full rounded-2xl pe-20 ps-11 text-sm text-foreground outline-none placeholder:text-muted-foreground/80"
       />
       <kbd className="glass-soft pointer-events-none absolute end-2.5 top-1/2 hidden -translate-y-1/2 items-center gap-0.5 rounded-lg px-2 py-1 font-sans text-[10px] font-semibold text-muted-foreground sm:flex">
@@ -82,38 +107,16 @@ export function TopBar({ user, initials, firmName, roleLabel, onOpenMenu }: TopB
 
   return (
     <div className="glass-bar">
-      <div className="flex h-[76px] items-center gap-3 px-4 lg:px-8">
-        <button
-          type="button"
-          onClick={onOpenMenu}
-          aria-label={t("openMenu")}
-          className="glass-icon-button h-10 w-10 border-[hsl(var(--border)/0.65)] bg-[hsl(var(--card)/0.5)] lg:hidden"
-        >
-          <Menu aria-hidden="true" className="h-5 w-5" />
-        </button>
-
-        <Link href="/dashboard" className="flex items-center gap-2.5 lg:hidden">
-          <LiquidGlassLogo size={36} />
+      <div className="flex h-16 items-center gap-3 px-4 sm:px-6 lg:h-[76px] lg:px-8">
+        <Link href="/dashboard" className="flex shrink-0 items-center gap-2.5 lg:hidden">
+          <LiquidGlassLogo size={32} label="LedgerFlow" />
           <span className="text-[15px] font-bold tracking-[-0.02em]">LedgerFlow</span>
         </Link>
 
         <div className="hidden w-full max-w-md md:block">{searchForm}</div>
 
         <div className="ms-auto flex items-center gap-1.5 sm:gap-2">
-          <button
-            type="button"
-            onClick={() => setMobileSearchOpen((open) => !open)}
-            aria-label={t("searchPlaceholder")}
-            aria-expanded={mobileSearchOpen}
-            className="glass-icon-button h-10 w-10 md:hidden"
-          >
-            {mobileSearchOpen ? (
-              <X aria-hidden="true" className="h-5 w-5" />
-            ) : (
-              <Search aria-hidden="true" className="h-5 w-5" />
-            )}
-          </button>
-
+          <ThemeToggle className="h-10 w-10" />
           <NotificationBell />
 
           <div ref={profileRef} className="relative">
@@ -184,9 +187,19 @@ export function TopBar({ user, initials, firmName, roleLabel, onOpenMenu }: TopB
         </div>
       </div>
 
-      {mobileSearchOpen ? (
+      {searchOpen ? (
         <div className="reveal-down border-t border-[hsl(var(--border)/0.5)] px-4 py-2.5 md:hidden">
-          {searchForm}
+          <div className="flex items-center gap-2">
+            {searchForm}
+            <button
+              type="button"
+              onClick={() => setSearchOpen(false)}
+              aria-label={t("closeSearch")}
+              className="glass-icon-button h-10 w-10 shrink-0"
+            >
+              <X aria-hidden="true" className="h-4 w-4" />
+            </button>
+          </div>
         </div>
       ) : null}
     </div>
