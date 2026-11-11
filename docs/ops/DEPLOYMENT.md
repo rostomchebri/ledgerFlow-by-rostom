@@ -93,7 +93,13 @@ uses SMTP. Verification e-mails contain a 6-digit code that expires after 10
 minutes; password reset e-mails contain a one-hour link.
 
 `NEXT_PUBLIC_APP_URL`, `BETTER_AUTH_URL`, and the public origin **must match**
-exactly, otherwise verification and reset links point at the wrong host.
+exactly, otherwise verification and reset links point at the wrong host. If the
+app is reachable through more than one origin (for example a second domain or an
+IP-based staging URL), list the extras in `BETTER_AUTH_TRUSTED_ORIGINS`
+(comma-separated). Requests from an origin that is not trusted are rejected by
+Better Auth with HTTP 403 `INVALID_ORIGIN`, which the UI shows as
+“Access denied.” In development every localhost/127.0.0.1/[::1] port is trusted
+automatically, so opening `next dev` on a fallback port such as 3001 works.
 
 ## 5. Upgrades and rollback
 

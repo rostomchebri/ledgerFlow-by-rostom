@@ -1,5 +1,7 @@
 import "server-only";
 
+import { networkInterfaces } from "node:os";
+
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { APIError, createAuthMiddleware } from "better-auth/api";
@@ -26,6 +28,26 @@ const extraTrustedOrigins = (env.BETTER_AUTH_TRUSTED_ORIGINS ?? "")
   .map((origin) => origin.trim())
   .filter(Boolean);
 
+/**
+ * Development only: `next dev` also prints a LAN URL such as
+ * `http://192.168.1.18:3000`. Opening that address otherwise fails the auth
+ * origin check with a confusing "Access denied." Trust this machine's current
+ * non-internal IPv4 addresses on any port.
+ */
+function developmentNetworkOrigins(): string[] {
+  const origins = ["http://localhost:*", "http://127.0.0.1:*", "http://[::1]:*"];
+
+  for (const addresses of Object.values(networkInterfaces())) {
+    for (const address of addresses ?? []) {
+      if (address.family === "IPv4" && !address.internal) {
+        origins.push(`http://${address.address}:*`);
+      }
+    }
+  }
+
+  return origins;
+}
+
 export const auth = betterAuth({
   appName: "LedgerFlow",
   baseURL: env.BETTER_AUTH_URL,
@@ -35,12 +57,10 @@ export const auth = betterAuth({
     env.NEXT_PUBLIC_APP_URL,
     env.BETTER_AUTH_URL,
     ...extraTrustedOrigins,
-    // Local development is often opened on a different loopback host or port
-    // (e.g. a second `next dev` picks 3001). Trust every loopback port there so
+    // Local development is often opened on a different loopback host, port, or
+    // LAN address (e.g. a second `next dev` picks 3001). Trust those there so
     // an origin mismatch cannot surface as a confusing "Access denied." error.
-    ...(env.isDevelopment
-      ? ["http://localhost:*", "http://127.0.0.1:*", "http://[::1]:*"]
-      : []),
+    ...(env.isDevelopment ? developmentNetworkOrigins() : []),
   ],
 
   database: prismaAdapter(prisma, {

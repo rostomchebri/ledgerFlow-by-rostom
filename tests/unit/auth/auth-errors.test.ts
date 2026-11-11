@@ -47,6 +47,16 @@ describe("auth error mapping", () => {
     expect(authErrorKey({ status: 403 })).toBe("errors.forbidden");
   });
 
+  it("maps origin rejections to a configuration hint", () => {
+    expect(authErrorKey({ status: 403, code: "INVALID_ORIGIN" })).toBe("errors.invalidOrigin");
+    expect(authErrorKey({ status: 403, code: "MISSING_OR_NULL_ORIGIN" })).toBe(
+      "errors.invalidOrigin",
+    );
+    expect(authErrorKey({ status: 403, code: "INVALID_CALLBACK_URL" })).toBe(
+      "errors.invalidOrigin",
+    );
+  });
+
   it("detects invalid reset tokens", () => {
     expect(isInvalidToken({ code: "INVALID_TOKEN" })).toBe(true);
     expect(isInvalidToken({ status: 400, message: "Token expired" })).toBe(true);

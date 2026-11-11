@@ -125,8 +125,12 @@ the default password.
 
 Generate a secret with `openssl rand -base64 32` and set `BETTER_AUTH_SECRET` in
 production. `BETTER_AUTH_URL` and `NEXT_PUBLIC_APP_URL` must match the public origin
-so verification and reset e-mails point to the right host. Configure either
-`RESEND_API_KEY` + `EMAIL_FROM` or the `SMTP_*` settings for real delivery.
+so verification and reset e-mails point to the right host. If the app is served
+from additional origins, add them to `BETTER_AUTH_TRUSTED_ORIGINS`
+(comma-separated); otherwise Better Auth rejects those requests with a 403
+`INVALID_ORIGIN` (“Access denied.”). Development trusts every localhost port
+automatically. Configure either `RESEND_API_KEY` + `EMAIL_FROM` or the `SMTP_*`
+settings for real delivery.
 
 ## Firm workspace, roles and team (FIRM-01 → FIRM-05)
 
