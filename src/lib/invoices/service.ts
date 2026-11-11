@@ -62,6 +62,22 @@ export function parseInvoiceQuery(
 
 export type InvoiceListQuery = ReturnType<typeof parseInvoiceQuery>;
 
+export function buildInvoiceOrderBy(
+  sort: InvoiceListQuery["sort"],
+): Prisma.InvoiceOrderByWithRelationInput[] {
+  switch (sort) {
+    case "issue-asc":
+      return [{ issueDate: "asc" }, { createdAt: "asc" }, { id: "asc" }];
+    case "due-asc":
+      return [{ dueDate: "asc" }, { issueDate: "desc" }, { id: "asc" }];
+    case "amount-desc":
+      return [{ total: "desc" }, { issueDate: "desc" }, { id: "asc" }];
+    case "issue-desc":
+    default:
+      return [{ issueDate: "desc" }, { createdAt: "desc" }, { id: "asc" }];
+  }
+}
+
 function invoiceWhere(
   firmId: string,
   query: InvoiceListQuery,
@@ -99,7 +115,7 @@ export async function listInvoices(firmId: string, query: InvoiceListQuery) {
         client: { select: { id: true, name: true } },
         _count: { select: { lineItems: true } },
       },
-      orderBy: [{ issueDate: "desc" }, { createdAt: "desc" }],
+      orderBy: buildInvoiceOrderBy(query.sort),
       skip: (query.page - 1) * INVOICE_PAGE_SIZE,
       take: INVOICE_PAGE_SIZE,
     }),

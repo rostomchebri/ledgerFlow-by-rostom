@@ -2,6 +2,15 @@ import { z } from "zod";
 
 export const INVOICE_STATUSES = ["DRAFT", "SENT", "PAID", "OVERDUE"] as const;
 
+export const INVOICE_SORT_OPTIONS = [
+  "issue-desc",
+  "issue-asc",
+  "due-asc",
+  "amount-desc",
+] as const;
+
+export type InvoiceSort = (typeof INVOICE_SORT_OPTIONS)[number];
+
 function emptyToUndefined(value: unknown) {
   if (typeof value === "string" && value.trim() === "") return undefined;
   return value;
@@ -87,9 +96,20 @@ export function parseInvoiceListFilters(
   const first = (value: string | string[] | undefined) =>
     Array.isArray(value) ? value[0] : value;
   const rawStatus = first(params.status)?.toUpperCase();
+  const rawSort = first(params.sort);
   const page = Number.parseInt(first(params.page) ?? "1", 10);
-  const from = first(params.from);
-  const to = first(params.to);
+
+  const parseDate = (value: string | undefined, endOfDay = false) => {
+    if (!value) return undefined;
+    const date = new Date(`${value}T00:00:00`);
+    if (Number.isNaN(date.getTime())) return undefined;
+    if (endOfDay) date.setHours(23, 59, 59, 999);
+    return date;
+  };
+
+  const from = parseDate(first(params.from));
+  const to = parseDate(first(params.to), true);
+  const invalidRange = Boolean(from && to && from > to);
 
   return {
     q: (first(params.q) ?? "").trim().slice(0, 120),
@@ -97,8 +117,11 @@ export function parseInvoiceListFilters(
       ? (rawStatus as (typeof INVOICE_STATUSES)[number])
       : ("ALL" as const),
     clientId: first(params.clientId)?.slice(0, 64) ?? "",
-    from: from ? new Date(from) : undefined,
-    to: to ? new Date(to) : undefined,
+    sort: INVOICE_SORT_OPTIONS.includes(rawSort as InvoiceSort)
+      ? (rawSort as InvoiceSort)
+      : ("issue-desc" as const),
+    from: invalidRange ? undefined : from,
+    to: invalidRange ? undefined : to,
     page: Number.isFinite(page) && page > 0 ? page : 1,
   };
 }
