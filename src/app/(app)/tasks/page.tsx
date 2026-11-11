@@ -10,6 +10,7 @@ import { TaskStatusSelect } from "@/components/tasks/task-status-select";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
+import { PageHeader } from "@/components/ui/page-header";
 import { formatDate } from "@/lib/clients/format";
 import { requireFirmContext } from "@/lib/firm-context";
 import { can } from "@/lib/rbac";
@@ -63,39 +64,30 @@ export default async function TasksPage({ searchParams }: TasksPageProps) {
 
   return (
     <div className="mx-auto flex w-full max-w-[1400px] flex-col gap-6">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div className="space-y-2">
-          <p className="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-primary/90">
-            <span
-              aria-hidden="true"
-              className="h-1.5 w-1.5 rounded-full bg-primary shadow-[0_0_0_3px_hsl(var(--primary)/0.14)]"
-            />
-            {t("eyebrow")}
-          </p>
-          <h1 className="text-gradient text-[30px] font-bold leading-tight tracking-[-0.04em] sm:text-[34px]">
-            {t("title")}
-          </h1>
-          <p className="max-w-2xl text-sm leading-6 text-muted-foreground">{t("description")}</p>
-        </div>
-
-        <div className="flex flex-wrap items-center gap-2">
-          <Link href="/api/reports/tasks/export" className={buttonVariants({ variant: "outline" })}>
-            <Download aria-hidden="true" className="h-4 w-4" />
-            {t("export")}
-          </Link>
-          {canWrite ? (
-            <>
-              <Link href="/tasks/templates" className={buttonVariants({ variant: "outline" })}>
-                {t("templates")}
-              </Link>
-              <Link href="/tasks/new" className={buttonVariants({ variant: "default" })}>
-                <Plus aria-hidden="true" className="h-4 w-4" />
-                {t("new")}
-              </Link>
-            </>
-          ) : null}
-        </div>
-      </div>
+      <PageHeader
+        eyebrow={t("eyebrow")}
+        title={t("title")}
+        description={t("description")}
+        actions={
+          <>
+            <Link href="/api/reports/tasks/export" className={buttonVariants({ variant: "outline" })}>
+              <Download aria-hidden="true" className="h-4 w-4" />
+              {t("export")}
+            </Link>
+            {canWrite ? (
+              <>
+                <Link href="/tasks/templates" className={buttonVariants({ variant: "outline" })}>
+                  {t("templates")}
+                </Link>
+                <Link href="/tasks/new" className={buttonVariants({ variant: "default" })}>
+                  <Plus aria-hidden="true" className="h-4 w-4" />
+                  {t("new")}
+                </Link>
+              </>
+            ) : null}
+          </>
+        }
+      />
 
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="glass-soft inline-flex rounded-xl p-1">

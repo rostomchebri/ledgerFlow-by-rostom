@@ -19,6 +19,7 @@ import { KpiCard } from "@/components/dashboard/kpi-card";
 import { RangeSelector } from "@/components/dashboard/range-selector";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { PageHeader } from "@/components/ui/page-header";
 import { formatDate } from "@/lib/clients/format";
 import {
   formatCompactCurrency,
@@ -92,35 +93,26 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
 
   return (
     <div className="mx-auto flex w-full max-w-[1400px] flex-col gap-7">
-      <div className="flex flex-col gap-5 xl:flex-row xl:items-center xl:justify-between">
-        <div className="space-y-2">
-          <p className="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-primary/90">
-            <span
-              aria-hidden="true"
-              className="h-1.5 w-1.5 rounded-full bg-primary shadow-[0_0_0_3px_hsl(var(--primary)/0.14)]"
-            />
-            {t("eyebrow")}
-          </p>
-          <h1 className="text-gradient text-[30px] font-bold leading-tight tracking-[-0.04em] sm:text-[34px]">
-            {t("welcome", { name: user.name.split(/\s+/)[0] ?? user.name })}
-          </h1>
-          <p className="max-w-2xl text-sm leading-6 text-muted-foreground">{t("subtitle")}</p>
-        </div>
-
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-          <RangeSelector range={range} labels={rangeLabels} periodLabel={periodLabel} />
-          <Link
-            href="/reports"
-            className={buttonVariants({
-              variant: "outline",
-              className: "h-[46px] rounded-xl",
-            })}
-          >
-            <BarChart3 aria-hidden="true" className="h-4 w-4" />
-            {t("quick.viewReports")}
-          </Link>
-        </div>
-      </div>
+      <PageHeader
+        eyebrow={t("eyebrow")}
+        title={t("welcome", { name: user.name.split(/\s+/)[0] ?? user.name })}
+        description={t("subtitle")}
+        actions={
+          <>
+            <RangeSelector range={range} labels={rangeLabels} periodLabel={periodLabel} />
+            <Link
+              href="/reports"
+              className={buttonVariants({
+                variant: "outline",
+                className: "h-[46px] rounded-xl",
+              })}
+            >
+              <BarChart3 aria-hidden="true" className="h-4 w-4" />
+              {t("quick.viewReports")}
+            </Link>
+          </>
+        }
+      />
 
       <section
         aria-label={t("eyebrow")}

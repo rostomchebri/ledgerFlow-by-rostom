@@ -16,6 +16,7 @@ import { DonutChart, type DonutSlice } from "@/components/charts/donut-chart";
 import { RangeSelector } from "@/components/dashboard/range-selector";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { PageHeader } from "@/components/ui/page-header";
 import {
   formatCompactCurrency,
   formatCurrency,
@@ -87,44 +88,36 @@ export default async function ReportsPage({ searchParams }: ReportsPageProps) {
 
   return (
     <div className="mx-auto flex w-full max-w-[1400px] flex-col gap-6">
-      <div className="flex flex-col gap-5 xl:flex-row xl:items-center xl:justify-between">
-        <div className="space-y-2">
-          <p className="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-primary/90">
-            <span
-              aria-hidden="true"
-              className="h-1.5 w-1.5 rounded-full bg-primary shadow-[0_0_0_3px_hsl(var(--primary)/0.14)]"
-            />
-            {t("eyebrow")}
-          </p>
-          <h1 className="text-gradient text-[30px] font-bold leading-tight tracking-[-0.04em] sm:text-[34px]">
-            {t("title")}
-          </h1>
-          <p className="max-w-2xl text-sm leading-6 text-muted-foreground">{t("description")}</p>
-        </div>
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-          <RangeSelector range={range} labels={rangeLabels} periodLabel={periodLabel} />
-          <Link
-            href="/reports/invoices"
-            className={buttonVariants({
-              variant: "outline",
-              className: "h-[46px] rounded-xl",
-            })}
-          >
-            <ReceiptText aria-hidden="true" className="h-4 w-4" />
-            {t("invoiceRegister.title")}
-          </Link>
-          <Link
-            href={`/api/reports/transactions/export?range=${range}`}
-            className={buttonVariants({
-              variant: "outline",
-              className: "h-[46px] rounded-xl",
-            })}
-          >
-            <Download aria-hidden="true" className="h-4 w-4" />
-            {t("export")}
-          </Link>
-        </div>
-      </div>
+      <PageHeader
+        eyebrow={t("eyebrow")}
+        title={t("title")}
+        description={t("description")}
+        actions={
+          <>
+            <RangeSelector range={range} labels={rangeLabels} periodLabel={periodLabel} />
+            <Link
+              href="/reports/invoices"
+              className={buttonVariants({
+                variant: "outline",
+                className: "h-[46px] rounded-xl",
+              })}
+            >
+              <ReceiptText aria-hidden="true" className="h-4 w-4" />
+              {t("invoiceRegister.title")}
+            </Link>
+            <Link
+              href={`/api/reports/transactions/export?range=${range}`}
+              className={buttonVariants({
+                variant: "outline",
+                className: "h-[46px] rounded-xl",
+              })}
+            >
+              <Download aria-hidden="true" className="h-4 w-4" />
+              {t("export")}
+            </Link>
+          </>
+        }
+      />
 
       <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <ReportKpi

@@ -9,6 +9,7 @@ import { DocumentFilters } from "@/components/documents/document-filters";
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
+import { PageHeader } from "@/components/ui/page-header";
 import { formatDate } from "@/lib/clients/format";
 import { formatFileSize } from "@/lib/documents/format";
 import { parseDocumentListQuery, type DocumentListQuery } from "@/lib/documents/schema";
@@ -48,27 +49,19 @@ export default async function DocumentsPage({ searchParams }: DocumentsPageProps
 
   return (
     <div className="mx-auto flex w-full max-w-[1400px] flex-col gap-6">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <div className="space-y-2">
-          <p className="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-primary/90">
-            <span
-              aria-hidden="true"
-              className="h-1.5 w-1.5 rounded-full bg-primary shadow-[0_0_0_3px_hsl(var(--primary)/0.14)]"
-            />
-            {t("eyebrow")}
-          </p>
-          <h1 className="text-gradient text-[30px] font-bold leading-tight tracking-[-0.04em] sm:text-[34px]">
-            {t("title")}
-          </h1>
-          <p className="max-w-2xl text-sm leading-6 text-muted-foreground">{t("description")}</p>
-        </div>
-        {canWrite ? (
-          <Link href="/documents/new" className={buttonVariants({ variant: "default" })}>
-            <Plus aria-hidden="true" className="h-4 w-4" />
-            {t("uploadButton")}
-          </Link>
-        ) : null}
-      </div>
+      <PageHeader
+        eyebrow={t("eyebrow")}
+        title={t("title")}
+        description={t("description")}
+        actions={
+          canWrite ? (
+            <Link href="/documents/new" className={buttonVariants({ variant: "default" })}>
+              <Plus aria-hidden="true" className="h-4 w-4" />
+              {t("uploadButton")}
+            </Link>
+          ) : null
+        }
+      />
 
       <DocumentFilters query={query} />
 
