@@ -293,6 +293,9 @@ model Transaction {
   @@index([firmId, occurredAt])
   @@index([firmId, type])
   @@index([firmId, clientId])
+  @@index([firmId, type, occurredAt])
+  @@index([firmId, category, occurredAt])
+  @@index([firmId, clientId, occurredAt])
   @@map("transactions")
 }
 
@@ -329,6 +332,9 @@ model Invoice {
   @@index([firmId, status])
   @@index([firmId, issueDate])
   @@index([firmId, clientId])
+  @@index([firmId, status, issueDate])
+  @@index([firmId, clientId, issueDate])
+  @@index([firmId, dueDate])
   @@map("invoices")
 }
 
