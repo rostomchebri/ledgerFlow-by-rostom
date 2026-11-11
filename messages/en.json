@@ -62,7 +62,9 @@
     "supportTitle": "Need a hand?",
     "supportBody": "Our team is here to help you get the most out of LedgerFlow.",
     "supportCta": "Contact support",
-    "role": "Role"
+    "role": "Role",
+    "skipToContent": "Skip to content",
+    "shortcuts": "Keyboard shortcuts"
   },
   "landing": {
     "badge": "CLIENT-02 · client management",
@@ -1294,6 +1296,60 @@
       "showing": "{from}–{to} of {total}",
       "previous": "Previous",
       "next": "Next"
+    }
+  },
+  "command": {
+    "title": "Command palette",
+    "placeholder": "Search or jump to…",
+    "empty": "No results for “{query}”",
+    "keepTyping": "Keep typing to search…",
+    "error": "Search is unavailable right now.",
+    "close": "Close command palette",
+    "footerNavigate": "to navigate",
+    "footerSelect": "to select",
+    "footerClose": "to close",
+    "groups": {
+      "navigation": "Go to",
+      "actions": "Create",
+      "recent": "Recent",
+      "clients": "Clients",
+      "invoices": "Invoices",
+      "transactions": "Transactions",
+      "tasks": "Tasks"
+    },
+    "actions": {
+      "newClient": "New client",
+      "newInvoice": "New invoice",
+      "newTransaction": "New transaction",
+      "newTask": "New task"
+    }
+  },
+  "shortcuts": {
+    "title": "Keyboard shortcuts",
+    "description": "Move through LedgerFlow without leaving the keyboard.",
+    "close": "Close shortcuts",
+    "then": "then",
+    "groups": {
+      "general": "General",
+      "navigation": "Go to",
+      "create": "Create"
+    },
+    "items": {
+      "command": "Open command palette",
+      "help": "Show this help",
+      "dashboard": "Dashboard",
+      "transactions": "Transactions",
+      "invoices": "Invoices",
+      "clients": "Clients",
+      "reports": "Reports",
+      "documents": "Documents",
+      "tasks": "Tasks",
+      "notifications": "Notifications",
+      "settings": "Settings",
+      "newClient": "New client",
+      "newInvoice": "New invoice",
+      "newTransaction": "New transaction",
+      "newTask": "New task"
     }
   }
 }

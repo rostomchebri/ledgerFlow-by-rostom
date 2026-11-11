@@ -62,7 +62,9 @@
     "supportTitle": "تحتاج إلى مساعدة؟",
     "supportBody": "فريقنا هنا لمساعدتك على الاستفادة القصوى من LedgerFlow.",
     "supportCta": "تواصل مع الدعم",
-    "role": "الدور"
+    "role": "الدور",
+    "skipToContent": "تخطَّ إلى المحتوى",
+    "shortcuts": "اختصارات لوحة المفاتيح"
   },
   "landing": {
     "badge": "CLIENT-02 · إدارة العملاء",
@@ -1294,6 +1296,60 @@
       "showing": "{from}–{to} من {total}",
       "previous": "السابق",
       "next": "التالي"
+    }
+  },
+  "command": {
+    "title": "لوحة الأوامر",
+    "placeholder": "ابحث أو انتقل إلى…",
+    "empty": "لا توجد نتائج لـ «{query}»",
+    "keepTyping": "واصل الكتابة للبحث…",
+    "error": "البحث غير متاح الآن.",
+    "close": "إغلاق لوحة الأوامر",
+    "footerNavigate": "للتنقل",
+    "footerSelect": "للاختيار",
+    "footerClose": "للإغلاق",
+    "groups": {
+      "navigation": "الانتقال إلى",
+      "actions": "إنشاء",
+      "recent": "الأخيرة",
+      "clients": "العملاء",
+      "invoices": "الفواتير",
+      "transactions": "المعاملات",
+      "tasks": "المهام"
+    },
+    "actions": {
+      "newClient": "عميل جديد",
+      "newInvoice": "فاتورة جديدة",
+      "newTransaction": "معاملة جديدة",
+      "newTask": "مهمة جديدة"
+    }
+  },
+  "shortcuts": {
+    "title": "اختصارات لوحة المفاتيح",
+    "description": "تنقّل في LedgerFlow دون مغادرة لوحة المفاتيح.",
+    "close": "إغلاق الاختصارات",
+    "then": "ثم",
+    "groups": {
+      "general": "عام",
+      "navigation": "الانتقال إلى",
+      "create": "إنشاء"
+    },
+    "items": {
+      "command": "فتح لوحة الأوامر",
+      "help": "عرض هذه المساعدة",
+      "dashboard": "لوحة المعلومات",
+      "transactions": "المعاملات",
+      "invoices": "الفواتير",
+      "clients": "العملاء",
+      "reports": "التقارير",
+      "documents": "المستندات",
+      "tasks": "المهام",
+      "notifications": "الإشعارات",
+      "settings": "الإعدادات",
+      "newClient": "عميل جديد",
+      "newInvoice": "فاتورة جديدة",
+      "newTransaction": "معاملة جديدة",
+      "newTask": "مهمة جديدة"
     }
   }
 }

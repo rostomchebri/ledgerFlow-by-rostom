@@ -21,6 +21,14 @@ export function uniqueSuffix(): string {
 }
 
 /**
+ * Waits until the client shell has hydrated and its global shortcut listeners
+ * are attached, so keyboard-driven specs never race React hydration.
+ */
+export async function waitForAppReady(page: Page): Promise<void> {
+  await page.waitForFunction(() => document.documentElement.dataset.appReady === "true");
+}
+
+/**
  * The app defaults to French. Every spec sets NEXT_LOCALE=en so selectors stay
  * stable; storageState created by auth.setup.ts already carries the cookie.
  */

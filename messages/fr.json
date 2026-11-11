@@ -62,7 +62,9 @@
     "supportTitle": "Besoin d'aide ?",
     "supportBody": "Notre équipe vous aide à tirer le meilleur de LedgerFlow.",
     "supportCta": "Contacter le support",
-    "role": "Rôle"
+    "role": "Rôle",
+    "skipToContent": "Aller au contenu",
+    "shortcuts": "Raccourcis clavier"
   },
   "landing": {
     "badge": "CLIENT-02 · gestion des clients",
@@ -1294,6 +1296,60 @@
       "showing": "{from}–{to} sur {total}",
       "previous": "Précédent",
       "next": "Suivant"
+    }
+  },
+  "command": {
+    "title": "Palette de commandes",
+    "placeholder": "Rechercher ou accéder à…",
+    "empty": "Aucun résultat pour « {query} »",
+    "keepTyping": "Continuez à saisir pour rechercher…",
+    "error": "La recherche est momentanément indisponible.",
+    "close": "Fermer la palette de commandes",
+    "footerNavigate": "pour naviguer",
+    "footerSelect": "pour sélectionner",
+    "footerClose": "pour fermer",
+    "groups": {
+      "navigation": "Aller à",
+      "actions": "Créer",
+      "recent": "Récents",
+      "clients": "Clients",
+      "invoices": "Factures",
+      "transactions": "Transactions",
+      "tasks": "Tâches"
+    },
+    "actions": {
+      "newClient": "Nouveau client",
+      "newInvoice": "Nouvelle facture",
+      "newTransaction": "Nouvelle transaction",
+      "newTask": "Nouvelle tâche"
+    }
+  },
+  "shortcuts": {
+    "title": "Raccourcis clavier",
+    "description": "Parcourez LedgerFlow sans quitter le clavier.",
+    "close": "Fermer les raccourcis",
+    "then": "puis",
+    "groups": {
+      "general": "Général",
+      "navigation": "Aller à",
+      "create": "Créer"
+    },
+    "items": {
+      "command": "Ouvrir la palette de commandes",
+      "help": "Afficher cette aide",
+      "dashboard": "Tableau de bord",
+      "transactions": "Transactions",
+      "invoices": "Factures",
+      "clients": "Clients",
+      "reports": "Rapports",
+      "documents": "Documents",
+      "tasks": "Tâches",
+      "notifications": "Notifications",
+      "settings": "Paramètres",
+      "newClient": "Nouveau client",
+      "newInvoice": "Nouvelle facture",
+      "newTransaction": "Nouvelle transaction",
+      "newTask": "Nouvelle tâche"
     }
   }
 }

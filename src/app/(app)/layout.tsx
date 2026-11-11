@@ -21,6 +21,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
       user={{ name: user.name, email: user.email }}
       initials={initials}
       firmName={firmName}
+      role={role}
       roleLabel={tRoles(role)}
     >
       {children}

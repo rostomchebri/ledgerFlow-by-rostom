@@ -1,10 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { ChevronDown, Search, X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { ChevronDown, Keyboard, Search } from "lucide-react";
 
 import { SignOutButton } from "@/components/auth/sign-out-button";
 import { LiquidGlassLogo } from "@/components/brand/liquid-glass-logo";
@@ -18,8 +17,10 @@ type TopBarProps = {
   initials: string;
   firmName: string;
   roleLabel: string;
-  /** Increment to focus the one existing search field (dock button, ⌘K). */
-  searchSignal: number;
+  /** Opens the global command palette (⌘K). */
+  onOpenPalette: () => void;
+  /** Opens the keyboard shortcuts reference. */
+  onOpenShortcuts: () => void;
 };
 
 export function TopBar({
@@ -27,45 +28,12 @@ export function TopBar({
   initials,
   firmName,
   roleLabel,
-  searchSignal,
+  onOpenPalette,
+  onOpenShortcuts,
 }: TopBarProps) {
   const t = useTranslations("shell");
-  const router = useRouter();
-  const searchRef = useRef<HTMLInputElement>(null);
   const profileRef = useRef<HTMLDivElement>(null);
-  const [query, setQuery] = useState("");
   const [profileOpen, setProfileOpen] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
-
-  const focusSearch = useCallback(() => {
-    if (window.innerWidth < 768) setSearchOpen(true);
-
-    // Two frames: the first lets a freshly revealed field mount and paint,
-    // the second moves focus without interrupting the reveal animation.
-    window.requestAnimationFrame(() => {
-      window.requestAnimationFrame(() => {
-        searchRef.current?.focus();
-        searchRef.current?.select();
-      });
-    });
-  }, []);
-
-  useEffect(() => {
-    if (searchSignal === 0) return;
-    focusSearch();
-  }, [focusSearch, searchSignal]);
-
-  useEffect(() => {
-    function onKeyDown(event: KeyboardEvent) {
-      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
-        event.preventDefault();
-        focusSearch();
-      }
-    }
-
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, [focusSearch]);
 
   useEffect(() => {
     function onPointerDown(event: MouseEvent) {
@@ -77,32 +45,23 @@ export function TopBar({
     return () => document.removeEventListener("mousedown", onPointerDown);
   }, []);
 
-  function handleSearchSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const value = query.trim();
-    router.push(value ? `/clients?q=${encodeURIComponent(value)}` : "/clients");
-    setSearchOpen(false);
-  }
-
-  const searchForm = (
-    <form onSubmit={handleSearchSubmit} className="relative w-full" role="search">
+  const searchTrigger = (
+    <button
+      type="button"
+      onClick={onOpenPalette}
+      aria-label={t("search")}
+      aria-haspopup="dialog"
+      className="glass-field relative flex h-11 w-full items-center rounded-2xl pe-20 ps-11 text-start text-sm text-muted-foreground/90 transition-colors duration-200 hover:text-foreground"
+    >
       <Search
         aria-hidden="true"
-        className="pointer-events-none absolute start-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+        className="pointer-events-none absolute start-3.5 top-1/2 h-4 w-4 -translate-y-1/2"
       />
-      <input
-        ref={searchRef}
-        type="search"
-        value={query}
-        onChange={(event) => setQuery(event.target.value)}
-        placeholder={t("searchPlaceholder")}
-        aria-label={t("search")}
-        className="glass-field h-11 w-full rounded-2xl pe-20 ps-11 text-sm text-foreground outline-none placeholder:text-muted-foreground/80"
-      />
+      <span className="truncate">{t("searchPlaceholder")}</span>
       <kbd className="glass-soft pointer-events-none absolute end-2.5 top-1/2 hidden -translate-y-1/2 items-center gap-0.5 rounded-lg px-2 py-1 font-sans text-[10px] font-semibold text-muted-foreground sm:flex">
         ⌘K
       </kbd>
-    </form>
+    </button>
   );
 
   return (
@@ -113,9 +72,17 @@ export function TopBar({
           <span className="text-[15px] font-bold tracking-[-0.02em]">LedgerFlow</span>
         </Link>
 
-        <div className="hidden w-full max-w-md md:block">{searchForm}</div>
+        <div className="hidden w-full max-w-md md:block">{searchTrigger}</div>
 
         <div className="ms-auto flex items-center gap-1.5 sm:gap-2">
+          <button
+            type="button"
+            onClick={onOpenShortcuts}
+            aria-label={t("shortcuts")}
+            className="glass-icon-button hidden h-10 w-10 sm:flex"
+          >
+            <Keyboard aria-hidden="true" className="h-4 w-4" />
+          </button>
           <ThemeToggle className="h-10 w-10" />
           <NotificationBell />
 
@@ -186,22 +153,6 @@ export function TopBar({
           </div>
         </div>
       </div>
-
-      {searchOpen ? (
-        <div className="reveal-down border-t border-[hsl(var(--border)/0.5)] px-4 py-2.5 md:hidden">
-          <div className="flex items-center gap-2">
-            {searchForm}
-            <button
-              type="button"
-              onClick={() => setSearchOpen(false)}
-              aria-label={t("closeSearch")}
-              className="glass-icon-button h-10 w-10 shrink-0"
-            >
-              <X aria-hidden="true" className="h-4 w-4" />
-            </button>
-          </div>
-        </div>
-      ) : null}
     </div>
   );
 }
