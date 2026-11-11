@@ -10,6 +10,9 @@ const nextConfig: NextConfig = {
   // `next start` (used by the E2E suite) stays supported.
   ...(process.env.NEXT_STANDALONE === "1" ? { output: "standalone" as const } : {}),
   poweredByHeader: false,
+  // Allow CI/E2E to build into an isolated directory when a dev server is
+  // already watching `.next`. Defaults to the standard Next location.
+  distDir: process.env.NEXT_DIST_DIR || ".next",
   // Locale catalogs are imported dynamically (`messages/${locale}.json`), so
   // force them into the standalone trace. Prisma's client and engine are traced
   // automatically from their real pnpm-store location.
@@ -38,6 +41,16 @@ const nextConfig: NextConfig = {
             key: "Permissions-Policy",
             value: "camera=(), microphone=(), geolocation=()",
           },
+          // Conservative CSP: no script/style directives yet (Next injects
+          // inline bootstrap code), but framing, base URLs, form targets and
+          // plugin content are locked down.
+          {
+            key: "Content-Security-Policy",
+            value:
+              "frame-ancestors 'self'; base-uri 'self'; form-action 'self'; object-src 'none'",
+          },
+          { key: "X-DNS-Prefetch-Control", value: "off" },
+          { key: "X-Permitted-Cross-Domain-Policies", value: "none" },
         ],
       },
     ];
